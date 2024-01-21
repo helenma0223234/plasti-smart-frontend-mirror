@@ -27,3 +27,5 @@ Please attach screenshots or screen recordings if you made a UI change.
 - Samiha Datta
 - Andy Kotz
 - Elizabeth Frey
+- Aneesh Patnaik
+- Yuchuan Ma

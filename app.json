@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "crud-template-mobile-expo",
-    "slug": "crud-template-mobile-expo",
+    "name": "plastic-sorting-frontend",
+    "slug": "plastic-sorting-frontend",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -1,24 +1,24 @@
-import {
-  SignInPage,
-  SignUpPage,
-  LaunchPage,
-  VerifyPage,
-} from './AuthScreens';
+import { SignInPage, SignUpPage, LaunchPage, VerifyPage } from "./AuthScreens";
 
-import { 
+import {
   FrontPage,
   ResourcesPage,
   UsersPage,
   ForbiddenPage,
-} from './BaseScreens';
+} from "./BaseScreens";
 
-export { 
+import { 
+  CameraPage 
+} from "./UserScreens";
+
+export {
   SignInPage,
   SignUpPage,
   LaunchPage,
   VerifyPage,
-  FrontPage, 
-  ResourcesPage, 
+  FrontPage,
+  ResourcesPage,
   UsersPage,
   ForbiddenPage,
+  CameraPage,
 };

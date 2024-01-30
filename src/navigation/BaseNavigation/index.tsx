@@ -1,14 +1,20 @@
-import React from 'react';
-import { Text } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
-import { AntDesign, Octicons, Ionicons } from '@expo/vector-icons';
-import useAppSelector from 'hooks/useAppSelector';
-import { UserScopes } from 'types/users';
-import { FrontPage, ResourcesPage, UsersPage, ForbiddenPage } from 'screens/BaseScreens';
-import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
-import Colors from 'utils/Colors';
+import React from "react";
+import { Text } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { AntDesign, Octicons, Ionicons } from "@expo/vector-icons";
+import useAppSelector from "hooks/useAppSelector";
+import { UserScopes } from "types/users";
+import {
+  FrontPage,
+  ResourcesPage,
+  UsersPage,
+  ForbiddenPage,
+  CameraPage,
+} from "screens/BaseScreens";
+import { BaseTabRoutes, BaseNavigationList } from "../routeTypes";
+import Colors from "utils/Colors";
 
 const BaseTab = createBottomTabNavigator<BaseNavigationList>();
 const BaseStack = createStackNavigator<BaseNavigationList>();
@@ -16,7 +22,7 @@ const BaseStack = createStackNavigator<BaseNavigationList>();
 const ProtectedRoute = (allowableScopes: UserScopes[]) => {
   const { authenticated, role } = useAppSelector((state) => state.auth);
 
-  return (allowableScopes.includes(role) && authenticated);
+  return allowableScopes.includes(role) && authenticated;
 };
 
 const FrontNavigator = () => {
@@ -25,6 +31,18 @@ const FrontNavigator = () => {
       <BaseStack.Screen
         name={BaseTabRoutes.FRONT}
         component={FrontPage}
+        options={{ header: () => null }}
+      />
+    </BaseStack.Navigator>
+  );
+};
+
+const CameraNavigator = () => {
+  return (
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.CAMERA}>
+      <BaseStack.Screen
+        name={BaseTabRoutes.CAMERA}
+        component={CameraPage}
         options={{ header: () => null }}
       />
     </BaseStack.Navigator>
@@ -67,37 +85,43 @@ const BaseNavigation = () => {
           tabBarActiveTintColor: Colors.secondary.white,
           tabBarInactiveTintColor: Colors.neutral[8],
         }}
-        initialRouteName={BaseTabRoutes.FRONT}
+        initialRouteName={BaseTabRoutes.CAMERA}
       >
+        <BaseTab.Screen
+          name={BaseTabRoutes.CAMERA}
+          component={CameraNavigator}
+          options={{
+            tabBarLabel: (props) => {
+              return <Text style={{ color: props.color }}>home</Text>;
+            },
+            tabBarIcon: (props) => (
+              <AntDesign name="home" color={props.color} size={26} />
+            ),
+          }}
+        />
         <BaseTab.Screen
           name={BaseTabRoutes.FRONT}
           component={FrontNavigator}
           options={{
             tabBarLabel: (props) => {
-              return (
-                <Text style={{ color: props.color }}>home</Text>
-              );
+              return <Text style={{ color: props.color }}>home</Text>;
             },
             tabBarIcon: (props) => (
-              <AntDesign name='home' color={props.color} size={26} />
+              <AntDesign name="home" color={props.color} size={26} />
             ),
           }}
         />
         <BaseTab.Screen
           name={BaseTabRoutes.USERS}
           component={
-            ProtectedRoute([UserScopes.Admin])
-              ? UsersNavigator
-              : ForbiddenPage
+            ProtectedRoute([UserScopes.Admin]) ? UsersNavigator : ForbiddenPage
           }
           options={{
             tabBarLabel: (props) => {
-              return (
-                <Text style={{ color: props.color }}>users</Text>
-              );
+              return <Text style={{ color: props.color }}>users</Text>;
             },
             tabBarIcon: (props) => (
-              <Ionicons name='person-outline' color={props.color} size={26} />
+              <Ionicons name="person-outline" color={props.color} size={26} />
             ),
           }}
         />
@@ -110,12 +134,10 @@ const BaseNavigation = () => {
           }
           options={{
             tabBarLabel: (props) => {
-              return (
-                <Text style={{ color: props.color }}>resources</Text>
-              );
+              return <Text style={{ color: props.color }}>resources</Text>;
             },
             tabBarIcon: (props) => (
-              <Octicons name='graph' color={props.color} size={26} />
+              <Octicons name="graph" color={props.color} size={26} />
             ),
           }}
         />

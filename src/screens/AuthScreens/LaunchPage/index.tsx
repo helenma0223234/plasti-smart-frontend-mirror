@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import AppButton from '../../../components/AppButton';
 import FormatStyle from '../../../utils/FormatStyle';
 import NavType from '../../../utils/NavType';
-import { AuthStackRoutes, UserStackRoutes } from '../../../navigation/routeTypes';
+import { AuthStackRoutes} from '../../../navigation/routeTypes';
 import LogoImage from '../../../assets/dali_dark.svg';
 
 const FrontPage = () => {
@@ -18,11 +18,6 @@ const FrontPage = () => {
             width: 309,
             height: 117,
           }}
-        />
-        <AppButton
-          onPress={() => navigation.navigate(UserStackRoutes.CAMERA)}
-          title={'Camera'}
-          isArrow={true}
         />
         <AppButton
           onPress={() => navigation.navigate(AuthStackRoutes.SIGNIN)}

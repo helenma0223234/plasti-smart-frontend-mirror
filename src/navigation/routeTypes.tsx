@@ -18,6 +18,7 @@ export enum BaseTabRoutes {
   USERS = 'Users',
   RESOURCES = 'Resources',
   FORBIDDEN = 'Forbidden',
+  CAMERA = 'Camera',
 }
 
 export type BaseNavigationList = {
@@ -25,12 +26,5 @@ export type BaseNavigationList = {
   [BaseTabRoutes.USERS]: Record<string, unknown>;
   [BaseTabRoutes.RESOURCES]: Record<string, unknown>;
   [BaseTabRoutes.FORBIDDEN]: Record<string, unknown>;
-};
-
-export enum UserStackRoutes {
-  CAMERA = 'Camera',
-}
-
-export type UserNavigationList = {
-  [UserStackRoutes.CAMERA]: Record<string, unknown>;
+  [BaseTabRoutes.CAMERA]: Record<string, unknown>;
 };

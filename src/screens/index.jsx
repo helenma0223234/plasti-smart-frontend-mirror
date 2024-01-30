@@ -5,11 +5,8 @@ import {
   ResourcesPage,
   UsersPage,
   ForbiddenPage,
+  CameraPage,
 } from "./BaseScreens";
-
-import { 
-  CameraPage 
-} from "./UserScreens";
 
 export {
   SignInPage,

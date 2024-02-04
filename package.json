@@ -27,6 +27,7 @@
     "eslint-plugin-airbnb-base": "^0.0.1-security",
     "eslint-plugin-import": "^2.25.2",
     "expo": "49.0.0",
+    "expo-camera": "13.4.4",
     "expo-dev-client": "~2.4.12",
     "expo-status-bar": "~1.6.0",
     "react": "18.2.0",
@@ -37,7 +38,6 @@
     "react-native-svg": "13.9.0",
     "react-native-svg-transformer": "^1.0.0",
     "react-native-tensorflow": "^0.1.8",
-    "react-native-vision-camera": "^3.8.2",
     "react-native-web": "~0.19.6",
     "react-redux": "^7.2.4",
     "semver": "^7.3.8"

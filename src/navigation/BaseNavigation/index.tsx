@@ -1,20 +1,20 @@
-import React from "react";
-import { Text } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
-import { AntDesign, Octicons, Ionicons } from "@expo/vector-icons";
-import useAppSelector from "hooks/useAppSelector";
-import { UserScopes } from "types/users";
+import React from 'react';
+import { Text } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { AntDesign, Octicons, Ionicons } from '@expo/vector-icons';
+import useAppSelector from 'hooks/useAppSelector';
+import { UserScopes } from 'types/users';
 import {
   FrontPage,
   ResourcesPage,
   UsersPage,
   ForbiddenPage,
   CameraPage,
-} from "screens/BaseScreens";
-import { BaseTabRoutes, BaseNavigationList } from "../routeTypes";
-import Colors from "utils/Colors";
+} from 'screens/BaseScreens';
+import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
+import Colors from 'utils/Colors';
 
 const BaseTab = createBottomTabNavigator<BaseNavigationList>();
 const BaseStack = createStackNavigator<BaseNavigationList>();
@@ -85,11 +85,11 @@ const BaseNavigation = () => {
           tabBarActiveTintColor: Colors.secondary.white,
           tabBarInactiveTintColor: Colors.neutral[8],
         }}
-        initialRouteName={BaseTabRoutes.CAMERA}
+        initialRouteName={BaseTabRoutes.FRONT}
       >
         <BaseTab.Screen
-          name={BaseTabRoutes.CAMERA}
-          component={CameraNavigator}
+          name={BaseTabRoutes.FRONT}
+          component={FrontNavigator}
           options={{
             tabBarLabel: (props) => {
               return <Text style={{ color: props.color }}>home</Text>;
@@ -100,14 +100,14 @@ const BaseNavigation = () => {
           }}
         />
         <BaseTab.Screen
-          name={BaseTabRoutes.FRONT}
-          component={FrontNavigator}
+          name={BaseTabRoutes.CAMERA}
+          component={CameraNavigator}
           options={{
             tabBarLabel: (props) => {
-              return <Text style={{ color: props.color }}>home</Text>;
+              return <Text style={{ color: props.color }}>camera</Text>;
             },
             tabBarIcon: (props) => (
-              <AntDesign name="home" color={props.color} size={26} />
+              <AntDesign name="camera" color={props.color} size={26} />
             ),
           }}
         />

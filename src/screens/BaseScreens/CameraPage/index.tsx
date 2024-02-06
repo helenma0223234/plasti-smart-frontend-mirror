@@ -110,6 +110,8 @@ const styles = StyleSheet.create({
     height: maskHeight,
     width: '86%',
     backgroundColor: 'transparent',
+    borderColor: 'white', // This sets the color of the trim
+    borderWidth: 2,
   },
   sideFrame: {
     backgroundColor: 'rgba(0,0,0,0.4)',

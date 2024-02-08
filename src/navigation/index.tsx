@@ -12,13 +12,13 @@ import BaseNavigation from './BaseNavigation';
 const RootNavigation = () => {
   const { isConnected } = useAppSelector((state) => state.connection);
   const { authenticated, role } = useAppSelector((state) => state.auth);
-  
+
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(checkConnection()).finally(() => { });
+    dispatch(checkConnection()).finally(() => {});
   }, []);
   useEffect(() => {
-    dispatch(initCredentials({})).finally(() => { });
+    dispatch(initCredentials({})).finally(() => {});
   }, []);
   // When the app loads, try to log in with token stored in async storage
   useEffect(() => {
@@ -26,7 +26,10 @@ const RootNavigation = () => {
       dispatch(jwtSignIn({}));
     }
   }, [isConnected]);
-  
+
+  // TODO: This is temporary, remove when auth is implemented
+  // return <BaseNavigation />;
+
   if (!authenticated) {
     return (
       <AuthNavigation />

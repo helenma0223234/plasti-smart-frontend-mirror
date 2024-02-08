@@ -17,10 +17,14 @@ export enum BaseTabRoutes {
   FRONT = 'Front Page',
   USERS = 'Users',
   RESOURCES = 'Resources',
+  FORBIDDEN = 'Forbidden',
+  CAMERA = 'Camera',
 }
 
 export type BaseNavigationList = {
   [BaseTabRoutes.FRONT]: Record<string, unknown>;
   [BaseTabRoutes.USERS]: Record<string, unknown>;
   [BaseTabRoutes.RESOURCES]: Record<string, unknown>;
+  [BaseTabRoutes.FORBIDDEN]: Record<string, unknown>;
+  [BaseTabRoutes.CAMERA]: Record<string, unknown>;
 };

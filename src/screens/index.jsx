@@ -3,6 +3,8 @@ import {
   SignUpPage,
   LaunchPage,
   VerifyPage,
+  OnboardingPage,
+
 } from './AuthScreens';
 
 import { 
@@ -13,6 +15,7 @@ import {
 } from './BaseScreens';
 
 export { 
+  OnboardingPage,
   SignInPage,
   SignUpPage,
   LaunchPage,

@@ -1,22 +1,46 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useRef } from 'react';
 import { Camera, CameraType } from 'expo-camera';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions, Animated } from 'react-native';
 import FormatStyle from '../../../utils/FormatStyle';
 import { Ionicons } from '@expo/vector-icons';
 
-// import * as tf from "react-native-tensorflow";
+// line animation source: https://medium.com/@vivekjoy/creating-a-barcode-scanner-using-expo-barcode-scanner-in-a-react-native-cli-project-2d36a235ab41
 
 const { width, height } = Dimensions.get('window');
+const maskHeight = height * 0.55;
 
 const CameraPage: FC = () => {
   const [type, setType] = useState<CameraType>(CameraType.back);
   const [permissions, requestPermission] = Camera.useCameraPermissions();
+  const [animationLineHeight, setAnimationLineHeight] = useState<number>(0);
+  const [focusLineAnimation, setFocusLineAnimation] = useState<Animated.Value>(new Animated.Value(0));
 
   useEffect(() => {
     (async () => {
       if (!permissions) await requestPermission();
     })();
   }, []);
+
+  useEffect(() => {
+    const animateLine = () => {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(focusLineAnimation, {
+            toValue: 1,
+            duration: 1500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(focusLineAnimation, {
+            toValue: 0,
+            duration: 1500,
+            useNativeDriver: true,
+          }),
+        ]),
+      ).start();
+    };
+
+    animateLine();
+  }, [focusLineAnimation]);
 
   if (!permissions) {
     return <View style={FormatStyle.container}><Text>Requesting permissions...</Text></View>;
@@ -36,35 +60,49 @@ const CameraPage: FC = () => {
   }
 
   return (
-    <View style={FormatStyle.container}>
+    <View style={styles.container}>
       <Camera style={styles.camera} type={type}>
-        <View style={styles.maskOuter}>
-          <View style={[styles.maskRow, styles.maskFrame]} />
-          <View style={styles.maskCenter}>
-            <View style={styles.maskFrame} />
-            <View style={styles.sideFrame} />
-            <View style={styles.maskInner} />
-            <View style={styles.sideFrame} />
-            <View style={styles.maskFrame} />
+        <View style={styles.overlay}>
+          <View style={styles.unfocusedContainer}></View>
+          <View style={styles.middleContainer}>
+            <View style={styles.unfocusedContainer}></View>
+            <View
+              onLayout={e => setAnimationLineHeight(e.nativeEvent.layout.height)}
+              style={styles.focusedContainer}>
+              <Animated.View
+                style={[
+                  styles.animationLineStyle,
+                  {
+                    transform: [
+                      {
+                        translateY: focusLineAnimation.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0, animationLineHeight],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              />
+            </View>
+            <View style={styles.unfocusedContainer}></View>
           </View>
-          <View style={[styles.maskRow, styles.maskFrame]} />
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-            <Ionicons name="camera-reverse-outline" size={36} color="white" />
-          </TouchableOpacity>
+          <View style={styles.unfocusedContainer}></View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
+              <Ionicons name="camera-reverse-outline" size={36} color="white" />
+            </TouchableOpacity>
+          </View>
         </View>
       </Camera>
     </View>
   );
 };
 
-const maskHeight = height * 0.55;
-const maskFrame = (height - maskHeight) / 2;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
   },
   camera: {
     flex: 1,
@@ -83,39 +121,34 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.6)',
     borderRadius: 30,
   },
-  maskOuter: {
+  overlay: {
     position: 'absolute',
     top: 0,
     left: 0,
-    width: width,
-    height: height,
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    right: 0,
+    bottom: 0,
   },
-  maskRow: {
-    width: '100%',
-  },
-  maskFrame: {
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    height: maskFrame,
-  },
-  maskCenter: {
-    flexDirection: 'row',
-    width: '100%',
-    height: maskHeight,
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  maskInner: {
-    height: maskHeight,
-    width: '86%',
-    backgroundColor: 'transparent',
-    borderColor: 'white', // This sets the color of the trim
-    borderWidth: 2,
-  },
-  sideFrame: {
-    backgroundColor: 'rgba(0,0,0,0.4)',
+  unfocusedContainer: {
     flex: 1,
+    backgroundColor: 'transparent',
+  },
+  middleContainer: {
+    flexDirection: 'row',
+    flex: 1.5,
+  },
+  focusedContainer: {
+    flex: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.20)',
+  },
+  animationLineStyle: {
+    height: 2,
+    width: '100%',
+    backgroundColor: 'white',
+  },
+  rescanIconContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

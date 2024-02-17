@@ -20,12 +20,17 @@ import { RootState } from "redux/store";
 const CameraPage = () => {
   const [type, setType] = useState<CameraType>(CameraType.back);
   const [permissions, requestPermission] = Camera.useCameraPermissions();
+
   const [animationLineHeight, setAnimationLineHeight] = useState<number>(0);
   const [focusLineAnimation, setFocusLineAnimation] = useState<Animated.Value>(new Animated.Value(0));
+
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
   const cameraRef = useRef<Camera | null>(null);
+
   const [modelVerdict, setModelVerdict] = useState<number | null>(null);
   const model = useAppSelector((state: RootState) => state.model.model);
+
+  const [manualEntryMode, setManualEntryMode] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {

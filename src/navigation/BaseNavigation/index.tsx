@@ -5,8 +5,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { AntDesign, Octicons, Ionicons } from "@expo/vector-icons";
 import useAppSelector from "hooks/useAppSelector";
-import useAppDispatch from 'hooks/useAppDispatch';
-import { cameraOpened } from '../../redux/slices/cameraSlice';
+import useAppDispatch from "hooks/useAppDispatch";
+import { cameraOpened } from "../../redux/slices/cameraSlice";
 import { UserScopes } from "types/users";
 import {
   FrontPage,
@@ -39,11 +39,12 @@ const FrontNavigator = () => {
   );
 };
 
-const CameraNavigator= () => {
+const CameraNavigator = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(cameraOpened)
-  }, [])
+    dispatch(cameraOpened());
+    console.log("camera opened");
+  }, []);
 
   return (
     <BaseStack.Navigator initialRouteName={BaseTabRoutes.CAMERA}>

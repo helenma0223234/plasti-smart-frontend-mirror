@@ -1,20 +1,22 @@
-import React from 'react';
-import { Text } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
-import { AntDesign, Octicons, Ionicons } from '@expo/vector-icons';
-import useAppSelector from 'hooks/useAppSelector';
-import { UserScopes } from 'types/users';
+import React, { useEffect } from "react";
+import { Text } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { AntDesign, Octicons, Ionicons } from "@expo/vector-icons";
+import useAppSelector from "hooks/useAppSelector";
+import useAppDispatch from 'hooks/useAppDispatch';
+import { cameraOpened } from '../../redux/slices/cameraSlice';
+import { UserScopes } from "types/users";
 import {
   FrontPage,
   ResourcesPage,
   UsersPage,
   ForbiddenPage,
   CameraPage,
-} from 'screens/BaseScreens';
-import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
-import Colors from 'utils/Colors';
+} from "screens/BaseScreens";
+import { BaseTabRoutes, BaseNavigationList } from "../routeTypes";
+import Colors from "utils/Colors";
 
 const BaseTab = createBottomTabNavigator<BaseNavigationList>();
 const BaseStack = createStackNavigator<BaseNavigationList>();
@@ -37,7 +39,12 @@ const FrontNavigator = () => {
   );
 };
 
-const CameraNavigator = () => {
+const CameraNavigator= () => {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(cameraOpened)
+  }, [])
+
   return (
     <BaseStack.Navigator initialRouteName={BaseTabRoutes.CAMERA}>
       <BaseStack.Screen
@@ -74,6 +81,8 @@ const ResourcesNavigator = () => {
 };
 
 const BaseNavigation = () => {
+  const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
+
   return (
     <NavigationContainer>
       <BaseTab.Navigator
@@ -81,6 +90,7 @@ const BaseNavigation = () => {
           header: () => null,
           tabBarStyle: {
             backgroundColor: Colors.primary.normal,
+            display: cameraOpen ? "none" : "flex",
           },
           tabBarActiveTintColor: Colors.secondary.white,
           tabBarInactiveTintColor: Colors.neutral[8],

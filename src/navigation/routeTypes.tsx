@@ -19,6 +19,7 @@ export enum BaseTabRoutes {
   RESOURCES = 'Resources',
   FORBIDDEN = 'Forbidden',
   CAMERA = 'Camera',
+  SCAN_COMPLETE = 'Scan Complete',
 }
 
 export type BaseNavigationList = {
@@ -27,4 +28,5 @@ export type BaseNavigationList = {
   [BaseTabRoutes.RESOURCES]: Record<string, unknown>;
   [BaseTabRoutes.FORBIDDEN]: Record<string, unknown>;
   [BaseTabRoutes.CAMERA]: Record<string, unknown>;
+  [BaseTabRoutes.SCAN_COMPLETE]: Record<string, unknown>;
 };

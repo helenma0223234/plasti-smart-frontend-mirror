@@ -1,12 +1,9 @@
-import React, { useEffect } from "react";
 import { Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { AntDesign, Octicons, Ionicons } from "@expo/vector-icons";
 import useAppSelector from "hooks/useAppSelector";
-import useAppDispatch from "hooks/useAppDispatch";
-import { cameraOpened } from "../../redux/slices/cameraSlice";
 import { UserScopes } from "types/users";
 import {
   FrontPage,
@@ -14,6 +11,7 @@ import {
   UsersPage,
   ForbiddenPage,
   CameraPage,
+  ScanCompletePage,
 } from "screens/BaseScreens";
 import { BaseTabRoutes, BaseNavigationList } from "../routeTypes";
 import Colors from "utils/Colors";
@@ -27,7 +25,7 @@ const ProtectedRoute = (allowableScopes: UserScopes[]) => {
   return allowableScopes.includes(role) && authenticated;
 };
 
-const FrontNavigator = () => {
+export const FrontNavigator = () => {
   return (
     <BaseStack.Navigator initialRouteName={BaseTabRoutes.FRONT}>
       <BaseStack.Screen
@@ -39,13 +37,19 @@ const FrontNavigator = () => {
   );
 };
 
-const CameraNavigator = () => {
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(cameraOpened());
-    console.log("camera opened");
-  }, []);
+const ScanCompleteNavigator = () => {
+  return (
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.SCAN_COMPLETE}>
+      <BaseStack.Screen
+        name={BaseTabRoutes.SCAN_COMPLETE}
+        component={ScanCompletePage}
+        options={{ header: () => null }}
+      />
+    </BaseStack.Navigator>
+  );
+}
 
+const CameraNavigator = () => {
   return (
     <BaseStack.Navigator initialRouteName={BaseTabRoutes.CAMERA}>
       <BaseStack.Screen
@@ -151,6 +155,11 @@ const BaseNavigation = () => {
               <Octicons name="graph" color={props.color} size={26} />
             ),
           }}
+        />
+        <BaseTab.Screen 
+          name={BaseTabRoutes.SCAN_COMPLETE}
+          component={ScanCompleteNavigator}
+          options={{tabBarButton: () => null}}
         />
       </BaseTab.Navigator>
     </NavigationContainer>

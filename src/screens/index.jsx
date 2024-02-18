@@ -6,6 +6,7 @@ import {
   UsersPage,
   ForbiddenPage,
   CameraPage,
+  ScanCompletePage
 } from "./BaseScreens";
 
 export {
@@ -18,4 +19,5 @@ export {
   UsersPage,
   ForbiddenPage,
   CameraPage,
+  ScanCompletePage
 };

@@ -13,10 +13,18 @@ const initialState: ModelState = {
 export const loadModel = createAsyncThunk(
   'model/loadModel',
   async () => {
-    const model = await tfjs.loadLayersModel(MODEL_URL);
-    console.log('Model loaded successfully');
-    return model;
-  },
+    try {
+      await tfjs.ready();
+      const model = await tfjs.loadLayersModel(MODEL_URL);
+      console.log('model loaded in async thunk');
+      return model;
+    }
+    catch (error) {
+      console.log('model not loaded in async thunk', error);
+      throw error;
+    }
+    
+  }
 );
 
 export const modelSlice = createSlice({

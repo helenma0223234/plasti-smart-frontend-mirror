@@ -31,23 +31,27 @@ const RootNavigation = () => {
   // Load the model when the app loads
   useEffect(() => {
     dispatch(loadModel());
+    console.log("loaded model");
+
   }, []);
 
-  if (!authenticated) {
-    return (
-      <AuthNavigation />
-    );
-  } else if (authenticated && role === UserScopes.Unverified) {
-    return (
-      <NavigationContainer>
-        <VerifyPage />
-      </NavigationContainer>
-    );
-  } else {
-    return (
-      <BaseNavigation />
-    );
-  } 
+  return <BaseNavigation />;
+
+  // if (!authenticated) {
+  //   return (
+  //     <AuthNavigation />
+  //   );
+  // } else if (authenticated && role === UserScopes.Unverified) {
+  //   return (
+  //     <NavigationContainer>
+  //       <VerifyPage />
+  //     </NavigationContainer>
+  //   );
+  // } else {
+  //   return (
+  //     <BaseNavigation />
+  //   );
+  // } 
 };
 
 export default RootNavigation;

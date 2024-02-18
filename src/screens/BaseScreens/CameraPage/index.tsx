@@ -59,8 +59,9 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
 
   const [manualEntryMode, setManualEntryMode] = useState<boolean>(false);
 
-  /**************** Button sheet ****************/
+  // buttom sheet
   const bottomSheetRef = useRef(null);
+  
   useEffect(() => {
     (async () => {
       if (!permissions) await requestPermission();
@@ -96,23 +97,23 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   });
 
   useEffect(() => {
-    console.log(model);
+    // console.log(model);
     const classifyImage = async () => {
       if (capturedPhoto && model) {
         try {
           console.log('classifying image');
-          // // Load image
-          // const response = await fetch(capturedPhoto);
-          // const imageDataArrayBuffer = await response.arrayBuffer();
-          // const imageTensor = tf.decodeJpeg(new Uint8Array(imageDataArrayBuffer), 3);
+          // Load image
+          const response = await fetch(capturedPhoto);
+          const imageDataArrayBuffer = await response.arrayBuffer();
+          const imageTensor = tf.decodeJpeg(new Uint8Array(imageDataArrayBuffer), 3);
 
-          // // Preprocess image
-          // const resizedImage = tfjs.image.resizeBilinear(imageTensor, [200, 200]);
-          // const batchedImage = resizedImage.expandDims(0);
+          // Preprocess image
+          const resizedImage = tfjs.image.resizeBilinear(imageTensor, [200, 200]);
+          const batchedImage = resizedImage.expandDims(0);
 
-          // // Classify image
-          // const prediction = await model.predict(batchedImage);
-          // console.log('Prediction', prediction);
+          // Classify image
+          const prediction = await model.predict(batchedImage);
+          console.log('Prediction', prediction);
           //TODO: need to change
           setModelVerdict(1);
           bottomSheetRef.current?.open();
@@ -167,19 +168,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
     <path d="M102.942 63.977L121.893 68.8028M121.893 68.8028L126.971 50.7927M121.893 68.8028L90.6789 17.422C89.4752 15.6572 87.8448 14.1917 85.9237 13.1478C84.0026 12.1039 81.8466 11.5119 79.6357 11.4212C77.4248 11.3305 75.2232 11.7438 73.2146 12.6265C71.206 13.5093 69.4488 14.8358 68.0896 16.4955L63.9899 22.9315" stroke="white" stroke-opacity="0.9" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
 `;
-  // const _BottomSheetRenderItem = ({ item, index }: renderItem) => {
-  //   return (
-  //     <View style={manualEntryStyles.slide}>
-  //       <SvgXml
-  //         style={manualEntryStyles.svg}
-  //         xml={svgMarkup}
-  //         width="105%"
-  //         height="105%"
-  //       />
-  //       <Text style={manualEntryStyles.title}>{item.plasticNumber}</Text>
-  //     </View>
-  //   );
-  // };
 
   /***************** Carousel *****************/
 
@@ -374,7 +362,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
         )} */}
         <RBSheet
           ref={bottomSheetRef}
-          height={300}
+          height={350}
           openDuration={250}
           closeDuration={200}
           closeOnDragDown={true}
@@ -384,29 +372,29 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
               backgroundColor: 'transparent',
             },
             container: {
-              justifyContent: 'center',
-              alignItems: 'center',
+              // justifyContent: 'center',
+              // alignItems: 'center',
               backgroundColor: '#FBFBF4',
             },
           }}
         >
-          <View style={{ alignItems: 'center', marginBottom: 20 }}>
+          <View style={{ flexDirection: 'column', alignItems: 'center', marginBottom: 20, borderColor: 'black', marginTop:6 }}>
             
-            <View style={manualEntryStyles.container}>
-              <View style={manualEntryStyles.slide}>
-                <SvgXml
-                  style={manualEntryStyles.svg}
-                  xml={svgMarkup}
-                  width="105%"
-                  height="105%"
-                />
-                <Text style={manualEntryStyles.title}>{modelVerdict}</Text>
-              </View>
-              <Text style={manualEntryStyles.title}>{`Plastic Type: ${modelVerdict}`}</Text>
+            <View style={{ justifyContent:'center', alignItems:'center', borderColor:'black', width: '50%', maxHeight: '40%', marginBottom: 8, marginTop:10  }}>
+              <SvgXml
+                style={styles.bottomSheetsvg}
+                xml={carouselSVG}
+                width="105%"
+                height="105%"
+              />
+              <Text style={[manualEntryStyles.title]}>{modelVerdict}</Text>
             </View>
+            <Text style={{ fontSize: 16, color: '#1B453C', marginBottom: 20 }}>
+              {`Polymer ${modelVerdict}: HDPE`}
+            </Text>
           
             <TouchableOpacity
-              style={[manualEntryStyles.selectButton, { backgroundColor: '#1B453C' }]}
+              style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
               onPress={() => {
                 setManualEntryMode(false);
                 dispatch(cameraClosed());
@@ -415,17 +403,17 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
                 bottomSheetRef.current?.close();
               }}
             >
-              <Text style={manualEntryStyles.selectButtonText}>Add to Diary</Text>
+              <Text style={styles.bottomSheetSelectButtonText}>Add to Diary</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[manualEntryStyles.selectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
+              style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
               onPress={() => {
                 setManualEntryMode(true);
                 bottomSheetRef.current?.close();
               }}
             >
-              <Text style={[manualEntryStyles.selectButtonText, { color: '#1B453C' }]}>Wrong Symbol</Text>
+              <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>Wrong Symbol</Text>
             </TouchableOpacity>
           </View>
         </RBSheet>
@@ -502,6 +490,7 @@ const manualEntryStyles = StyleSheet.create({
     position: 'relative',
     right: '5.5%',
     bottom: '1%',
+    color: 'black',
   },
   selectButtonContainer: {
     flexDirection: 'column',
@@ -649,6 +638,25 @@ const styles = StyleSheet.create({
   previewImage: {
     width: '100%',
     height: '80%',
+  },
+  bottomSheetsvg: {
+    position: 'relative',
+    right: '4.5%',
+  },
+  bottomSheetSelectButton: {
+    justifyContent: 'center',
+    width: 180,
+    height: 42,
+    backgroundColor: '#1B453C',
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  bottomSheetSelectButtonText: {
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '500',
+    letterSpacing: -0.1,
   },
 });
 

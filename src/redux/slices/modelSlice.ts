@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import * as tfjs from "@tensorflow/tfjs";
-import {MODEL_URL} from '../../utils/constants';
+import * as tfjs from '@tensorflow/tfjs';
+import { MODEL_URL } from '../../utils/constants';
 
 export interface ModelState {
   model: tfjs.LayersModel | null;
 }
 
 const initialState: ModelState = {
-  model: null
+  model: null,
 };
 
 export const loadModel = createAsyncThunk(

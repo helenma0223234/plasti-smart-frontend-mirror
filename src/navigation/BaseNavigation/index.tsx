@@ -1,22 +1,23 @@
-import React, { useEffect } from "react";
-import { Text } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
-import { AntDesign, Octicons, Ionicons } from "@expo/vector-icons";
-import useAppSelector from "hooks/useAppSelector";
-import useAppDispatch from 'hooks/useAppDispatch';
-import { cameraOpened } from '../../redux/slices/cameraSlice';
-import { UserScopes } from "types/users";
+import { Text } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { AntDesign, Octicons, Ionicons } from '@expo/vector-icons';
+import useAppSelector from 'hooks/useAppSelector';
+import { UserScopes } from 'types/users';
 import {
   FrontPage,
   ResourcesPage,
   UsersPage,
   ForbiddenPage,
   CameraPage,
-} from "screens/BaseScreens";
-import { BaseTabRoutes, BaseNavigationList } from "../routeTypes";
-import Colors from "utils/Colors";
+  ScanCompletePage,
+} from 'screens/BaseScreens';
+import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
+import Colors from 'utils/Colors';
+import useAppDispatch from 'hooks/useAppDispatch';
+import { loadModel } from 'redux/slices/modelSlice';
+import { useEffect } from 'react';
 
 const BaseTab = createBottomTabNavigator<BaseNavigationList>();
 const BaseStack = createStackNavigator<BaseNavigationList>();
@@ -27,7 +28,7 @@ const ProtectedRoute = (allowableScopes: UserScopes[]) => {
   return allowableScopes.includes(role) && authenticated;
 };
 
-const FrontNavigator = () => {
+export const FrontNavigator = () => {
   return (
     <BaseStack.Navigator initialRouteName={BaseTabRoutes.FRONT}>
       <BaseStack.Screen
@@ -39,12 +40,19 @@ const FrontNavigator = () => {
   );
 };
 
-const CameraNavigator= () => {
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(cameraOpened)
-  }, [])
+const ScanCompleteNavigator = () => {
+  return (
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.SCAN_COMPLETE}>
+      <BaseStack.Screen
+        name={BaseTabRoutes.SCAN_COMPLETE}
+        component={ScanCompletePage}
+        options={{ header: () => null }}
+      />
+    </BaseStack.Navigator>
+  );
+};
 
+const CameraNavigator = () => {
   return (
     <BaseStack.Navigator initialRouteName={BaseTabRoutes.CAMERA}>
       <BaseStack.Screen
@@ -82,6 +90,9 @@ const ResourcesNavigator = () => {
 
 const BaseNavigation = () => {
   const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
+  useEffect(() => {
+    useAppDispatch(loadModel());
+  }, [] );
 
   return (
     <NavigationContainer>
@@ -90,7 +101,7 @@ const BaseNavigation = () => {
           header: () => null,
           tabBarStyle: {
             backgroundColor: Colors.primary.normal,
-            display: cameraOpen ? "none" : "flex",
+            display: cameraOpen ? 'none' : 'flex',
           },
           tabBarActiveTintColor: Colors.secondary.white,
           tabBarInactiveTintColor: Colors.neutral[8],
@@ -150,6 +161,11 @@ const BaseNavigation = () => {
               <Octicons name="graph" color={props.color} size={26} />
             ),
           }}
+        />
+        <BaseTab.Screen 
+          name={BaseTabRoutes.SCAN_COMPLETE}
+          component={ScanCompleteNavigator}
+          options={{ tabBarButton: () => null }}
         />
       </BaseTab.Navigator>
     </NavigationContainer>

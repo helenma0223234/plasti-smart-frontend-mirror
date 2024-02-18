@@ -89,7 +89,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
     };
 
     animateLine();
-  }, [focusLineAnimation]);
+  });
 
   useEffect(() => {
     const classifyImage = async () => {

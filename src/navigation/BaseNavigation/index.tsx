@@ -1,10 +1,10 @@
-import { Text } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
-import { AntDesign, Octicons, Ionicons } from "@expo/vector-icons";
-import useAppSelector from "hooks/useAppSelector";
-import { UserScopes } from "types/users";
+import { Text } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { AntDesign, Octicons, Ionicons } from '@expo/vector-icons';
+import useAppSelector from 'hooks/useAppSelector';
+import { UserScopes } from 'types/users';
 import {
   FrontPage,
   ResourcesPage,
@@ -12,9 +12,12 @@ import {
   ForbiddenPage,
   CameraPage,
   ScanCompletePage,
-} from "screens/BaseScreens";
-import { BaseTabRoutes, BaseNavigationList } from "../routeTypes";
-import Colors from "utils/Colors";
+} from 'screens/BaseScreens';
+import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
+import Colors from 'utils/Colors';
+import useAppDispatch from 'hooks/useAppDispatch';
+import { loadModel } from 'redux/slices/modelSlice';
+import { useEffect } from 'react';
 
 const BaseTab = createBottomTabNavigator<BaseNavigationList>();
 const BaseStack = createStackNavigator<BaseNavigationList>();
@@ -47,7 +50,7 @@ const ScanCompleteNavigator = () => {
       />
     </BaseStack.Navigator>
   );
-}
+};
 
 const CameraNavigator = () => {
   return (
@@ -87,6 +90,9 @@ const ResourcesNavigator = () => {
 
 const BaseNavigation = () => {
   const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
+  useEffect(() => {
+    useAppDispatch(loadModel());
+  }, [] );
 
   return (
     <NavigationContainer>
@@ -95,7 +101,7 @@ const BaseNavigation = () => {
           header: () => null,
           tabBarStyle: {
             backgroundColor: Colors.primary.normal,
-            display: cameraOpen ? "none" : "flex",
+            display: cameraOpen ? 'none' : 'flex',
           },
           tabBarActiveTintColor: Colors.secondary.white,
           tabBarInactiveTintColor: Colors.neutral[8],
@@ -159,7 +165,7 @@ const BaseNavigation = () => {
         <BaseTab.Screen 
           name={BaseTabRoutes.SCAN_COMPLETE}
           component={ScanCompleteNavigator}
-          options={{tabBarButton: () => null}}
+          options={{ tabBarButton: () => null }}
         />
       </BaseTab.Navigator>
     </NavigationContainer>

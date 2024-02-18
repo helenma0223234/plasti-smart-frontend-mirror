@@ -11,5 +11,5 @@ export {
   UsersPage,
   ForbiddenPage,
   CameraPage,
-  ScanCompletePage
+  ScanCompletePage,
 };

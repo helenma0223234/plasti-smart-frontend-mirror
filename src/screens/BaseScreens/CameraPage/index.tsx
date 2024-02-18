@@ -1,33 +1,31 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-len */
-import React, { FC, useState, useEffect, useRef } from 'react';
-import { Camera, CameraType } from 'expo-camera';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Animated, Image } from 'react-native';
-import FormatStyle from '../../../utils/FormatStyle';
-import { Ionicons } from '@expo/vector-icons';
-import { SvgXml } from 'react-native-svg'; 
-
-import * as tf from '@tensorflow/tfjs';
-import '@tensorflow/tfjs-react-native';
-import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
-import * as FileSystem from 'expo-file-system';
-import { LayersModel } from '@tensorflow/tfjs';
+import React, { useState, useEffect, useRef } from "react";
+import { Camera, CameraType } from "expo-camera";
+import { View, Text, Button, StyleSheet, TouchableOpacity, Animated, Image } from "react-native";
+import FormatStyle from "../../../utils/FormatStyle";
+import { Ionicons } from "@expo/vector-icons";
+import { SvgXml } from "react-native-svg";
+import * as tf from "@tensorflow/tfjs-react-native";
+import * as tfjs from "@tensorflow/tfjs";
+import useAppSelector from "../../../hooks/useAppSelector";
+import { RootState } from "redux/store";
 
 // line animation source: https://medium.com/@vivekjoy/creating-a-barcode-scanner-using-expo-barcode-scanner-in-a-react-native-cli-project-2d36a235ab41
 
 // const { width, height } = Dimensions.get('window');
 // const maskHeight = height * 0.55;
 
-const CameraPage: FC = () => {
+
+const CameraPage = () => {
   const [type, setType] = useState<CameraType>(CameraType.back);
   const [permissions, requestPermission] = Camera.useCameraPermissions();
   const [animationLineHeight, setAnimationLineHeight] = useState<number>(0);
   const [focusLineAnimation, setFocusLineAnimation] = useState<Animated.Value>(new Animated.Value(0));
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
   const cameraRef = useRef<Camera | null>(null);
-
-  const [model, setModel] = useState<LayersModel | null>(null);
-  const [isTfReady, setIsTfReady] = useState(false);
+  const [modelVerdict, setModelVerdict] = useState<number | null>(null);
+  const model = useAppSelector((state: RootState) => state.model.model);
 
   useEffect(() => {
     (async () => {
@@ -49,39 +47,48 @@ const CameraPage: FC = () => {
             duration: 1500,
             useNativeDriver: true,
           }),
-        ]),
+        ])
       ).start();
     };
 
     animateLine();
   }, [focusLineAnimation]);
 
-  const loadModel = async () => {
-    try {
-      // Adjust these paths according to where your model is located
-      const modelJson = require('../../../utils/model.json');
-      const modelWeights = require('../../../utils/group1-shard1of9.bin');
-  
-      const modelLoaded = bundleResourceIO(modelJson, modelWeights);
-      setModel(modelLoaded);
-      console.log('Model loaded successfully');
-    } catch (error) {
-      console.error('Error loading model:', error);
-    }
-  };
-
   useEffect(() => {
-    const initializeTf = async () => {
-      await tf.ready(); // wait for tf to be ready.
-      console.log('here');
-      setIsTfReady(true);
-      loadModel();
+    const classifyImage = async () => {
+      if (capturedPhoto && model) {
+        try {
+          console.log("classifying image");
+          // Load image
+          const response = await fetch(capturedPhoto);
+          const imageDataArrayBuffer = await response.arrayBuffer();
+          const imageTensor = tf.decodeJpeg(new Uint8Array(imageDataArrayBuffer), 3);
+
+          // Preprocess image
+          const resizedImage = tfjs.image.resizeBilinear(imageTensor, [200, 200]);
+          const batchedImage = resizedImage.expandDims(0);
+
+          // Classify image
+          const prediction = await model.predict(batchedImage);
+          console.log("Prediction", prediction);
+          //TODO: need to change
+          setModelVerdict(1);
+        } catch (error) {
+          console.error("Error classifying image:", error);
+        }
+      }
     };
-    initializeTf();
-  }, []);
+
+    classifyImage();
+  }, [capturedPhoto]);
+
 
   if (!permissions) {
-    return <View style={FormatStyle.container}><Text>Requesting permissions...</Text></View>;
+    return (
+      <View style={FormatStyle.container}>
+        <Text>Requesting permissions...</Text>
+      </View>
+    );
   }
 
   if (!permissions.granted) {
@@ -126,8 +133,11 @@ const CameraPage: FC = () => {
           <View style={styles.middleContainer}>
             <View style={styles.unfocusedContainer}></View>
             <View
-              onLayout={e => setAnimationLineHeight(e.nativeEvent.layout.height)}
-              style={styles.focusedContainer}>
+              onLayout={(e) =>
+                setAnimationLineHeight(e.nativeEvent.layout.height)
+              }
+              style={styles.focusedContainer}
+            >
               <Animated.View
                 style={[
                   styles.animationLineStyle,
@@ -172,11 +182,11 @@ const CameraPage: FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
+    position: "relative",
   },
   camera: {
     flex: 1,
-    width: '100%',
+    width: "100%",
   },
   buttonContainer: {
     position: 'absolute',
@@ -184,15 +194,15 @@ const styles = StyleSheet.create({
     right: '8%',
   },
   button: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     width: 60,
     height: 60,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: "rgba(0,0,0,0.6)",
     borderRadius: 30,
   },
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -204,7 +214,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   middleContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     flex: 1.5,
   },
   focusedContainer: {
@@ -214,8 +224,8 @@ const styles = StyleSheet.create({
   },
   animationLineStyle: {
     height: 2,
-    width: '100%',
-    backgroundColor: 'white',
+    width: "100%",
+    backgroundColor: "white",
   },
   rescanIconContainer: {
     flex: 1,

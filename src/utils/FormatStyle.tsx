@@ -1,6 +1,12 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
 const FormatStyle = StyleSheet.create({
+  topContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+  },
+  
   container: {
     flex: 1,
     backgroundColor: '#fff',

@@ -2,14 +2,15 @@ import { Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { AntDesign, Octicons, Ionicons } from '@expo/vector-icons';
+import { AntDesign, Octicons, Ionicons, MaterialIcons, Feather } from '@expo/vector-icons';
 import useAppSelector from 'hooks/useAppSelector';
 import { UserScopes } from 'types/users';
 import {
   FrontPage,
   ResourcesPage,
   UsersPage,
-  ForbiddenPage,
+  ForbiddenPage, 
+  HomePage,
   CameraPage,
   ScanCompletePage,
 } from 'screens/BaseScreens';
@@ -30,15 +31,22 @@ const ProtectedRoute = (allowableScopes: UserScopes[]) => {
 
 export const FrontNavigator = () => {
   return (
-    <BaseStack.Navigator initialRouteName={BaseTabRoutes.FRONT}>
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.HOME}>
+      <BaseStack.Screen
+        name={BaseTabRoutes.HOME}
+        component={HomePage}
+        options={{ header: () => null }}
+      />
       <BaseStack.Screen
         name={BaseTabRoutes.FRONT}
         component={FrontPage}
         options={{ header: () => null }}
       />
+  
     </BaseStack.Navigator>
   );
 };
+
 
 const ScanCompleteNavigator = () => {
   return (
@@ -90,8 +98,9 @@ const ResourcesNavigator = () => {
 
 const BaseNavigation = () => {
   const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    useAppDispatch(loadModel());
+    dispatch(loadModel());
   }, [] );
 
   return (
@@ -100,23 +109,28 @@ const BaseNavigation = () => {
         screenOptions={{
           header: () => null,
           tabBarStyle: {
-            backgroundColor: Colors.primary.normal,
+            backgroundColor: Colors.secondary.white,
+            height: 100,
+            borderRadius: 20,
+
             display: cameraOpen ? 'none' : 'flex',
           },
-          tabBarActiveTintColor: Colors.secondary.white,
-          tabBarInactiveTintColor: Colors.neutral[8],
+          tabBarActiveTintColor: Colors.primary.dark,
+          tabBarInactiveTintColor: Colors.neutral[2],
         }}
-        initialRouteName={BaseTabRoutes.FRONT}
+        initialRouteName={BaseTabRoutes.HOME}
       >
+
+
         <BaseTab.Screen
           name={BaseTabRoutes.FRONT}
           component={FrontNavigator}
           options={{
             tabBarLabel: (props) => {
-              return <Text style={{ color: props.color }}>home</Text>;
+              return (null);
             },
             tabBarIcon: (props) => (
-              <AntDesign name="home" color={props.color} size={26} />
+              <Feather name="home" size={40} color={props.color} />
             ),
           }}
         />
@@ -139,11 +153,12 @@ const BaseNavigation = () => {
           }
           options={{
             tabBarLabel: (props) => {
-              return <Text style={{ color: props.color }}>users</Text>;
+              return (
+                null
+              );
             },
             tabBarIcon: (props) => (
-              <Ionicons name="person-outline" color={props.color} size={26} />
-            ),
+              <Feather name="user" size={40} color={props.color} />),
           }}
         />
         <BaseTab.Screen
@@ -155,11 +170,11 @@ const BaseNavigation = () => {
           }
           options={{
             tabBarLabel: (props) => {
-              return <Text style={{ color: props.color }}>resources</Text>;
+              return (
+                null);
             },
             tabBarIcon: (props) => (
-              <Octicons name="graph" color={props.color} size={26} />
-            ),
+              <Feather name="book-open" size={40} color={props.color} />),
           }}
         />
         <BaseTab.Screen 

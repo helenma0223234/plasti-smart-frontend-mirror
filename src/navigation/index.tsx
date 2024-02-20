@@ -31,7 +31,7 @@ const RootNavigation = () => {
   // Load the model when the app loads
   useEffect(() => {
     dispatch(loadModel());
-    console.log("loaded model");
+    console.log('loaded model');
 
   }, []);
 

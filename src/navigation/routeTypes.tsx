@@ -5,9 +5,11 @@ export enum AuthStackRoutes {
   LAUNCH = 'Launch',
   SIGNIN = 'Sign In',
   SIGNUP = 'Sign Up',
+  ONBOARD = 'Onboard',
 }
 
 export type AuthNavigationList = {
+  [AuthStackRoutes.ONBOARD]: Record<string, unknown>;
   [AuthStackRoutes.LAUNCH]: Record<string, unknown>;
   [AuthStackRoutes.SIGNIN]: Record<string, unknown>;
   [AuthStackRoutes.SIGNUP]: Record<string, unknown>;
@@ -20,6 +22,7 @@ export enum BaseTabRoutes {
   FORBIDDEN = 'Forbidden',
   CAMERA = 'Camera',
   SCAN_COMPLETE = 'Scan Complete',
+  HOME = 'Home',
 }
 
 export type BaseNavigationList = {
@@ -29,4 +32,6 @@ export type BaseNavigationList = {
   [BaseTabRoutes.FORBIDDEN]: Record<string, unknown>;
   [BaseTabRoutes.CAMERA]: Record<string, unknown>;
   [BaseTabRoutes.SCAN_COMPLETE]: Record<string, unknown>;
+  [BaseTabRoutes.HOME]: Record<string, unknown>;
+
 };

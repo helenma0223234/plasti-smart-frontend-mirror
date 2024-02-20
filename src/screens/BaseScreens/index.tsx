@@ -4,6 +4,7 @@ import UsersPage from './UsersPage';
 import ForbiddenPage from './ForbiddenPage';
 import CameraPage from './CameraPage';
 import ScanCompletePage from './ScanCompletePage';
+import HomePage from './HomePage';
 
 export {
   FrontPage,
@@ -12,4 +13,5 @@ export {
   ForbiddenPage,
   CameraPage,
   ScanCompletePage,
+  HomePage,
 };

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ScrollView, SafeAreaView, Text, View, Image, StyleSheet } from 'react-native';
+import { ScrollView, SafeAreaView, Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
 import { logout } from '../../../redux/slices/authSlice';
 import AppButton from '../../../components/AppButton';
@@ -8,18 +8,17 @@ import CircleBG from '../../../assets/Ellipse 66.svg';
 import Title from 'components/Title';
 import { AntDesign } from '@expo/vector-icons';
 
-
 import Svg, { G, Circle } from 'react-native-svg';
 import Animated from 'react-native-reanimated';
 import CircularProgress from 'react-native-circular-progress-indicator';
 
 import Cat from '../../../assets/Cat.svg';
-import Heart from '../../../assets/Heart.svg'
-import EmptyHeart from '../../../assets/EmptyHeart.svg'
+import Heart from '../../../assets/Heart.svg';
+import EmptyHeart from '../../../assets/EmptyHeart.svg';
+import Snack from '../../../assets/Snack.svg';
 
 import Calendar from 'components/Calendar';
 import Colors from 'utils/Colors';
-
 
 
 
@@ -30,6 +29,17 @@ const HomePage = () => {
   const TOTAL = 40;
   const dummyDates = [29, 30, 1, 2, 3, 4, 5];
   const [progress, setProgress] = useState(TOTAL - 30);
+  const [hearts, setHearts] = useState(0);
+  const [snacks, setSnacks] = useState(2);
+
+  const addHeart = () => {
+    setHearts(hearts + 1);
+  };
+
+  const eatSnacks = () => {
+    setSnacks(Math.max(0, snacks - 1));
+  };
+
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container, justifyContent: 'flex-start' }}>
@@ -60,7 +70,8 @@ const HomePage = () => {
           <Cat></Cat>
         </View>
         <Place number={1}></Place>
-        <HappyScale happiness={3} ></HappyScale>
+        <SnackButton snacks={snacks} setHearts={addHeart} setSnacks={eatSnacks}></SnackButton>
+        <HappyScale happiness={hearts} ></HappyScale>
 
 
         <View style={{ flexDirection: 'column', position: 'absolute', right: 10, bottom: -80 }}>
@@ -92,6 +103,7 @@ const HomePage = () => {
 
 interface HappyProps {
   happiness: number
+
 }
 
 const HappyScale = ({ happiness }: HappyProps) => {
@@ -116,15 +128,15 @@ interface PlaceProps {
   number: number
 }
 
-const Place = ({ number } : PlaceProps) => {
+const Place = ({ number }: PlaceProps) => {
   let suffix;
-  if (number % 10 == 1) suffix = 'st'; 
-  else if (number % 10 == 2) suffix = 'nd'; 
-  else if (number % 10 == 3) suffix = 'rd'; 
-  else suffix = 'th'; 
+  if (number % 10 == 1) suffix = 'st';
+  else if (number % 10 == 2) suffix = 'nd';
+  else if (number % 10 == 3) suffix = 'rd';
+  else suffix = 'th';
 
   return (
-    <View style={{ ...FormatStyle.circle, backgroundColor: Colors.primary.dark, width: 70, height: 70, position: 'absolute',  gap: -5, left: 20, bottom: 340 }}>
+    <View style={{ ...FormatStyle.circle, backgroundColor: Colors.primary.dark, width: 70, height: 70, position: 'absolute', gap: -5, left: 20, bottom: 340 }}>
       <Text style={{ color: Colors.secondary.light, fontSize: 30 }}>{number}{suffix}</Text>
       <Text style={{ color: Colors.secondary.light, fontSize: 15 }}>Place</Text>
 
@@ -133,6 +145,37 @@ const Place = ({ number } : PlaceProps) => {
 };
 
 
+interface SnackProps {
+  snacks: number
+  setHearts: () => void;
+  setSnacks: () => void;
+
+}
+
+const SnackButton = ({ snacks, setHearts, setSnacks }: SnackProps) => {
+  const handlePress = () => {
+    // Increment the parent state by 1
+    if (snacks > 0) {
+      setHearts();
+      setSnacks();
+    }
+  };
+
+  return (
+    <TouchableOpacity onPress={handlePress} style={{ position: 'absolute', right: 20, bottom: 450, alignItems: 'center' }}>
+      <View style={{ ...FormatStyle.circle, backgroundColor: Colors.secondary.light, width: 30, height: 30, position: 'relative', top: 40, right: -20, borderColor: 'transparent', zIndex: 1 }}>
+        <Text>{snacks}</Text>
+      </View>
+
+      <View style={{ ...FormatStyle.circle, backgroundColor: Colors.primary.dark, width: 70, height: 70 }}>
+        <Snack></Snack>
+
+      </View>
+
+      <Text>snacks</Text>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   scroll: {

@@ -112,7 +112,7 @@ const BaseNavigation = () => {
             backgroundColor: Colors.secondary.white,
             height: 100,
             borderRadius: 20,
-
+            
             display: cameraOpen ? 'none' : 'flex',
           },
           tabBarActiveTintColor: Colors.primary.dark,
@@ -139,10 +139,10 @@ const BaseNavigation = () => {
           component={CameraNavigator}
           options={{
             tabBarLabel: (props) => {
-              return <Text style={{ color: props.color }}>camera</Text>;
+              return null;
             },
             tabBarIcon: (props) => (
-              <AntDesign name="camera" color={props.color} size={26} />
+              <AntDesign name="camera" color={props.color} size={40} />
             ),
           }}
         />

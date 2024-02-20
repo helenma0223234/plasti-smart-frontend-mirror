@@ -59,7 +59,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
 
   const [manualEntryMode, setManualEntryMode] = useState<boolean>(false);
 
-  // buttom sheet
+  // bottom sheet
   const bottomSheetRef = useRef(null);
   
   useEffect(() => {
@@ -71,7 +71,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   useFocusEffect(
     useCallback(() => {
       dispatch(cameraOpened());
-      console.log('CameraPage was focused');
     }, []),
   );
 
@@ -97,11 +96,10 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   });
 
   useEffect(() => {
-    // console.log(model);
+    console.log(model);
     const classifyImage = async () => {
       if (capturedPhoto && model) {
         try {
-          console.log('classifying image');
           // Load image
           const response = await fetch(capturedPhoto);
           const imageDataArrayBuffer = await response.arrayBuffer();
@@ -113,10 +111,16 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
 
           // Classify image
           const prediction = await model.predict(batchedImage);
-          console.log('Prediction', prediction);
-          //TODO: need to change
-          setModelVerdict(1);
-          bottomSheetRef.current?.open();
+          if (prediction instanceof tfjs.Tensor) {
+            const predictionArray = prediction.dataSync();
+            const predictionValues = Array.from(predictionArray);
+            // finding the index w/ maximum value (class with the highest probability)
+            const predictedIndex = predictionValues.indexOf(Math.max(...predictionValues));
+            setModelVerdict(4);
+            bottomSheetRef.current?.open();
+          } else {
+            console.error('Error classifying image: prediction is not a tensor');
+          }
         } catch (error) {
           console.error('Error classifying image:', error);
         }
@@ -387,7 +391,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
                 width="105%"
                 height="105%"
               />
-              <Text style={[manualEntryStyles.title]}>{modelVerdict}</Text>
+              <Text style={[styles.bottomSheetTitle]}>{modelVerdict}</Text>
             </View>
             <Text style={{ fontSize: 16, color: '#1B453C', marginBottom: 20 }}>
               {`Polymer ${modelVerdict}: HDPE`}
@@ -657,6 +661,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '500',
     letterSpacing: -0.1,
+  },
+  bottomSheetTitle: {
+    fontSize: 35,
+    color: '#1B453C',
+    fontWeight: 'bold',
+    position: 'absolute',
   },
 });
 

@@ -2,13 +2,13 @@ export default {
   primary: {
     light: '#05C3DD',
     normal: '#737B7D',
-    dark: '#0077A8',
+    dark: '#1B453C',
   },
   secondary: {
-    light: '#E0F2E1',
-    normal: '#A7DBAA',
-    dark: '#69CD6F',
-    white: '#FFFFFF',
+    light: '#DAE5D7',
+    normal: '#F4F3E7',
+    dark: '',
+    white: '#FBFBF4',
   },
   neutral: {
     1: '#E2E7EC',
@@ -21,5 +21,5 @@ export default {
     8: '#2A2F38',
   },
   error: '#FF4D3D',
-  highlight: '#FFD700',
+  highlight: '#CC554E',
 };

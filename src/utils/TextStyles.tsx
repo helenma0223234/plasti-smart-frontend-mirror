@@ -2,12 +2,12 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   logo: {
-    color: '#B1B1B1',
-    fontSize: 56,
-    // fontFamily: 'Mulish',
-    fontWeight: '700',
-    lineHeight: 72,
-    letterSpacing: 0.20,
+    fontFamily: 'ITC Cheltenham Std',
+    fontSize: 30,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 28, /* 93.333% */
+    letterSpacing: -0.4,
   },
   title: {
     fontSize: 36,

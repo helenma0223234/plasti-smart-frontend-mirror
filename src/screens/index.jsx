@@ -12,6 +12,7 @@ import {
   ResourcesPage,
   UsersPage,
   ForbiddenPage,
+  HomePage,
 } from './BaseScreens';
 
 export { 
@@ -24,4 +25,5 @@ export {
   ResourcesPage, 
   UsersPage,
   ForbiddenPage,
+  HomePage,
 };

@@ -12,7 +12,7 @@ import BaseNavigation from './BaseNavigation';
 const RootNavigation = () => {
   const { isConnected } = useAppSelector((state) => state.connection);
   const { authenticated, role } = useAppSelector((state) => state.auth);
-  
+
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(checkConnection()).finally(() => { });
@@ -26,12 +26,12 @@ const RootNavigation = () => {
       dispatch(jwtSignIn({}));
     }
   }, [isConnected]);
-  
+
   if (!authenticated) {
     return (
-      // <BaseNavigation />
+      <BaseNavigation />
 
-      <AuthNavigation />
+    // <AuthNavigation />
     );
   } else if (authenticated && role === UserScopes.Unverified) {
     return (

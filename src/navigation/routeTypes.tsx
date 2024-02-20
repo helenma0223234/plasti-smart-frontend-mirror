@@ -19,10 +19,13 @@ export enum BaseTabRoutes {
   FRONT = 'Front Page',
   USERS = 'Users',
   RESOURCES = 'Resources',
+  HOME = 'Home',
 }
 
 export type BaseNavigationList = {
   [BaseTabRoutes.FRONT]: Record<string, unknown>;
   [BaseTabRoutes.USERS]: Record<string, unknown>;
   [BaseTabRoutes.RESOURCES]: Record<string, unknown>;
+  [BaseTabRoutes.HOME]: Record<string, unknown>;
+
 };

@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Animated,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import FormatStyle from '../../../utils/FormatStyle';
 import { Ionicons } from '@expo/vector-icons';
@@ -58,6 +59,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   const dispatch = useAppDispatch();
 
   const [manualEntryMode, setManualEntryMode] = useState<boolean>(false);
+  const [isAnimating, setIsAnimating] = useState(true);
 
   // bottom sheet
   const bottomSheetRef = useRef(null);
@@ -70,34 +72,47 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
 
   useFocusEffect(
     useCallback(() => {
+      console.log('camera page focused');
+      setIsAnimating(true);
+      console.log(isAnimating);
+      setCapturedPhoto(null);
+      console.log(capturedPhoto);
       dispatch(cameraOpened());
-    }, []),
+  
+      let animation: Animated.CompositeAnimation | undefined;
+      // console.log('I am in use EFFECT');
+      if (isAnimating) {
+        // console.log('I am reacting to isAnimating');
+        animation = Animated.loop(
+          Animated.sequence([
+            Animated.timing(focusLineAnimation, {
+              toValue: 1,
+              duration: 1500,
+              useNativeDriver: true,
+            }),
+            Animated.timing(focusLineAnimation, {
+              toValue: 0,
+              duration: 1500,
+              useNativeDriver: true,
+            }),
+          ]),
+        );
+    
+        animation.start();
+      }
+    
+      return () => animation && animation.stop();
+    }, [navigation, isAnimating]),
   );
 
   useEffect(() => {
-    const animateLine = () => {
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(focusLineAnimation, {
-            toValue: 1,
-            duration: 1500,
-            useNativeDriver: true,
-          }),
-          Animated.timing(focusLineAnimation, {
-            toValue: 0,
-            duration: 1500,
-            useNativeDriver: true,
-          }),
-        ]),
-      ).start();
-    };
-
-    animateLine();
-  });
-
-  useEffect(() => {
-    console.log(model);
     const classifyImage = async () => {
+      // for development purposes
+      // if (capturedPhoto) {
+      //   setModelVerdict(4);
+      //   bottomSheetRef.current?.open();
+      // }
+
       if (capturedPhoto && model) {
         try {
           // Load image
@@ -218,6 +233,8 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
     setManualEntryMode(false);
 
     //TODO: Send API request to backend with plastic number, plastic letter, and userID
+    setIsAnimating(false);
+    setCapturedPhoto(null);
     dispatch(cameraClosed());
     navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
   };
@@ -231,6 +248,8 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
               style={manualEntryStyles.backButton}
               onPress={() => {
                 setManualEntryMode(false);
+                setCapturedPhoto(null);
+                setIsAnimating(false);
               }}
             >
               <Ionicons name="arrow-back-outline" size={36} color="#1B453C" />
@@ -273,6 +292,8 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   };
 
   const goToFrontPage = () => {
+    setCapturedPhoto(null);
+    setIsAnimating(false);
     dispatch(cameraClosed());
     console.log('camera closed');
     navigation.navigate(BaseTabRoutes.FRONT, {});
@@ -300,40 +321,52 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
                   style={styles.manualEntryButton}
                   onPress={() => {
                     setManualEntryMode(true);
+                    setIsAnimating(false);
                   }}
                 >
                   <Text style={styles.manualEntryText}>Manually Enter</Text>
                 </TouchableOpacity>
               </View>
             </View>
+            <View style={styles.cameraTextContainer}>
+              <Text style={styles.cameraText}>
+                {capturedPhoto ? 'Polymer captured, recognizing...' : 'Center the polymer icon'}
+              </Text>
+            </View>
             <View style={styles.middleContainer}>
               <View style={styles.unfocusedContainer}></View>
-
               <View
                 onLayout={(e) =>
                   setAnimationLineHeight(e.nativeEvent.layout.height)
                 }
                 style={styles.focusedContainer}
               >
-                <Animated.View
-                  style={[
-                    styles.animationLineStyle,
-                    {
-                      transform: [
+                {capturedPhoto ? (
+                  <ActivityIndicator size="large" color="white" style={{ alignSelf: 'center', position:'absolute', bottom:'45%' }}/>
+                ) : (
+                  <>
+                    <Animated.View
+                      style={[
+                        styles.animationLineStyle,
                         {
-                          translateY: focusLineAnimation.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [0, animationLineHeight],
-                          }),
+                          transform: [
+                            {
+                              translateY: focusLineAnimation.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [0, animationLineHeight],
+                              }),
+                            },
+                          ],
                         },
-                      ],
-                    },
-                  ]}
-                />
-                <SvgXml xml={svgMarkup} width="90%" height="95%" />
+                      ]}
+                    />
+                    <SvgXml xml={svgMarkup} style={{ position: 'absolute', right:'18.5%', bottom:'15.5%' }} width="70%" height="70%" />
+                  </>
+                )}
               </View>
               <View style={styles.unfocusedContainer}></View>
             </View>
+
             <View style={styles.bottomContainer}>
               <View style={styles.flipButtonContainer}>
                 <TouchableOpacity
@@ -356,14 +389,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
             </View>
           </View>
         </Camera>
-        {/* {capturedPhoto && (
-          <View style={styles.previewContainer}>
-            <Image
-              source={{ uri: capturedPhoto }}
-              style={styles.previewImage}
-            />
-          </View>
-        )} */}
         <RBSheet
           ref={bottomSheetRef}
           height={350}
@@ -376,8 +401,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
               backgroundColor: 'transparent',
             },
             container: {
-              // justifyContent: 'center',
-              // alignItems: 'center',
               backgroundColor: '#FBFBF4',
             },
           }}
@@ -400,11 +423,15 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
             <TouchableOpacity
               style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
               onPress={() => {
+                // bottomSheetRef.current?.close();
                 setManualEntryMode(false);
+                setIsAnimating(false);
+                setCapturedPhoto(null);
                 dispatch(cameraClosed());
+                
+                bottomSheetRef.current?.close();
                 navigation.navigate(BaseTabRoutes.SCAN_COMPLETE);
                 // TODO: add integrate backend api here
-                bottomSheetRef.current?.close();
               }}
             >
               <Text style={styles.bottomSheetSelectButtonText}>Add to Diary</Text>
@@ -413,8 +440,12 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
             <TouchableOpacity
               style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
               onPress={() => {
-                setManualEntryMode(true);
+                setIsAnimating(false);
+                setCapturedPhoto(null);
+                setIsAnimating(true);
                 bottomSheetRef.current?.close();
+                setManualEntryMode(true);
+                // bottomSheetRef.current?.close();
               }}
             >
               <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>Wrong Symbol</Text>
@@ -580,24 +611,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   middleContainer: {
     flexDirection: 'row',
     flex: 1.5,
     paddingBottom: -40,
+    // justifyContent: 'center',
   },
   topContainer: {
     flexDirection: 'row',
-    height: '10%',
+    height: '15%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
     marginTop: 40,
-    marginBottom: 100,
+    marginBottom: 80,
   },
   bottomContainer: {
     flexDirection: 'row',
-    height: '10%',
+    height: '15%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
@@ -607,7 +640,10 @@ const styles = StyleSheet.create({
   focusedContainer: {
     flex: 6,
     backgroundColor: 'rgba(255, 255, 255, 0.20)',
+    alignContent: 'center',
     // justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.20)',
   },
   animationLineStyle: {
     height: 2,
@@ -667,6 +703,17 @@ const styles = StyleSheet.create({
     color: '#1B453C',
     fontWeight: 'bold',
     position: 'absolute',
+  },
+  cameraTextContainer: {
+    marginBottom: 12, 
+  },
+  cameraText: {
+    color: '#FFF',
+    textAlign: 'center',
+    // fontFamily: 'Inter',
+    fontSize: 21,
+    fontWeight: '500',
+    letterSpacing: -0.3,
   },
 });
 

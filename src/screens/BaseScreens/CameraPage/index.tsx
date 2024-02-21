@@ -131,7 +131,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
             const predictionValues = Array.from(predictionArray);
             // finding the index w/ maximum value (class with the highest probability)
             const predictedIndex = predictionValues.indexOf(Math.max(...predictionValues));
-            setModelVerdict(predictedIndex);
+            setModelVerdict(predictedIndex + 1);
             bottomSheetRef.current?.open();
           } else {
             console.error('Error classifying image: prediction is not a tensor');

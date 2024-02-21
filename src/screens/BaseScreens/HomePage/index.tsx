@@ -30,7 +30,7 @@ const HomePage = () => {
   const dummyDates = [29, 30, 1, 2, 3, 4, 5];
   const [progress, setProgress] = useState(TOTAL - 30);
   const [hearts, setHearts] = useState(0);
-  const [snacks, setSnacks] = useState(2);
+  const [snacks, setSnacks] = useState(100);
 
   const addHeart = () => {
     setHearts(hearts + 1);

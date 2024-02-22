@@ -24,6 +24,8 @@ import { cameraClosed, cameraOpened } from 'redux/slices/cameraSlice';
 import { RootState } from 'redux/store';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
+import { PinchGestureHandler, State } from 'react-native-gesture-handler';
+import { PinchGestureHandlerGestureEvent, PinchGestureHandlerStateChangeEvent } from 'react-native-gesture-handler';
 
 // components
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -60,6 +62,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
 
   const [manualEntryMode, setManualEntryMode] = useState<boolean>(false);
   const [isAnimating, setIsAnimating] = useState(true);
+  const [zoom, setZoom] = useState(0);
 
   // bottom sheet
   const bottomSheetRef = useRef(null);
@@ -76,11 +79,11 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       setIsAnimating(true);
       console.log(isAnimating);
       setCapturedPhoto(null);
+      setZoom(0);
       console.log(capturedPhoto);
       dispatch(cameraOpened());
   
       let animation: Animated.CompositeAnimation | undefined;
-      // console.log('I am in use EFFECT');
       if (isAnimating) {
         // console.log('I am reacting to isAnimating');
         animation = Animated.loop(
@@ -107,7 +110,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
 
   useEffect(() => {
     const classifyImage = async () => {
-      // for development purposes
+      // for development purpose
       // if (capturedPhoto) {
       //   setModelVerdict(4);
       //   bottomSheetRef.current?.open();
@@ -176,6 +179,26 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
         console.error('Error taking picture:', error);
         alert('Failed to take picture. Please try again.'); // Optionally alert the user
       }
+    }
+  };
+
+  const onPinchGestureEvent = (event: PinchGestureHandlerGestureEvent) => {
+    console.log(zoom);
+    console.log(event.nativeEvent.scale);
+    console.log('changing...');
+    const { scale } = event.nativeEvent;
+    const newZoom = Math.min(Math.max(0, scale / 80), 1); // Clamp zoom value between 0 and 1
+    console.log(newZoom);
+    console.log('done for this event...');
+    setZoom(newZoom);
+  };
+
+  const onPinchGestureStateChange = (event: PinchGestureHandlerStateChangeEvent) => {
+    if (event.nativeEvent.oldState === State.END) {
+      const { scale } = event.nativeEvent;
+      // Adjust the scale to your needs
+      const newZoom = Math.min(Math.max(0, scale / 5), 1);
+      setZoom(newZoom);
     }
   };
 
@@ -305,90 +328,96 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       <ManualEntryPage />
     ) : (
       <View style={styles.container}>
-        <Camera style={styles.camera} type={type} ref={cameraRef}>
-          <View style={styles.overlay}>
-            <View style={styles.topContainer}>
-              <View style={styles.backButtonContainer}>
-                <TouchableOpacity
-                  style={styles.backButton}
-                  onPress={() => goToFrontPage()}
+        <PinchGestureHandler
+          onGestureEvent={onPinchGestureEvent}
+          // onHandlerStateChange={onPinchGestureStateChange}
+        >
+          <Camera style={styles.camera} type={type} ref={cameraRef} zoom={zoom}>
+            <View style={styles.overlay}>
+              <View style={styles.topContainer}>
+                <View style={styles.backButtonContainer}>
+                  <TouchableOpacity
+                    style={styles.backButton}
+                    onPress={() => goToFrontPage()}
+                  >
+                    <Ionicons name="arrow-back-outline" size={36} color="white" />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.manualEntryButtonContainer}>
+                  <TouchableOpacity
+                    style={styles.manualEntryButton}
+                    onPress={() => {
+                      setManualEntryMode(true);
+                      setIsAnimating(false);
+                    }}
+                  >
+                    <Text style={styles.manualEntryText}>Manually Enter</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.cameraTextContainer}>
+                <Text style={styles.cameraText}>
+                  {capturedPhoto ? 'Polymer captured, recognizing...' : 'Center the polymer icon'}
+                </Text>
+              </View>
+              <View style={styles.middleContainer}>
+                <View style={styles.unfocusedContainer}></View>
+                <View
+                  onLayout={(e) =>
+                    setAnimationLineHeight(e.nativeEvent.layout.height)
+                  }
+                  style={styles.focusedContainer}
                 >
-                  <Ionicons name="arrow-back-outline" size={36} color="white" />
-                </TouchableOpacity>
+                  {capturedPhoto ? (
+                    <ActivityIndicator size="large" color="white" style={{ alignSelf: 'center', position:'absolute', bottom:'45%' }}/>
+                  ) : (
+                    <>
+                      <Animated.View
+                        style={[
+                          styles.animationLineStyle,
+                          {
+                            transform: [
+                              {
+                                translateY: focusLineAnimation.interpolate({
+                                  inputRange: [0, 1],
+                                  outputRange: [0, animationLineHeight],
+                                }),
+                              },
+                            ],
+                          },
+                        ]}
+                      />
+                      <SvgXml xml={svgMarkup} style={{ position: 'absolute', right:'18.5%', bottom:'15.5%' }} width="70%" height="70%" />
+                    </>
+                  )}
+                </View>
+                <View style={styles.unfocusedContainer}></View>
               </View>
-              <View style={styles.manualEntryButtonContainer}>
-                <TouchableOpacity
-                  style={styles.manualEntryButton}
-                  onPress={() => {
-                    setManualEntryMode(true);
-                    setIsAnimating(false);
-                  }}
-                >
-                  <Text style={styles.manualEntryText}>Manually Enter</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={styles.cameraTextContainer}>
-              <Text style={styles.cameraText}>
-                {capturedPhoto ? 'Polymer captured, recognizing...' : 'Center the polymer icon'}
-              </Text>
-            </View>
-            <View style={styles.middleContainer}>
-              <View style={styles.unfocusedContainer}></View>
-              <View
-                onLayout={(e) =>
-                  setAnimationLineHeight(e.nativeEvent.layout.height)
-                }
-                style={styles.focusedContainer}
-              >
-                {capturedPhoto ? (
-                  <ActivityIndicator size="large" color="white" style={{ alignSelf: 'center', position:'absolute', bottom:'45%' }}/>
-                ) : (
-                  <>
-                    <Animated.View
-                      style={[
-                        styles.animationLineStyle,
-                        {
-                          transform: [
-                            {
-                              translateY: focusLineAnimation.interpolate({
-                                inputRange: [0, 1],
-                                outputRange: [0, animationLineHeight],
-                              }),
-                            },
-                          ],
-                        },
-                      ]}
-                    />
-                    <SvgXml xml={svgMarkup} style={{ position: 'absolute', right:'18.5%', bottom:'15.5%' }} width="70%" height="70%" />
-                  </>
-                )}
-              </View>
-              <View style={styles.unfocusedContainer}></View>
-            </View>
 
-            <View style={styles.bottomContainer}>
-              <View style={styles.flipButtonContainer}>
-                <TouchableOpacity
-                  style={styles.flipButton}
-                  onPress={toggleCameraType}
-                >
-                  <Ionicons
-                    name="camera-reverse-outline"
-                    size={36}
-                    color="white"
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.captureButtonContainer}>
-                <TouchableOpacity
-                  style={styles.captureButton}
-                  onPress={takePicture}
-                ></TouchableOpacity>
+              <View style={styles.bottomContainer}>
+                <View style={styles.flipButtonContainer}>
+                  <TouchableOpacity
+                    style={styles.flipButton}
+                    onPress={toggleCameraType}
+                  >
+                    <Ionicons
+                      name="camera-reverse-outline"
+                      size={36}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.captureButtonContainer}>
+                  <TouchableOpacity
+                    style={styles.captureButton}
+                    onPress={takePicture}
+                  ></TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
-        </Camera>
+          </Camera>
+        </PinchGestureHandler>
+
         <RBSheet
           ref={bottomSheetRef}
           height={350}
@@ -452,6 +481,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
             </TouchableOpacity>
           </View>
         </RBSheet>
+        
       </View>
     )
   );

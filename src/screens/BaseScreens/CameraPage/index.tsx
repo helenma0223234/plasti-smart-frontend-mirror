@@ -10,7 +10,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Animated,
-  Image,
   ActivityIndicator,
 } from 'react-native';
 import FormatStyle from '../../../utils/FormatStyle';
@@ -24,8 +23,8 @@ import { cameraClosed, cameraOpened } from 'redux/slices/cameraSlice';
 import { RootState } from 'redux/store';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
-import { PinchGestureHandler, State } from 'react-native-gesture-handler';
-import { PinchGestureHandlerGestureEvent, PinchGestureHandlerStateChangeEvent } from 'react-native-gesture-handler';
+import { PinchGestureHandler } from 'react-native-gesture-handler';
+import { PinchGestureHandlerGestureEvent } from 'react-native-gesture-handler';
 
 // components
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -187,19 +186,10 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
     console.log(event.nativeEvent.scale);
     console.log('changing...');
     const { scale } = event.nativeEvent;
-    const newZoom = Math.min(Math.max(0, scale / 80), 1); // Clamp zoom value between 0 and 1
+    const newZoom = Math.min(Math.max(0, scale / 80), 1); // clamp zoom between 0 and 1
     console.log(newZoom);
     console.log('done for this event...');
     setZoom(newZoom);
-  };
-
-  const onPinchGestureStateChange = (event: PinchGestureHandlerStateChangeEvent) => {
-    if (event.nativeEvent.oldState === State.END) {
-      const { scale } = event.nativeEvent;
-      // Adjust the scale to your needs
-      const newZoom = Math.min(Math.max(0, scale / 5), 1);
-      setZoom(newZoom);
-    }
   };
 
   // camera page recylce icon
@@ -330,7 +320,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       <View style={styles.container}>
         <PinchGestureHandler
           onGestureEvent={onPinchGestureEvent}
-          // onHandlerStateChange={onPinchGestureStateChange}
         >
           <Camera style={styles.camera} type={type} ref={cameraRef} zoom={zoom}>
             <View style={styles.overlay}>

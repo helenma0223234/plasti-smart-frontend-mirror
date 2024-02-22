@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Animated,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import FormatStyle from '../../../utils/FormatStyle';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,6 +26,7 @@ import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { PinchGestureHandler } from 'react-native-gesture-handler';
 import { PinchGestureHandlerGestureEvent } from 'react-native-gesture-handler';
+import CircleBG from '../../../assets/Ellipse 66.svg';
 
 // components
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -74,12 +76,9 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log('camera page focused');
       setIsAnimating(true);
-      console.log(isAnimating);
       setCapturedPhoto(null);
       setZoom(0);
-      console.log(capturedPhoto);
       dispatch(cameraOpened());
   
       let animation: Animated.CompositeAnimation | undefined;
@@ -255,6 +254,19 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   const ManualEntryPage = () => {
     return (
       <View style={manualEntryStyles.container}>
+        <View style={{
+          width: 400,
+          overflow: 'hidden',
+          aspectRatio: 1,
+
+          alignItems: 'center',
+          position: 'absolute',
+          bottom: 0,
+
+        }}>
+          <Image source={require('../../../assets/Ellipse 66.svg')}></Image>
+          <CircleBG></CircleBG>
+        </View>
         <View style={manualEntryStyles.topContainer}>
           <View style={manualEntryStyles.backButtonContainer}>
             <TouchableOpacity
@@ -480,6 +492,7 @@ const manualEntryStyles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'relative',
+    backgroundColor: '#FBFBF4',
   },
   backButtonContainer: {
     position: 'absolute',
@@ -506,13 +519,14 @@ const manualEntryStyles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   textContainer: {
-    marginTop: 20,
+    marginTop: '10%',
     marginHorizontal: 20,
   },
   text: {
     color: '#1B453C',
     textAlign: 'center',
-    fontSize: 30,
+    fontSize: 25,
+    fontStyle: 'normal',
     fontWeight: '400',
     lineHeight: 35,
     letterSpacing: -0.3,
@@ -572,6 +586,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'relative',
+    backgroundColor: '#FBFBF4',
   },
   camera: {
     flex: 1,
@@ -644,7 +659,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
-    marginTop: 40,
+    marginTop: 10,
     marginBottom: 80,
   },
   bottomContainer: {

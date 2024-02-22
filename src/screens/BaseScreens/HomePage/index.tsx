@@ -24,7 +24,6 @@ import Colors from 'utils/Colors';
 
 const HomePage = () => {
 
-
   const dispatch = useAppDispatch();
   const TOTAL = 40;
   const dummyDates = [29, 30, 1, 2, 3, 4, 5];

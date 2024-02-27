@@ -1,4 +1,11 @@
-import { SignInPage, SignUpPage, LaunchPage, VerifyPage } from "./AuthScreens";
+import {
+  SignInPage,
+  SignUpPage,
+  LaunchPage,
+  VerifyPage,
+  OnboardingPage,
+
+} from './AuthScreens';
 
 import {
   FrontPage,
@@ -6,9 +13,12 @@ import {
   UsersPage,
   ForbiddenPage,
   CameraPage,
+  ScanCompletePage
+  HomePage,
 } from "./BaseScreens";
 
 export {
+  OnboardingPage,
   SignInPage,
   SignUpPage,
   LaunchPage,
@@ -18,4 +28,6 @@ export {
   UsersPage,
   ForbiddenPage,
   CameraPage,
+  ScanCompletePage
+  HomePage,
 };

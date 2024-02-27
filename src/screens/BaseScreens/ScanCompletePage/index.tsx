@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   homeButtonText: {
-    color: 'white',
+    color: '#FBFBF4',
     fontSize: 20,
     fontWeight: '600',
     letterSpacing: 0.3,

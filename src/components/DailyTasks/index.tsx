@@ -14,7 +14,7 @@ const DailyTasks = () => {
     <ScrollView>
       <View style={{ gap: 10, marginBottom: 30 }}>
         <Task complete={true} title={'Get your money up'}></Task>
-        <Task complete={true} title={'Inject the cat with microplastics'}></Task>
+        <Task complete={true} title={'Protect the cat from microplastics'}></Task>
         <Task complete={true} title={'Call mom'}></Task>
       </View>
     </ScrollView>

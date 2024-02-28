@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import Colors from './Colors';
 
 const FormatStyle = StyleSheet.create({
   topContainer: {
@@ -9,7 +10,7 @@ const FormatStyle = StyleSheet.create({
   
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary.white,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -33,7 +34,6 @@ const FormatStyle = StyleSheet.create({
   },
 
   circle: {
-    borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.2)',
     alignItems: 'center',
     justifyContent: 'center',

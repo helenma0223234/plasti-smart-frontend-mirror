@@ -13,9 +13,11 @@ import {
   UsersPage,
   ForbiddenPage,
   CameraPage,
-  ScanCompletePage
+  ScanCompletePage,
   HomePage,
-} from "./BaseScreens";
+  LeaderboardPage,
+  EducationPage,
+} from './BaseScreens';
 
 export {
   OnboardingPage,
@@ -28,6 +30,8 @@ export {
   UsersPage,
   ForbiddenPage,
   CameraPage,
-  ScanCompletePage
-  HomePage,
+  ScanCompletePage,
+  // HomePage,
+  // LeaderboardPage,
+  // EducationPage,
 };

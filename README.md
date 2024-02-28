@@ -1,14 +1,17 @@
-# CRUD Template - Mobile Frontend - Expo - Redux Toolkit
+# Plastic Sorting App Front End
 
-This repository is an optional frontend starter for new DALI React projects. Installation and setup instructions are included below. You should eventually customize this README file with project-specific documentation.
+Despite the widespread presence of symbols on plastic products and the abundance of information about recycling, there hasn't been a compelling method for educating younger generations on the various types of plastics, their recycling procedures, and their impact on the environment.
+
+Our plastic sorting app simplifies and enlivens the learning process. It features a scanning tool that identifies the plastic symbol on a product, enabling users to ascertain the type of plastic they are using. Additionally, the app incorporates incentives: users earn snacks for their avatars as they scan more products and achieve monthly objectives. It also introduces a competitive element by including leaderboards among friends.
 
 ## Designs
 
-[Screenshot description]
+![Home page](./images/home_screenshot.png)
+![Scanning page](./images/scan_screenshot.png)
+![Education page](./images/education_screenshot.png)
 
-[Link to the project Figma]()
+[Link to the project Figma](https://www.figma.com/file/5doTne1z3zCYPKUAZiwsuO/Plastic-Sorting-24W?type=design&node-id=1%3A154&mode=design&t=haH1j12vXJcLT8cN-1)
 
-[2-4 screenshots from the app]
 
 ## Architecture
 ### Tech Stack
@@ -19,17 +22,16 @@ This repository is an optional frontend starter for new DALI React projects. Ins
 - [TypeScript](https://www.typescriptlang.org/docs/)
 
 #### External Packages
-- [Description of any notable added services]
+- [Expo Camera]
+- [ionicons]
 
 ### Style
-[Describe notable code style conventions]
-
-We are using [typically a configuration like [CS52's React-Native ESLint Configuration](https://gist.github.com/timofei7/c8df5cc69f44127afb48f5d1dffb6c84) or [CS52's ES6 and Node ESLint Configuration](https://gist.github.com/timofei7/21ac43d41e506429495c7368f0b40cc7)]
+We are using [CS52's React-Native ESLint airbnb base Configuration](https://gist.github.com/timofei7/c8df5cc69f44127afb48f5d1dffb6c84) or [CS52's ES6 and Node ESLint Configuration](https://gist.github.com/timofei7/21ac43d41e506429495c7368f0b40cc7)
 
 ### File Structure
     .
     ├── ...    
-    ├── public
+    ├── images                 # for this readme
     ├── src                
     │   └── assets             # static assets   
     │   └── components         # reusable components across several screens
@@ -41,7 +43,9 @@ We are using [typically a configuration like [CS52's React-Native ESLint Configu
     │   └── utils              # utility folder containing helper files
     ├── tsconfig.json          # TypeScript configuration
     ├── package.json           # yarn config
-    └── ...
+    ├── app.json               # expo config
+    ├── yarn.loc               # faster yarn dependency downloading and linking
+    └── babel.config.js        # babel linting config
 
 For more detailed documentation on our file structure and specific functions in the code, feel free to check the project files themselves.
 
@@ -52,21 +56,19 @@ For more detailed documentation on our file structure and specific functions in 
 2. Change `SERVER_URL` endpoint to exact IPv4 address + port used by backend
    - You can view your IPv4 address by running `ipconfig` in command terminal
 3. App should be ready for use now
-   - `yarn start` to run with hot reloading
+   - `yarn start` or `expo start` to run with hot reloading
       - If you are getting "This is taking much longer than it should..." error, try doing `expo start --tunnel` instead. This error happens sometimes when trying to run on Dartmouth eduroam.
 
 ## Deployment 🚀
-[Where is the app deployed? i.e. Expo, Surge, TestFlight etc.]
-
-[What are the steps to re-deploy the project with any new changes?]
-
-[How does one get access to the deployed project?]
+Going to be on testflight next term
 
 ## Authors
-* Firstname Lastname 'YY, role
+* Aneesh Patnaik '25, Dev
+* Jack Macy '25, Dev
+* Yuchuan (Helen) Ma '23, Dev
 
 ## Acknowledgments 🤝
-We would like to thank [anyone you would like to acknowledge] for [what you would like to acknowledge them for].
+We would like to thank Ashna Ghanate for being the best PM, the design team for their work and Eric for not being annoyed by us asking for help all the time.
 
 ---
 Designed and developed by [@DALI Lab](https://github.com/dali-lab)

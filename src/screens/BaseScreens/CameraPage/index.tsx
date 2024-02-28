@@ -521,6 +521,7 @@ const manualEntryStyles = StyleSheet.create({
   textContainer: {
     marginTop: '10%',
     marginHorizontal: 20,
+    fontFamily: 'ITCCheltenhamStdBook',
   },
   text: {
     color: '#1B453C',
@@ -621,6 +622,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '400',
     letterSpacing: -0.2,
+    fontFamily: 'ITCCheltenhamStdBook',
   },
   flipButtonContainer: {
     position: 'absolute',
@@ -744,7 +746,7 @@ const styles = StyleSheet.create({
   cameraText: {
     color: '#FFF',
     textAlign: 'center',
-    // fontFamily: 'Inter',
+    fontFamily: 'ITCCheltenhamStdBook',
     fontSize: 21,
     fontWeight: '500',
     letterSpacing: -0.3,

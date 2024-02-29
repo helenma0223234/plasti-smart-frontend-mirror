@@ -1,4 +1,4 @@
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -9,16 +9,19 @@ import {
   FrontPage,
   ResourcesPage,
   UsersPage,
-  ForbiddenPage, 
+  ForbiddenPage,
   HomePage,
   CameraPage,
   ScanCompletePage,
+  EducationPage,
+  LeaderboardPage,
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
 import useAppDispatch from 'hooks/useAppDispatch';
 import { loadModel } from 'redux/slices/modelSlice';
 import { useEffect } from 'react';
+import FormatStyle from 'utils/FormatStyle';
 
 const BaseTab = createBottomTabNavigator<BaseNavigationList>();
 const BaseStack = createStackNavigator<BaseNavigationList>();
@@ -42,7 +45,7 @@ export const FrontNavigator = () => {
         component={FrontPage}
         options={{ header: () => null }}
       />
-  
+
     </BaseStack.Navigator>
   );
 };
@@ -72,36 +75,39 @@ const CameraNavigator = () => {
   );
 };
 
-const UsersNavigator = () => {
+const EducationNavigator = () => {
   return (
-    <BaseStack.Navigator initialRouteName={BaseTabRoutes.USERS}>
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.EDUCATION}>
       <BaseStack.Screen
-        name={BaseTabRoutes.USERS}
-        component={UsersPage}
+        name={BaseTabRoutes.EDUCATION}
+        component={EducationPage}
         options={{ header: () => null }}
       />
     </BaseStack.Navigator>
   );
 };
 
-const ResourcesNavigator = () => {
+const LeaderboardNavigator = () => {
   return (
-    <BaseStack.Navigator initialRouteName={BaseTabRoutes.RESOURCES}>
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.LEADERBOARD}>
       <BaseStack.Screen
-        name={BaseTabRoutes.RESOURCES}
-        component={ResourcesPage}
+        name={BaseTabRoutes.LEADERBOARD}
+        component={LeaderboardPage}
         options={{ header: () => null }}
       />
     </BaseStack.Navigator>
   );
 };
+
+
+
 
 const BaseNavigation = () => {
   const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(loadModel());
-  }, [] );
+  }, []);
 
   return (
     <NavigationContainer>
@@ -112,7 +118,7 @@ const BaseNavigation = () => {
             backgroundColor: Colors.secondary.white,
             height: 100,
             borderRadius: 20,
-            
+
             display: cameraOpen ? 'none' : 'flex',
           },
           tabBarActiveTintColor: Colors.primary.dark,
@@ -135,22 +141,8 @@ const BaseNavigation = () => {
           }}
         />
         <BaseTab.Screen
-          name={BaseTabRoutes.CAMERA}
-          component={CameraNavigator}
-          options={{
-            tabBarLabel: (props) => {
-              return null;
-            },
-            tabBarIcon: (props) => (
-              <AntDesign name="camera" color={props.color} size={40} />
-            ),
-          }}
-        />
-        <BaseTab.Screen
-          name={BaseTabRoutes.USERS}
-          component={
-            ProtectedRoute([UserScopes.Admin]) ? UsersNavigator : ForbiddenPage
-          }
+          name={BaseTabRoutes.EDUCATION}
+          component={EducationNavigator}
           options={{
             tabBarLabel: (props) => {
               return (
@@ -158,26 +150,52 @@ const BaseNavigation = () => {
               );
             },
             tabBarIcon: (props) => (
-              <Feather name="user" size={40} color={props.color} />),
+              <Feather name="book-open" size={40} color={props.color} />),
+
+            // <Feather name="user" size={40} color={props.color} />),
           }}
         />
         <BaseTab.Screen
-          name={BaseTabRoutes.RESOURCES}
-          component={
-            ProtectedRoute([UserScopes.User, UserScopes.Admin])
-              ? ResourcesNavigator
-              : ForbiddenPage
-          }
+          name={BaseTabRoutes.CAMERA}
+          component={CameraNavigator}
+          options={{
+            tabBarLabel: (props) => {
+              return null;
+            },
+            tabBarIcon: (props) => (
+              <View style={{ ...FormatStyle.circle, width: 70, height: 70, backgroundColor: Colors.primary.dark, position: 'relative', bottom: 30 }}>
+                <AntDesign name="camera" color={Colors.secondary.white} size={40} />
+              </View>
+            ),
+          }}
+        />
+        <BaseTab.Screen
+          name={BaseTabRoutes.LEADERBOARD}
+          component={LeaderboardNavigator}
           options={{
             tabBarLabel: (props) => {
               return (
                 null);
             },
             tabBarIcon: (props) => (
-              <Feather name="book-open" size={40} color={props.color} />),
+              <Feather name="bar-chart-2" size={40} color={props.color} />
+            ),
           }}
         />
-        <BaseTab.Screen 
+        <BaseTab.Screen
+          name={BaseTabRoutes.RESOURCES}
+          component={LeaderboardNavigator}
+          options={{
+            tabBarLabel: (props) => {
+              return (
+                null);
+            },
+            tabBarIcon: (props) => (
+              <Feather name="bar-chart-2" size={40} color={props.color} />
+            ),
+          }}
+        />
+        <BaseTab.Screen
           name={BaseTabRoutes.SCAN_COMPLETE}
           component={ScanCompleteNavigator}
           options={{ tabBarButton: () => null }}

@@ -14,7 +14,8 @@ const SignUpPage = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-
+  
+  // TODO: add user name to signup action
   const handleSubmit = () => {
     // Send only if all fields filled in
     if (!name) alert('Please enter your name!');

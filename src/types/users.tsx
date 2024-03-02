@@ -3,7 +3,7 @@ export enum UserScopes {
   User = 'USER',
   Admin = 'ADMIN',
 }
-
+// TODO: change to reflect backend
 export interface IUser {
   id: string
   email: string

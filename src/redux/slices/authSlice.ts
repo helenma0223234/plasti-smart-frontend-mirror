@@ -23,6 +23,7 @@ const initialState: AuthState = {
   role: UserScopes.Unverified,
 };
 
+// TODO: change this
 interface LoginResponse {
   token: string
   user: {

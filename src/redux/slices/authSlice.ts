@@ -4,13 +4,15 @@ import { SERVER_URL } from 'utils/constants.js';
 import axios from 'axios';
 import { getBearerToken, setBearerToken } from 'utils/asyncStorage';
 import { UserScopes } from 'types/users';
+import { setLoginHistory } from './loginhistorySlice';
+import { LoginHistory } from 'types/loginHistory';
 
 export interface AuthState {
   authenticated: boolean
   loading: boolean
   id: string
   email: string
-  name: string
+  username: string
   role: UserScopes
 }
 
@@ -19,7 +21,7 @@ const initialState: AuthState = {
   loading: false,
   id: '',
   email: '',
-  name: '',
+  username: '',
   role: UserScopes.Unverified,
 };
 
@@ -30,9 +32,10 @@ interface LoginResponse {
     id: string
     email: string
     // no password
-    name: string
+    username: string
     role: UserScopes
   }
+  history: LoginHistory[]
 }
 
 export const setCredentials = createAsyncThunk(
@@ -56,14 +59,21 @@ export const initCredentials = createAsyncThunk(
 
 export const signUp = createAsyncThunk(
   'auth/signup',
-  async (credentials: { email: string, password: string, name: string }, { dispatch }) => {
+  // QUESTION: username here right?
+  async (credentials: { email: string, password: string, username: string }, { dispatch }) => {
     dispatch(startAuthLoading());
     return axios
       .post(`${SERVER_URL}auth/signup`, credentials)
       .finally(() => dispatch(stopAuthLoading()))
       .then((response) => {
         alert('Sign up successful!');
-        return response.data;
+        const { token, user, history } = response.data; // Fix: Update property name to LoginHistory
+        dispatch(setLoginHistory(history));
+        //////////// Question:
+        ///was not in the original template.. why not dispatch the token here?
+        ////////////
+        // dispatch(setCredentials(token));
+        return user;
       })
       .catch((error) => {
         console.error('Error when signing up', error);
@@ -83,13 +93,15 @@ export const signIn = createAsyncThunk(
         if (response.status == 403) {
           // forbidden - not verified
           return {
-            user: { email: credentials.email },
+            user: { email: credentials.email, loginHistory: [] }, // Add loginHistory property
             verified: false,
           };
         }
-        dispatch(setCredentials(response.data.token));
+        const { token, user, history } = response.data; // Fix: Update property name to LoginHistory
+        dispatch(setLoginHistory(history));
+        dispatch(setCredentials(token));
         alert('Signed In!');
-        return { ...response.data };
+        return user;
       })
       .catch((error) => {
         alert(
@@ -121,7 +133,8 @@ export const jwtSignIn = createAsyncThunk(
         if (token) {
           dispatch(setCredentials(token));
         }
-        return response.data;
+        dispatch(setLoginHistory(response.data.history));
+        return response.data.user;
       })
       .catch((err) => {
         console.error(err);

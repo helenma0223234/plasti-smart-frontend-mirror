@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/too
 import { SERVER_URL } from 'utils/constants.js';
 import axios from 'axios';
 import { getBearerToken, setBearerToken } from 'utils/asyncStorage';
-import { UserScopes } from 'types/users';
+import { IUser, UserScopes } from 'types/users';
 import { setLoginHistory } from './loginhistorySlice';
 import { LoginHistory } from 'types/loginHistory';
 
@@ -28,6 +28,8 @@ const initialState: AuthState = {
 // TODO: change this
 interface LoginResponse {
   token: string
+  // user: IUser
+  history: LoginHistory[]
   user: {
     id: string
     email: string
@@ -35,7 +37,6 @@ interface LoginResponse {
     username: string
     role: UserScopes
   }
-  history: LoginHistory[]
 }
 
 export const setCredentials = createAsyncThunk(
@@ -67,13 +68,12 @@ export const signUp = createAsyncThunk(
       .finally(() => dispatch(stopAuthLoading()))
       .then((response) => {
         alert('Sign up successful!');
-        const { token, user, history } = response.data; // Fix: Update property name to LoginHistory
-        dispatch(setLoginHistory(history));
+        dispatch(setLoginHistory(response.data.history));
         //////////// Question:
         ///was not in the original template.. why not dispatch the token here?
         ////////////
-        // dispatch(setCredentials(token));
-        return user;
+        // dispatch(setCredentials(response.data.token));
+        return response.data;
       })
       .catch((error) => {
         console.error('Error when signing up', error);
@@ -93,15 +93,17 @@ export const signIn = createAsyncThunk(
         if (response.status == 403) {
           // forbidden - not verified
           return {
-            user: { email: credentials.email, loginHistory: [] }, // Add loginHistory property
+            user: { email: credentials.email },
+            LoginHistory: [],
             verified: false,
           };
         }
-        const { token, user, history } = response.data; // Fix: Update property name to LoginHistory
-        dispatch(setLoginHistory(history));
-        dispatch(setCredentials(token));
+        // TODO: move to user slice
+        dispatch(setLoginHistory(response.data.history));
+
+        dispatch(setCredentials(response.data.token));
         alert('Signed In!');
-        return user;
+        return response.data;
       })
       .catch((error) => {
         alert(
@@ -134,7 +136,7 @@ export const jwtSignIn = createAsyncThunk(
           dispatch(setCredentials(token));
         }
         dispatch(setLoginHistory(response.data.history));
-        return response.data.user;
+        return response.data;
       })
       .catch((err) => {
         console.error(err);

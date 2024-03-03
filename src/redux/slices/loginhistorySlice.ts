@@ -8,8 +8,7 @@ export interface LoginHistoryState {
 const initialState: LoginHistoryState = {
   history: [],
 };
-  
-// Slice
+
 export const loginHistorySlice = createSlice({
   name: 'loginHistory',
   initialState,
@@ -17,11 +16,16 @@ export const loginHistorySlice = createSlice({
     setLoginHistory: (state, action: PayloadAction<Array<any>>) => {
       state.history = action.payload;
     },
+    updateFirstLoginHistory: (state, action: PayloadAction<LoginHistory>) => {
+      if (state.history.length > 0) {
+        state.history[0] = action.payload;
+      }
+    },
   },
 
 });
 
-export const { setLoginHistory } = loginHistorySlice.actions;
+export const { setLoginHistory, updateFirstLoginHistory } = loginHistorySlice.actions;
 
 export default loginHistorySlice.reducer;
   

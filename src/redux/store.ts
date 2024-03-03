@@ -5,6 +5,7 @@ import resourcesReducer from './slices/resourcesSlice';
 import usersReducer from './slices/usersSlice';
 import modelReducer from './slices/modelSlice';
 import cameraReducer from './slices/cameraSlice';
+import loginhistoryReducer from './slices/loginhistorySlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     users: usersReducer,
     model: modelReducer,
     camera: cameraReducer,
+    loginhistory: loginhistoryReducer,
   },
 });
 

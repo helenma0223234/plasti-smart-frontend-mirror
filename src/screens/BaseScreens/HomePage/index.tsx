@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import { ScrollView, SafeAreaView, Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
 import useAppSelector from 'hooks/useAppSelector';
-import { logout } from '../../../redux/slices/authSlice';
 import AppButton from '../../../components/AppButton';
 import FormatStyle from '../../../utils/FormatStyle';
 import CircleBG from '../../../assets/Ellipse 66.svg';
@@ -25,17 +24,14 @@ import DailyTasks from 'components/DailyTasks';
 
 
 const HomePage = () => {
-  const user = useAppSelector((state) => state.auth.user);
+  const user = useAppSelector((state) => state.users.selectedUser);
+  const loginHistory = useAppSelector((state) => state.loginhistory.history);
 
   if (user === null) {
     return <Text>Loading...</Text>;
   }
-  
-  const dispatch = useAppDispatch();
-  const TOTAL = 30;
-  const dummyDates = [29, 30, 1, 2, 3, 4, 5];
-  const [progress, setProgress] = useState(TOTAL);
-  const [hearts, setHearts] = useState(0);
+
+  const [hearts, setHearts] = useState(user.avatarHealth);
   const [snacks, setSnacks] = useState(user.snacks);
 
   const addHeart = () => {
@@ -51,7 +47,55 @@ const HomePage = () => {
   }
 
   const today = new Date();
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  today.setUTCHours(5, 0, 0, 0);
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  let todayTasksCompletion = [false, false, false];
+  if (loginHistory.length > 0) {
+    const firstHist = new Date(loginHistory[0].date);
+    // console.log(loginHistory[0]);
+    if (today.toDateString() === firstHist.toDateString()) {
+      todayTasksCompletion = [loginHistory[0].redGoal, loginHistory[0].yellowGoal, loginHistory[0].greenGoal];
+      // console.log('here', todayTasksCompletion);
+    }
+  }
+
+  const taskCompletionStatuses = [];
+  for (let i = 10; i > 0; i--) {
+    const day = new Date(today);
+    day.setUTCHours(5, 0, 0, 0);
+    day.setDate(today.getDate() - i);
+  
+    const loginHistoryForDay = loginHistory.find(history => {
+      const historyDate = new Date(history.date);
+      return historyDate.toDateString() === day.toDateString();
+    });
+  
+    if (loginHistoryForDay) {
+      const sub = [];
+      sub.push(+loginHistoryForDay.redGoal);
+      sub.push(+loginHistoryForDay.yellowGoal);
+      sub.push(+loginHistoryForDay.greenGoal);
+      taskCompletionStatuses.push(sub);    
+    } else {
+      taskCompletionStatuses.push([]);
+    }
+  }
+  // for today
+  const tod = [];
+  if (todayTasksCompletion[0]) {
+    tod.push(+todayTasksCompletion[0]);
+  }
+  if (todayTasksCompletion[1]) {
+    tod.push(+todayTasksCompletion[1]);
+  }
+  if (todayTasksCompletion[2]) {
+    tod.push(+todayTasksCompletion[2]);
+  }
+  taskCompletionStatuses.push(tod);  
+  for (let j = 0; j < 3; j++) {
+    taskCompletionStatuses.push([]);
+  }
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container, justifyContent: 'flex-start' }}>
@@ -73,45 +117,43 @@ const HomePage = () => {
         width: '100%',
         margin: 20,
       }}>
-
         <View style={{ position: 'absolute', top: 120, right: 20 }}>
           <Cat></Cat>
         </View>
 
         <View style={{ gap: 5, marginLeft: 20 }}>
           <Title></Title>
-          <Text>Ready to Recycle, Jack?</Text>
-          <HappyScale happiness={hearts} ></HappyScale>
+          <Text>Ready to Recycle, {user?.username ?? 'now'}?</Text>
+          <HappyScale happiness={user.avatarHealth} ></HappyScale>
 
           <View style={{ gap: 10, marginTop: 10 }}>
-            <SnackButton snacks={snacks} setHearts={addHeart} setSnacks={eatSnacks}></SnackButton>
+            <SnackButton snacks={user.snacks} setHearts={addHeart} setSnacks={eatSnacks}></SnackButton>
             <Place number={1}></Place>
             <View style={{ flexDirection: 'column', justifyContent: 'flex-start', width: 70, gap: 5 }}>
-              <CircularProgress
-                value={(progress / 40) * 100}
-                radius={35}
+              <View style={{ borderWidth: 2, borderColor: Colors.primary.dark, borderRadius: 38, alignItems:'center', justifyContent:'center' }}>
+                <CircularProgress
+                  value={(user.monthlyGoalPlasticAmount / user.monthlyGoalPlasticTotal) * 100}
+                  radius={35}
 
-                circleBackgroundColor={'transparent'}
-                progressValueColor={'transparent'}
-                activeStrokeColor={Colors.primary.dark}
-                inActiveStrokeColor={'transparent'}
-              />
-              <View style={{ position: 'absolute', bottom: 38, left: 23 }}>
-                <Text style={{ fontSize: 20 }}>{progress}</Text>
+                  circleBackgroundColor={'transparent'}
+                  progressValueColor={'transparent'}
+                  activeStrokeColor={Colors.primary.dark}
+                  inActiveStrokeColor={'transparent'}
+                />
+              </View>
+              <View style={{ position: 'absolute', alignItems: 'center', bottom: 40, left: 22 }}>
+                <Text style={{ fontSize: 20 }}>{user.monthlyGoalPlasticAmount}</Text>
                 <View style={{ height: 2, backgroundColor: 'black', width: '100%' }} />
-                <Text style={{ fontSize: 20 }}>40</Text>
+                <Text style={{ fontSize: 20 }}>{user.monthlyGoalPlasticTotal}</Text>
               </View>
               <Text style={{ fontSize: 10, flexWrap: 'wrap', textAlign: 'center' }}>{months[today.getMonth()]} monthly goal</Text>
             </View>
           </View>
         </View>
 
-
-
-
         <View style={{ ...styles.scroll, marginLeft: 20, marginRight: 100, gap: 20 }}>
-          <Calendar></Calendar>
-          <DailyTasks></DailyTasks>
+          <Calendar circlesArray={taskCompletionStatuses}></Calendar>
+          <DailyTasks taskCompletionStatuses={todayTasksCompletion}></DailyTasks>
         </View>
       </View>
     </SafeAreaView >
@@ -131,7 +173,6 @@ const HappyScale = ({ happiness }: HappyProps) => {
       <View style={{ width: 133.897, height: 31, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
         {Array(Math.min(5, happiness)).fill(1).map(() => (
           <Heart></Heart>
-          // <AntDesign name="heart" size={24} color="red" />
         ))}
         {Array(empty).fill(1).map(() => (
           <EmptyHeart></EmptyHeart>

@@ -11,6 +11,7 @@ interface CalendarProps {
   // curr_date: number
   // dates: number[]
   children?: React.ReactNode
+  circlesArray: number[][]
 }
 
 // GET CALENDAR
@@ -33,16 +34,19 @@ for (let i = 1; i <= 3; i++) {
 }
 
 
-const Calendar = ({ }: CalendarProps) => {
+const Calendar = ({ circlesArray }: CalendarProps) => {
+  const newCirclesArray = circlesArray.map(subArray => {
+    const numberOfOnes = subArray.filter(value => value === 1).length;
+    return Array(numberOfOnes).fill(1);
+  });
 
-  const dummyCircles = [1, 1];
   return (
-    <View>
-      <Text>Daily Goal</Text>
+    <View style={{ marginTop: 10 }}>
+      <Text style={{ color:Colors.primary.dark, marginBottom: -8 }}>Daily Goal</Text>
       <ScrollView horizontal={true} style={{ width: 350 }} contentOffset={{ x: 400, y: 0 }} bounces={true} showsHorizontalScrollIndicator={false}>
         <View style={{ flexDirection: 'row', gap: 10, marginRight: 6 }}>
           {dates.map((date: number, key: number) => (
-            <DateCircle circles={dummyCircles} date={date} key={key} active={key == 10} isPast={key < 10}></DateCircle>
+            <DateCircle date={date} key={key} active={key == 10} isPast={key < 10} circles={newCirclesArray[key]} colorcircles={circlesArray[key]}></DateCircle>
           ))}
         </View>
       </ScrollView>
@@ -54,13 +58,14 @@ interface DateProps {
   date: number
   active?: boolean
   isPast: boolean
-  circles: number[]
+  colorcircles: number[]
 }
 
-const DateCircle = ({ isPast, active, date, circles }: DateProps) => {
+const DateCircle = ({ isPast, active, date, colorcircles }: DateProps) => {
+  const circleColors = [Colors.secondary.red, Colors.secondary.yellow, Colors.primary.dark];
+
   return (
     <View style={{ flexDirection: 'column', marginBottom: 0, gap: -11, alignItems: 'center' }}>
-
 
       <View style={{
         ...FormatStyle.circle,
@@ -72,8 +77,16 @@ const DateCircle = ({ isPast, active, date, circles }: DateProps) => {
         <Text style={{ ...TextStyles.small, color: active && Colors.secondary.white }}>{date}</Text>
       </View>
       <View style={{ alignItems: 'center', flexDirection: 'row', gap: 4 }}>
-        {circles.map((circle: number, key: number) => (
-          <View style={{ ...FormatStyle.circle, backgroundColor: Colors.highlight, width: 6, height: 6, borderWidth: 0 }} key={key}></View>
+        {colorcircles.map((circle: number, key: number) => (
+          circle === 1 ? (
+            <View style={{
+              ...FormatStyle.circle,
+              backgroundColor: circleColors[key],
+              width: 6,
+              height: 6,
+              borderWidth: 0,
+            }} key={key}></View>
+          ) : null
         ))}
       </View>
     </View>

@@ -5,12 +5,12 @@ import { UserScopes, IUser } from 'types/users.jsx';
 
 export interface UserState {
   loading: boolean
-  selectedUser: IUser | undefined
+  selectedUser: IUser | null
 }
 
 const initialState: UserState = {
   loading: false,
-  selectedUser: undefined,
+  selectedUser: null,
 };
 
 export const createUser = createAsyncThunk(
@@ -87,6 +87,9 @@ export const usersSlice = createSlice({
   reducers: {
     startUsersLoading: (state) => ({ ...state, loading: true }),
     stopUsersLoading: (state) => ({ ...state, loading: false }),
+    setSelectedUser: (state, action) => {
+      state.selectedUser = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(createUser.fulfilled, (state, action) => {
@@ -112,7 +115,7 @@ export const usersSlice = createSlice({
   },
 });
 
-export const { startUsersLoading, stopUsersLoading } =
+export const { startUsersLoading, stopUsersLoading, setSelectedUser } =
   usersSlice.actions;
 
 export default usersSlice.reducer;

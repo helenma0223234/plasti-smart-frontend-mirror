@@ -7,16 +7,19 @@ import { Text, View } from 'react-native';
 import CompletedDot from 'components/CompletedDot';
 
 interface DailyTasksProps {
-  fea: number
+  taskCompletionStatuses?: boolean[]
 }
 
-const DailyTasks = () => {
+const DailyTasks = ({ taskCompletionStatuses = [] }: DailyTasksProps) => {
+  const taskTitles = ['Feed your plasty', 'Recycle a plastic', 'Over 50% happiness'];
+  const dotColors = [Colors.secondary.red, Colors.secondary.yellow, Colors.primary.dark];
+  console.log(taskCompletionStatuses);
   return (
     <ScrollView>
       <View style={{ gap: 10, marginBottom: 30 }}>
-        <Task complete={true} title={'Feed your plasty'}></Task>
-        <Task complete={true} title={'Recycle a plastic'}></Task>
-        <Task complete={true} title={'Over 50% happiness'}></Task>
+        {taskCompletionStatuses.map((taskComplete, index) => (
+          <Task key={index} complete={taskComplete} title={taskTitles[index]} color={dotColors[index]}/>
+        ))}
       </View>
     </ScrollView>
   );
@@ -25,13 +28,14 @@ const DailyTasks = () => {
 interface TaskProps {
   complete: boolean
   title: string
+  color: string
 }
 
-const Task = ({ complete, title }: TaskProps) => {
+const Task = ({ complete, title, color }: TaskProps) => {
   return (
     <View style={{ borderColor: Colors.primary.dark, borderWidth: 2, padding: 20, borderRadius: 15, width: 350, flexDirection: 'row', justifyContent: 'space-between' }}>
       <Text style={{ ...TextStyles.regular }}>{title}</Text>
-      <CompletedDot color='red' completed={complete}></CompletedDot>
+      <CompletedDot color={color} completed={complete}></CompletedDot>
     </View>
   );
 };

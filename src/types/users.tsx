@@ -25,6 +25,6 @@ export interface IUser {
   Type6Collected: number;
   Type7Collected: number;
   monthlyGoalPlasticType: number;
-  monthlyGoalPlasticAmount: number;
-  monthlyGoalPlasticTotal: number;
+  monthlyGoalPlasticAmount: number; // amount so far
+  monthlyGoalPlasticTotal: number; // goal of the month
 }

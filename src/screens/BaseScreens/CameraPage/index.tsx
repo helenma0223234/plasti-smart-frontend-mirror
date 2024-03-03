@@ -321,7 +321,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
     setIsAnimating(false);
     dispatch(cameraClosed());
     console.log('camera closed');
-    navigation.navigate(BaseTabRoutes.FRONT, {});
+    navigation.navigate(BaseTabRoutes.HOME, {});
   };
   /**************** Done Nav functions ****************/
 

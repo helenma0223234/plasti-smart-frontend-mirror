@@ -9,6 +9,8 @@ export default {
     normal: '#F4F3E7',
     dark: '',
     white: '#FBFBF4',
+    yellow: '#F6D053',
+    red: '#CC554E',
   },
   neutral: {
     1: '#E2E7EC',

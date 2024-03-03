@@ -35,23 +35,23 @@ const RootNavigation = () => {
 
   }, []);
 
-  return <BaseNavigation />;
+  // return <BaseNavigation />;
 
-  // if (!authenticated) {
-  //   return (
-  //     <AuthNavigation />
-  //   );
-  // } else if (authenticated && role === UserScopes.Unverified) {
-  //   return (
-  //     <NavigationContainer>
-  //       <VerifyPage />
-  //     </NavigationContainer>
-  //   );
-  // } else {
-  //   return (
-  //     <BaseNavigation />
-  //   );
-  // } 
+  if (!authenticated) {
+    return (
+      <AuthNavigation />
+    );
+  } else if (authenticated && role === UserScopes.Unverified) {
+    return (
+      <NavigationContainer>
+        <VerifyPage />
+      </NavigationContainer>
+    );
+  } else {
+    return (
+      <BaseNavigation />
+    );
+  } 
 };
 
 export default RootNavigation;

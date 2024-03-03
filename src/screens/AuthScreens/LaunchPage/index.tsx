@@ -41,7 +41,7 @@ const FrontPage = () => {
           fullWidth
         />
         <Button
-          onPress={() => navigation.navigate(AuthStackRoutes.SIGNUP)}
+          onPress={() => navigation.navigate(AuthStackRoutes.SIGNIN)}
           title={'I Already Have an Account'}
           fullWidth
           inverted

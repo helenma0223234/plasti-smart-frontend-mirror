@@ -10,33 +10,21 @@ import { LoginHistory } from 'types/loginHistory';
 export interface AuthState {
   authenticated: boolean
   loading: boolean
-  id: string
-  email: string
-  username: string
-  role: UserScopes
+  user: IUser | null;
+  loginHistory: LoginHistory[];
 }
 
 const initialState: AuthState = {
   authenticated: false,
   loading: false,
-  id: '',
-  email: '',
-  username: '',
-  role: UserScopes.Unverified,
+  user: null,
+  loginHistory: [],
 };
 
-// TODO: change this
 interface LoginResponse {
   token: string
-  // user: IUser
+  user: IUser
   history: LoginHistory[]
-  user: {
-    id: string
-    email: string
-    // no password
-    username: string
-    role: UserScopes
-  }
 }
 
 export const setCredentials = createAsyncThunk(
@@ -60,7 +48,6 @@ export const initCredentials = createAsyncThunk(
 
 export const signUp = createAsyncThunk(
   'auth/signup',
-  // QUESTION: username here right?
   async (credentials: { email: string, password: string, username: string }, { dispatch }) => {
     dispatch(startAuthLoading());
     return axios
@@ -98,9 +85,7 @@ export const signIn = createAsyncThunk(
             verified: false,
           };
         }
-        // TODO: move to user slice
         dispatch(setLoginHistory(response.data.history));
-
         dispatch(setCredentials(response.data.token));
         alert('Signed In!');
         return response.data;
@@ -205,13 +190,14 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(signIn.fulfilled, (state, action) => {
       if ('token' in action.payload) {
-        state = ({ ...state, ...action.payload.user });
+        state.user = action.payload.user;
         state.authenticated = true;
         return state;
       }
     });
     builder.addCase(jwtSignIn.fulfilled, (state, action) => {
-      state = ({ ...state, ...action.payload.user });
+      // state = ({ ...state, ...action.payload.user });
+      state.user = action.payload.user;
       state.authenticated = true;
       return state;
     });
@@ -227,7 +213,8 @@ export const authSlice = createSlice({
     builder.addCase(verify.fulfilled, (state, action) => {
       if (action.payload != null) {
         setBearerToken(action.payload.token);
-        state = ({ ...state, ...action.payload.user });
+        // state = ({ ...state, ...action.payload.user });
+        state.user = action.payload.user;
         state.authenticated = true;
       }
       alert('Your account has been authorized!');

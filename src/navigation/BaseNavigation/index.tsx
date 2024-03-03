@@ -32,7 +32,7 @@ const ProtectedRoute = (allowableScopes: UserScopes[]) => {
   return allowableScopes.includes(role) && authenticated;
 };
 
-export const FrontNavigator = () => {
+export const HomeNavigator = () => {
   return (
     <BaseStack.Navigator initialRouteName={BaseTabRoutes.HOME}>
       <BaseStack.Screen
@@ -40,12 +40,18 @@ export const FrontNavigator = () => {
         component={HomePage}
         options={{ header: () => null }}
       />
+    </BaseStack.Navigator>
+  );
+};
+
+export const FrontNavigator = () => {
+  return (
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.FRONT}>
       <BaseStack.Screen
         name={BaseTabRoutes.FRONT}
         component={FrontPage}
         options={{ header: () => null }}
       />
-
     </BaseStack.Navigator>
   );
 };
@@ -129,8 +135,8 @@ const BaseNavigation = () => {
 
 
         <BaseTab.Screen
-          name={BaseTabRoutes.FRONT}
-          component={FrontNavigator}
+          name={BaseTabRoutes.HOME}
+          component={HomeNavigator}
           options={{
             tabBarLabel: (props) => {
               return (null);
@@ -183,8 +189,8 @@ const BaseNavigation = () => {
           }}
         />
         <BaseTab.Screen
-          name={BaseTabRoutes.RESOURCES}
-          component={LeaderboardNavigator}
+          name={BaseTabRoutes.FRONT}
+          component={FrontNavigator}
           options={{
             tabBarLabel: (props) => {
               return (

@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { ScrollView, SafeAreaView, Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
+import useAppSelector from 'hooks/useAppSelector';
 import { logout } from '../../../redux/slices/authSlice';
 import AppButton from '../../../components/AppButton';
 import FormatStyle from '../../../utils/FormatStyle';
@@ -24,13 +25,18 @@ import DailyTasks from 'components/DailyTasks';
 
 
 const HomePage = () => {
+  const user = useAppSelector((state) => state.auth.user);
 
+  if (user === null) {
+    return <Text>Loading...</Text>;
+  }
+  
   const dispatch = useAppDispatch();
   const TOTAL = 30;
   const dummyDates = [29, 30, 1, 2, 3, 4, 5];
   const [progress, setProgress] = useState(TOTAL);
   const [hearts, setHearts] = useState(0);
-  const [snacks, setSnacks] = useState(100);
+  const [snacks, setSnacks] = useState(user.snacks);
 
   const addHeart = () => {
     setHearts(hearts + 1);
@@ -39,6 +45,10 @@ const HomePage = () => {
   const eatSnacks = () => {
     setSnacks(Math.max(0, snacks - 1));
   };
+  
+  if (user === null) {
+    return <Text>Loading...</Text>;
+  }
 
 
   return (

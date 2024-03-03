@@ -9,9 +9,9 @@ export interface IUser {
   email: string;
   username: string;
   name?: string;
-  pronoun?: string; // Make optional if not always provided
+  pronoun?: string;
   role: UserScopes;
-  teamID?: number; // Make optional if not always provided
+  teamID?: number;
   lastLogin: Date;
   avatar: number;
   avatarHealth: number;

@@ -40,6 +40,8 @@ const HomePage = () => {
     setSnacks(Math.max(0, snacks - 1));
   };
 
+  const today = new Date();
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container, justifyContent: 'flex-start' }}>
@@ -89,7 +91,7 @@ const HomePage = () => {
                 <View style={{ height: 2, backgroundColor: 'black', width: '100%' }} />
                 <Text style={{ fontSize: 20 }}>40</Text>
               </View>
-              <Text style={{ fontSize: 10, flexWrap: 'wrap', textAlign: 'center' }}>February monthly goal</Text>
+              <Text style={{ fontSize: 10, flexWrap: 'wrap', textAlign: 'center' }}>{months[today.getMonth()]} monthly goal</Text>
             </View>
           </View>
         </View>
@@ -98,7 +100,7 @@ const HomePage = () => {
 
 
         <View style={{ ...styles.scroll, marginLeft: 20, marginRight: 100, gap: 20 }}>
-          <Calendar dates={dummyDates} curr_date={3}></Calendar>
+          <Calendar></Calendar>
           <DailyTasks></DailyTasks>
         </View>
       </View>

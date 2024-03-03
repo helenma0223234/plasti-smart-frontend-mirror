@@ -4,6 +4,7 @@ import TextStyles from 'utils/TextStyles';
 import Colors from 'utils/Colors';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Text, View } from 'react-native';
+import CompletedDot from 'components/CompletedDot';
 
 interface DailyTasksProps {
   fea: number
@@ -13,9 +14,9 @@ const DailyTasks = () => {
   return (
     <ScrollView>
       <View style={{ gap: 10, marginBottom: 30 }}>
-        <Task complete={true} title={'Get your money up'}></Task>
-        <Task complete={true} title={'Protect the cat from microplastics'}></Task>
-        <Task complete={true} title={'Call mom'}></Task>
+        <Task complete={true} title={'Feed your plasty'}></Task>
+        <Task complete={true} title={'Recycle a plastic'}></Task>
+        <Task complete={true} title={'Over 50% happiness'}></Task>
       </View>
     </ScrollView>
   );
@@ -28,8 +29,9 @@ interface TaskProps {
 
 const Task = ({ complete, title }: TaskProps) => {
   return (
-    <View style={{ borderColor: Colors.primary.dark, borderWidth: 2, padding: 20, borderRadius: 15, width: 350 }}>
+    <View style={{ borderColor: Colors.primary.dark, borderWidth: 2, padding: 20, borderRadius: 15, width: 350, flexDirection: 'row', justifyContent: 'space-between' }}>
       <Text style={{ ...TextStyles.regular }}>{title}</Text>
+      <CompletedDot color='red' completed={complete}></CompletedDot>
     </View>
   );
 };

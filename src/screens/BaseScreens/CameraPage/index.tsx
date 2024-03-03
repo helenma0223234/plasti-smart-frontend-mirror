@@ -109,38 +109,38 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   useEffect(() => {
     const classifyImage = async () => {
       // for development purpose
-      // if (capturedPhoto) {
-      //   setModelVerdict(4);
-      //   bottomSheetRef.current?.open();
-      // }
-
-      if (capturedPhoto && model) {
-        try {
-          // Load image
-          const response = await fetch(capturedPhoto);
-          const imageDataArrayBuffer = await response.arrayBuffer();
-          const imageTensor = tf.decodeJpeg(new Uint8Array(imageDataArrayBuffer), 3);
-
-          // Preprocess image
-          const resizedImage = tfjs.image.resizeBilinear(imageTensor, [200, 200]);
-          const batchedImage = resizedImage.expandDims(0);
-
-          // Classify image
-          const prediction = await model.predict(batchedImage);
-          if (prediction instanceof tfjs.Tensor) {
-            const predictionArray = prediction.dataSync();
-            const predictionValues = Array.from(predictionArray);
-            // finding the index w/ maximum value (class with the highest probability)
-            const predictedIndex = predictionValues.indexOf(Math.max(...predictionValues));
-            setModelVerdict(predictedIndex + 1);
-            bottomSheetRef.current?.open();
-          } else {
-            console.error('Error classifying image: prediction is not a tensor');
-          }
-        } catch (error) {
-          console.error('Error classifying image:', error);
-        }
+      if (capturedPhoto) {
+        setModelVerdict(4);
+        bottomSheetRef.current?.open();
       }
+      //////////////// bypass this current model that isn't working
+      // if (capturedPhoto && model) {
+      //   try {
+      //     // Load image
+      //     const response = await fetch(capturedPhoto);
+      //     const imageDataArrayBuffer = await response.arrayBuffer();
+      //     const imageTensor = tf.decodeJpeg(new Uint8Array(imageDataArrayBuffer), 3);
+
+      //     // Preprocess image
+      //     const resizedImage = tfjs.image.resizeBilinear(imageTensor, [200, 200]);
+      //     const batchedImage = resizedImage.expandDims(0);
+
+      //     // Classify image
+      //     const prediction = await model.predict(batchedImage);
+      //     if (prediction instanceof tfjs.Tensor) {
+      //       const predictionArray = prediction.dataSync();
+      //       const predictionValues = Array.from(predictionArray);
+      //       // finding the index w/ maximum value (class with the highest probability)
+      //       const predictedIndex = predictionValues.indexOf(Math.max(...predictionValues));
+      //       setModelVerdict(predictedIndex + 1);
+      //       bottomSheetRef.current?.open();
+      //     } else {
+      //       console.error('Error classifying image: prediction is not a tensor');
+      //     }
+      //   } catch (error) {
+      //     console.error('Error classifying image:', error);
+      //   }
+      // }
     };
 
     classifyImage();

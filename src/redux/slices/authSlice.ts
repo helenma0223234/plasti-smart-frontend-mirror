@@ -3,35 +3,28 @@ import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/too
 import { SERVER_URL } from 'utils/constants.js';
 import axios from 'axios';
 import { getBearerToken, setBearerToken } from 'utils/asyncStorage';
-import { UserScopes } from 'types/users';
+import { IUser, UserScopes } from 'types/users';
+import { setLoginHistory } from './loginhistorySlice';
+import { LoginHistory } from 'types/loginHistory';
 
 export interface AuthState {
   authenticated: boolean
   loading: boolean
-  id: string
-  email: string
-  name: string
-  role: UserScopes
+  user: IUser | null;
+  loginHistory: LoginHistory[];
 }
 
 const initialState: AuthState = {
   authenticated: false,
   loading: false,
-  id: '',
-  email: '',
-  name: '',
-  role: UserScopes.Unverified,
+  user: null,
+  loginHistory: [],
 };
 
 interface LoginResponse {
   token: string
-  user: {
-    id: string
-    email: string
-    // no password
-    name: string
-    role: UserScopes
-  }
+  user: IUser
+  history: LoginHistory[]
 }
 
 export const setCredentials = createAsyncThunk(
@@ -55,13 +48,18 @@ export const initCredentials = createAsyncThunk(
 
 export const signUp = createAsyncThunk(
   'auth/signup',
-  async (credentials: { email: string, password: string, name: string }, { dispatch }) => {
+  async (credentials: { email: string, password: string, username: string }, { dispatch }) => {
     dispatch(startAuthLoading());
     return axios
       .post(`${SERVER_URL}auth/signup`, credentials)
       .finally(() => dispatch(stopAuthLoading()))
       .then((response) => {
         alert('Sign up successful!');
+        dispatch(setLoginHistory(response.data.history));
+        //////////// Question:
+        ///was not in the original template.. why not dispatch the token here?
+        ////////////
+        // dispatch(setCredentials(response.data.token));
         return response.data;
       })
       .catch((error) => {
@@ -83,12 +81,14 @@ export const signIn = createAsyncThunk(
           // forbidden - not verified
           return {
             user: { email: credentials.email },
+            LoginHistory: [],
             verified: false,
           };
         }
+        dispatch(setLoginHistory(response.data.history));
         dispatch(setCredentials(response.data.token));
         alert('Signed In!');
-        return { ...response.data };
+        return response.data;
       })
       .catch((error) => {
         alert(
@@ -120,6 +120,7 @@ export const jwtSignIn = createAsyncThunk(
         if (token) {
           dispatch(setCredentials(token));
         }
+        dispatch(setLoginHistory(response.data.history));
         return response.data;
       })
       .catch((err) => {
@@ -189,13 +190,14 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(signIn.fulfilled, (state, action) => {
       if ('token' in action.payload) {
-        state = ({ ...state, ...action.payload.user });
+        state.user = action.payload.user;
         state.authenticated = true;
         return state;
       }
     });
     builder.addCase(jwtSignIn.fulfilled, (state, action) => {
-      state = ({ ...state, ...action.payload.user });
+      // state = ({ ...state, ...action.payload.user });
+      state.user = action.payload.user;
       state.authenticated = true;
       return state;
     });
@@ -211,7 +213,8 @@ export const authSlice = createSlice({
     builder.addCase(verify.fulfilled, (state, action) => {
       if (action.payload != null) {
         setBearerToken(action.payload.token);
-        state = ({ ...state, ...action.payload.user });
+        // state = ({ ...state, ...action.payload.user });
+        state.user = action.payload.user;
         state.authenticated = true;
       }
       alert('Your account has been authorized!');

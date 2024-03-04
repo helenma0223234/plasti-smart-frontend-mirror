@@ -91,6 +91,7 @@ export const feedAvatar = createAsyncThunk(
       .post(`${SERVER_URL}users/${req.id}/feedAvatar`)
       .finally(() => dispatch(stopUsersLoading()))
       .then((response) => {
+        console.log('response', response.data.loginHistory);
         dispatch(updateFirstLoginHistory(response.data.loginHistory));
         console.log(response.data.user);
         return response.data.user;
@@ -132,6 +133,10 @@ export const usersSlice = createSlice({
         state.selectedUser = undefined;
       }
       alert('Deleted user with id ' + user.id);
+    });
+    builder.addCase(feedAvatar.fulfilled, (state, action) => {
+      state.selectedUser = action.payload as IUser;
+      alert('Updated user after feedAvatar: ' + JSON.stringify(action.payload));
     });
   },
 });

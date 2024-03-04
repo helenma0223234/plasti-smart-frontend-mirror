@@ -23,18 +23,13 @@ import DailyTasks from 'components/DailyTasks';
 
 import { useDispatch } from 'react-redux';
 import { feedAvatar } from '../../../redux/slices/usersSlice'; // import the action
-import { useSelector } from 'react-redux';
 
 
 
 const HomePage = () => {
-  const user = useSelector((state) => state.users.selectedUser);
+  const user = useAppSelector((state) => state.users.selectedUser);
   const currentLoginHist = useAppSelector((state) => state.loginhistory.history);
 
-  if (user === null) {
-    return <Text>Loading...</Text>;
-  }
-  
   if (user === null) {
     return <Text>Loading...</Text>;
   }
@@ -64,27 +59,14 @@ const HomePage = () => {
     });
   
     if (loginHistoryForDay) {
-      const sub = [];
-      sub.push(+loginHistoryForDay.redGoal);
-      sub.push(+loginHistoryForDay.yellowGoal);
-      sub.push(+loginHistoryForDay.greenGoal);
-      taskCompletionStatuses.push(sub);    
+      taskCompletionStatuses.push([+loginHistoryForDay.redGoal, +loginHistoryForDay.yellowGoal, +loginHistoryForDay.greenGoal]);    
     } else {
       taskCompletionStatuses.push([]);
     }
   }
   // for today
-  const tod = [];
-  if (todayTasksCompletion[0]) {
-    tod.push(+todayTasksCompletion[0]);
-  }
-  if (todayTasksCompletion[1]) {
-    tod.push(+todayTasksCompletion[1]);
-  }
-  if (todayTasksCompletion[2]) {
-    tod.push(+todayTasksCompletion[2]);
-  }
-  taskCompletionStatuses.push(tod);  
+  taskCompletionStatuses.push([+todayTasksCompletion[0], +todayTasksCompletion[1], +todayTasksCompletion[2]]);  
+  // next 3 days are empty
   for (let j = 0; j < 3; j++) {
     taskCompletionStatuses.push([]);
   }

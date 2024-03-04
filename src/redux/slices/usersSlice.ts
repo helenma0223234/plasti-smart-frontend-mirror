@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { SERVER_URL } from 'utils/constants.js';
 import axios from 'axios';
 import { UserScopes, IUser } from 'types/users.jsx';
+import { updateFirstLoginHistory } from './loginhistorySlice';
 
 export interface UserState {
   loading: boolean
@@ -76,6 +77,26 @@ export const deleteUser = createAsyncThunk(
       })
       .catch((error) => {
         console.error('Error when deleting user', error);
+        return false;
+      });
+  },
+);
+
+export const feedAvatar = createAsyncThunk(
+  'users/feedAvatar',
+  async (req: { id: string }, { dispatch }) => {
+    dispatch(startUsersLoading());
+    console.log('calling feed avatar');
+    return axios
+      .post(`${SERVER_URL}users/${req.id}/feedAvatar`)
+      .finally(() => dispatch(stopUsersLoading()))
+      .then((response) => {
+        dispatch(updateFirstLoginHistory(response.data.loginHistory));
+        console.log(response.data.user);
+        return response.data.user;
+      })
+      .catch((error) => {
+        console.error('Error when feeding avatar', error);
         return false;
       });
   },

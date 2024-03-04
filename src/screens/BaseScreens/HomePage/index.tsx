@@ -21,26 +21,19 @@ import Calendar from 'components/Calendar';
 import Colors from 'utils/Colors';
 import DailyTasks from 'components/DailyTasks';
 
+import { useDispatch } from 'react-redux';
+import { feedAvatar } from '../../../redux/slices/usersSlice'; // import the action
+import { useSelector } from 'react-redux';
+
 
 
 const HomePage = () => {
-  const user = useAppSelector((state) => state.users.selectedUser);
-  const loginHistory = useAppSelector((state) => state.loginhistory.history);
+  const user = useSelector((state) => state.users.selectedUser);
+  const currentLoginHist = useAppSelector((state) => state.loginhistory.history);
 
   if (user === null) {
     return <Text>Loading...</Text>;
   }
-
-  const [hearts, setHearts] = useState(user.avatarHealth);
-  const [snacks, setSnacks] = useState(user.snacks);
-
-  const addHeart = () => {
-    setHearts(hearts + 1);
-  };
-
-  const eatSnacks = () => {
-    setSnacks(Math.max(0, snacks - 1));
-  };
   
   if (user === null) {
     return <Text>Loading...</Text>;
@@ -50,13 +43,12 @@ const HomePage = () => {
   today.setUTCHours(5, 0, 0, 0);
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+  // console.log(currentLoginHist);
   let todayTasksCompletion = [false, false, false];
-  if (loginHistory.length > 0) {
-    const firstHist = new Date(loginHistory[0].date);
-    // console.log(loginHistory[0]);
+  if (currentLoginHist.length > 0) {
+    const firstHist = new Date(currentLoginHist[0].date);
     if (today.toDateString() === firstHist.toDateString()) {
-      todayTasksCompletion = [loginHistory[0].redGoal, loginHistory[0].yellowGoal, loginHistory[0].greenGoal];
-      // console.log('here', todayTasksCompletion);
+      todayTasksCompletion = [currentLoginHist[0].redGoal, currentLoginHist[0].yellowGoal, currentLoginHist[0].greenGoal];
     }
   }
 
@@ -66,7 +58,7 @@ const HomePage = () => {
     day.setUTCHours(5, 0, 0, 0);
     day.setDate(today.getDate() - i);
   
-    const loginHistoryForDay = loginHistory.find(history => {
+    const loginHistoryForDay = currentLoginHist.find(history => {
       const historyDate = new Date(history.date);
       return historyDate.toDateString() === day.toDateString();
     });
@@ -127,7 +119,7 @@ const HomePage = () => {
           <HappyScale happiness={user.avatarHealth} ></HappyScale>
 
           <View style={{ gap: 10, marginTop: 10 }}>
-            <SnackButton snacks={user.snacks} setHearts={addHeart} setSnacks={eatSnacks}></SnackButton>
+            <SnackButton snacks={user.snacks} uid={user.id} uhealth={user.avatarHealth}></SnackButton>
             <Place number={1}></Place>
             <View style={{ flexDirection: 'column', justifyContent: 'flex-start', width: 70, gap: 5 }}>
               <View style={{ borderWidth: 2, borderColor: Colors.primary.dark, borderRadius: 38, alignItems:'center', justifyContent:'center' }}>
@@ -205,17 +197,17 @@ const Place = ({ number }: PlaceProps) => {
 
 interface SnackProps {
   snacks: number
-  setHearts: () => void;
-  setSnacks: () => void;
-
+  uid: string
+  uhealth: number
 }
 
-const SnackButton = ({ snacks, setHearts, setSnacks }: SnackProps) => {
+const SnackButton = ({ snacks, uid, uhealth }: SnackProps) => {
+  const dispatch = useDispatch();
   const handlePress = () => {
-    // Increment the parent state by 1
-    if (snacks > 0) {
-      setHearts();
-      setSnacks();
+    if (snacks > 0 && uhealth < 5) {
+      dispatch(feedAvatar({ id: uid }));
+    } else {
+      alert('Can not feed Plasti sorry~');
     }
   };
 

@@ -13,7 +13,7 @@ interface DailyTasksProps {
 const DailyTasks = ({ taskCompletionStatuses = [] }: DailyTasksProps) => {
   const taskTitles = ['Feed your plasty', 'Recycle a plastic', 'Over 50% happiness'];
   const dotColors = [Colors.secondary.red, Colors.secondary.yellow, Colors.primary.dark];
-  console.log(taskCompletionStatuses);
+  // console.log(taskCompletionStatuses);
   return (
     <ScrollView>
       <View style={{ gap: 10, marginBottom: 30 }}>

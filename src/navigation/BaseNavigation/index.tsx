@@ -197,7 +197,7 @@ const BaseNavigation = () => {
                 null);
             },
             tabBarIcon: (props) => (
-              <Feather name="bar-chart-2" size={40} color={props.color} />
+              <Feather name="settings" size={40} color={props.color} />
             ),
           }}
         />

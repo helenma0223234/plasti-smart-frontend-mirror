@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ScrollView, SafeAreaView, View, Text, StyleSheet, Modal, Pressable } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, SafeAreaView, View, Text, StyleSheet, Modal, Pressable, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
 import { logout } from '../../../redux/slices/authSlice';
 import AppButton from '../../../components/AppButton';
@@ -13,17 +13,61 @@ import Colors from 'utils/Colors';
 import Svg, { G, Circle } from 'react-native-svg';
 import Animated from 'react-native-reanimated';
 import CircularProgress from 'react-native-circular-progress-indicator';
+import Cat from '../../../assets/Cat.svg';
 import Trophy from '../../../assets/Trophy.svg';
+import useAppSelector from 'hooks/useAppSelector';
+import PlasticSymbol from 'components/RecycleSymbol';
 // import PlasticSymbol from 'components/RecycleSymbol';
 
 
+const info = [
+  {
+    title: 'Polyethylene Terephthalate',
+  },
+  {
+    title: 'High Density Polyethylene',
+  },
+  {
+    title: 'Polyvinyl Chloride',
+  },
+  {
+    title: 'Low-Density Polyethylene',
+  },
+  {
+    title: 'Polypropylene',
+  },
+  {
+    title: 'Polystyrene',
+  },
+  {
+    title: 'Miscellaneous/Other',
+  },
+];
+
+
 const EducationPage = () => {
+  const user = useAppSelector((state) => state.auth.user);
+  const [currCard, setCurrCard] = useState(1);
+  const [currCardPlastic, setCurrCardPlastic] = useState(1);
+
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavType>();
 
   const [modalVisible, setModalVisible] = useState(false);
 
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    // console.log(event.nativeEvent.contentOffset.y);
+    setCurrCardPlastic(Math.floor(((event.nativeEvent.contentOffset.x)) / 330));
+  };
 
+  const handlePress = (index: number) => {
+    setCurrCard(index);
+    setCurrCardPlastic(index);
+  };
+
+  // useEffect(() => {
+
+  // }, [currCard]);
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container }}>
@@ -67,6 +111,7 @@ const EducationPage = () => {
               <ProgressCard
                 title={'Monthly Challenge'}
                 text={'You\'ve recycled 8 out of 10 PET plastics this month. Keep going to get the prize!'}
+                number={1}
                 cornerComponent={
                   <View>
 
@@ -86,60 +131,37 @@ const EducationPage = () => {
                 }>
               </ProgressCard>
               <ProgressCard
-                title={'Monthly Challenge'}
-                text={'You\'ve recycled 8 out of 10 PET plastics this month. Keep going to get the prize!'}
+                title={'Top Plastic'}
+                text={'You\'ve recycled a lot!'}
+                number={1}
                 cornerComponent={
-                  <View style={{ width: 20, height: 20, alignItems: 'center', backgroundColor: 'blue' }}>
-                    <Trophy></Trophy>
-                  </View>
+                  <Trophy width={80} height={80} style={{ left: -10 }}></Trophy>
                 }>
               </ProgressCard>
               <ProgressCard
-                title={'Monthly Challenge'}
-                text={'You\'ve recycled 8 out of 10 PET plastics this month. Keep going to get the prize!'}
-                cornerComponent={<></>}>
+                title={'Avatar Points'}
+                text={'You monthly challenge progress has gained you the most points!'}
+                cornerComponent={<Cat height={100} width={100} style={{ left: -20 }}></Cat>}>
               </ProgressCard>
             </View>
           </ScrollView>
-          <Text style={{ ...TextStyles.subTitle }}>Learn about polymers</Text>
-          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
+          <View style={{ gap: 10 }}>
+            <Text style={{ ...TextStyles.subTitle }}>Learn about polymers</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              {info.map((card, index) => (
+                // eslint-disable-next-line max-len
+                <TouchableOpacity style={{ ...FormatStyle.circle, marginTop: 0, width: 43, height: 43, backgroundColor: currCardPlastic != index ? Colors.secondary.white : Colors.primary.dark }} onPress={() => handlePress(index)}>
+                  <PlasticSymbol color = {currCardPlastic == index ? Colors.secondary.white : Colors.primary.dark} width={35} height={35} number={index + 1} top={5} left={15}></PlasticSymbol>
+                </TouchableOpacity >
+              ))}
+            </View>
+          </View>
+          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} contentOffset={{ x: 340 * currCard, y: 0 }} onScroll={handleScroll}>
             <View style={{ gap: 10, flexDirection: 'row' }}>
-              <PolymerCard
-                title={'Polyethylene Terephthalate'}
-                text={'PET (or PETE) is pretty common! They’re used to make bottles for soda, water, and other drinks. These are dangerous when exposed to heat.'}
-              ></PolymerCard>
-              <PolymerCard
-                title={'Polyethylene Terephthalate'}
-                text={'PET (or PETE) is pretty common! They’re used to make bottles for soda, water, and other drinks. These are dangerous when exposed to heat.'}
-              ></PolymerCard>
-              <PolymerCard
-                title={'Polyethylene Terephthalate'}
-                text={'PET (or PETE) is pretty common! They’re used to make bottles for soda, water, and other drinks. These are dangerous when exposed to heat.'}
-              ></PolymerCard>
-              <PolymerCard
-                title={'Polyethylene Terephthalate'}
-                text={'PET (or PETE) is pretty common! They’re used to make bottles for soda, water, and other drinks. These are dangerous when exposed to heat.'}
-              ></PolymerCard>
-              <PolymerCard
-                title={'Polyethylene Terephthalate'}
-                text={'PET (or PETE) is pretty common! They’re used to make bottles for soda, water, and other drinks. These are dangerous when exposed to heat.'}
-              ></PolymerCard>
-              <PolymerCard
-                title={'Polyethylene Terephthalate'}
-                text={'PET (or PETE) is pretty common! They’re used to make bottles for soda, water, and other drinks. These are dangerous when exposed to heat.'}
-              ></PolymerCard>
-              <PolymerCard
-                title={'Polyethylene Terephthalate'}
-                text={'PET (or PETE) is pretty common! They’re used to make bottles for soda, water, and other drinks. These are dangerous when exposed to heat.'}
-              ></PolymerCard>
-              <PolymerCard
-                title={'Polyethylene Terephthalate'}
-                text={'PET (or PETE) is pretty common! They’re used to make bottles for soda, water, and other drinks. These are dangerous when exposed to heat.'}
-              ></PolymerCard>
-              <PolymerCard
-                title={'Polyethylene Terephthalate'}
-                text={'PET (or PETE) is pretty common! They’re used to make bottles for soda, water, and other drinks. These are dangerous when exposed to heat.'}
-              ></PolymerCard>
+              {info.map((card, index) => (
+                <PolymerCard title={card.title} number={index + 1} />
+              ))}
+
             </View>
           </ScrollView>
 
@@ -153,17 +175,23 @@ interface ProgressCardProps {
   cornerComponent: JSX.Element;
   title: string;
   text: string;
-  plastic?: JSX.Element;
+  number?: number
 }
 
-const ProgressCard = ({ cornerComponent, title, text, plastic }: ProgressCardProps) => {
+const ProgressCard = ({ cornerComponent, title, text, number }: ProgressCardProps) => {
   return (
     <View style={{ ...styles.card, width: 180, height: 250, padding: 10, gap: 10 }}>
       <View style={{
-        position: 'absolute', top: 10, left: 15, height: 100,
+        position: 'absolute', alignItems: 'flex-start', top: 10, left: 15,
       }}>
         {cornerComponent}
       </View>
+      {number &&
+        <View style={{ ...FormatStyle.circle, alignSelf: 'flex-end', marginTop: 0, width: 50, height: 50, backgroundColor: Colors.secondary.white, position: 'absolute', top: 10, right: 10 }}>
+          <PlasticSymbol color={Colors.primary.dark} width={35} height={35} number={1} top={5} left={15}></PlasticSymbol>
+        </View>
+      }
+
       <View style={{ marginTop: 100, gap: 5 }}>
         <Text style={{ ...TextStyles.subTitle, fontSize: 16, flexWrap: 'wrap' }}>{title}</Text>
         <Text style={{ flexWrap: 'wrap', fontSize: 14 }}>{text}</Text>
@@ -176,11 +204,12 @@ const ProgressCard = ({ cornerComponent, title, text, plastic }: ProgressCardPro
 interface PolymerCardProps {
   cornerComponent?: JSX.Element;
   title: string;
-  text: string;
+  text?: string;
   plastic?: JSX.Element;
+  number: number;
 }
 
-const PolymerCard = ({ title, text }: PolymerCardProps) => {
+const PolymerCard = ({ title, number }: PolymerCardProps) => {
   return (
     <View style={{ ...styles.card, borderRadius: 20, width: 330, height: 400, padding: 20 }}>
       <View style={{
@@ -191,14 +220,14 @@ const PolymerCard = ({ title, text }: PolymerCardProps) => {
         position: 'absolute',
       }}>
         <View>
-          {/* <PlasticSymbol color={Colors.secondary.white}></PlasticSymbol> */}
+          <PlasticSymbol color={Colors.secondary.white} width={35} height={35} number={number} top={5} left={15}></PlasticSymbol>
         </View>
       </View>
-      <Text style={{ ...TextStyles.subTitle, fontSize: 18, marginLeft: 40 }}>{title}</Text>
+      <Text style={{ ...TextStyles.subTitle, fontSize: 20, marginLeft: 40, marginTop: -5 }}>{title}</Text>
 
-      <View style={{ alignItems: 'center', gap: 20, marginTop: 30 }}>
-        <Text style={{ ...TextStyles.small, fontSize: 19, textAlign: 'center', width: 250 }}>
-          {text}
+      <View style={{ alignItems: 'center', gap: 20, marginTop: 40 }}>
+        <Text style={{ ...TextStyles.small, fontSize: 17, textAlign: 'center', width: 250 }}>
+          {title} is pretty <Text style={{ fontWeight: '800' }}>common!</Text> It's used to make bottles for soda, water, and other drinks. These are dangerous when exposed to heat.
         </Text>
         <Text>Found in:</Text>
         <View>

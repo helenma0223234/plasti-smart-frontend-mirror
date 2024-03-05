@@ -35,12 +35,13 @@ const RootNavigation = () => {
 
   }, []);
 
-  // return <BaseNavigation />;
 
   if (!authenticated) {
-    return (
-      <AuthNavigation />
-    );
+    return <BaseNavigation />;
+
+    // return (
+    //   // <AuthNavigation />
+    // );
   } else if (authenticated && role === UserScopes.Unverified) {
     return (
       <NavigationContainer>

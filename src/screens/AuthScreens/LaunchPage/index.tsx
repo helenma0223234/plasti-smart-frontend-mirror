@@ -31,7 +31,7 @@ const FrontPage = () => {
       </View>
       <View style={{ position: 'absolute', bottom: 0, marginBottom: 50 }}>
         <Button
-          onPress={() => navigation.navigate(AuthStackRoutes.ONBOARD)}
+          onPress={() => navigation.navigate(AuthStackRoutes.SIGNUP)}
           title={'Get Started'}
           fullWidth
         />

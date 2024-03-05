@@ -86,14 +86,11 @@ export const feedAvatar = createAsyncThunk(
   'users/feedAvatar',
   async (req: { id: string }, { dispatch }) => {
     dispatch(startUsersLoading());
-    console.log('calling feed avatar');
     return axios
       .post(`${SERVER_URL}users/${req.id}/feedAvatar`)
       .finally(() => dispatch(stopUsersLoading()))
       .then((response) => {
-        console.log('response', response.data.loginHistory);
         dispatch(updateFirstLoginHistory(response.data.loginHistory));
-        console.log(response.data.user);
         return response.data.user;
       })
       .catch((error) => {
@@ -136,7 +133,7 @@ export const usersSlice = createSlice({
     });
     builder.addCase(feedAvatar.fulfilled, (state, action) => {
       state.selectedUser = action.payload as IUser;
-      alert('Updated user after feedAvatar: ' + JSON.stringify(action.payload));
+      // alert('Updated user after feedAvatar: ' + JSON.stringify(action.payload));
     });
   },
 });

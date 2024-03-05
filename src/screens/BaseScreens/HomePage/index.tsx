@@ -35,7 +35,7 @@ const HomePage = () => {
   }
 
   const today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
+  // today.setUTCHours(0, 0, 0, 0);
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
   let todayTasksCompletion = [false, false, false];
@@ -139,6 +139,12 @@ interface HappyProps {
 }
 
 const HappyScale = ({ happiness }: HappyProps) => {
+  if (typeof happiness !== 'number') {
+    throw new Error('Invalid happiness value');
+  }
+  // hardcode for bug right now...
+  if (happiness >= 5 ) happiness = 5;
+  if (happiness <= 0 ) happiness = 0;
   const empty = Math.max(0, 5 - happiness);
   return (
     <View style={{}}>

@@ -61,7 +61,10 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   const [modelVerdict, setModelVerdict] = useState<number | null>(null);
   const model = useAppSelector((state: RootState) => state.model.model);
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state: RootState) => state.auth.user);
+  
+  // use user slice user instead of auth slice user?
+  const user = useAppSelector((state) => state.users.selectedUser);
+  
   const plasticTypes = {
     1: 'PET',
     2: 'HDPE',
@@ -429,8 +432,8 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
           height={350}
           openDuration={250}
           closeDuration={200}
-          closeOnDragDown={true}
-          closeOnPressMask={true}
+          closeOnDragDown={false}
+          closeOnPressMask={false}
           customStyles={{
             wrapper: {
               backgroundColor: 'transparent',
@@ -440,7 +443,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
             },
           }}
         >
-          <View style={{ flexDirection: 'column', alignItems: 'center', marginBottom: 20, borderColor: 'black', marginTop:6 }}>
+          <View style={{ flexDirection: 'column', alignItems: 'center', marginBottom: 20, borderColor: 'black', marginTop:12 }}>
             
             <View style={{ justifyContent:'center', alignItems:'center', borderColor:'black', width: '50%', maxHeight: '40%', marginBottom: 8, marginTop:10  }}>
               <SvgXml
@@ -479,7 +482,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
                 setIsAnimating(true);
                 bottomSheetRef.current?.close();
                 setManualEntryMode(true);
-                // bottomSheetRef.current?.close();
               }}
             >
               <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>Wrong Symbol</Text>

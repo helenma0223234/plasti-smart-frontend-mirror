@@ -16,9 +16,10 @@ import PlasticSymbol from 'components/RecycleSymbol';
 
 import * as Progress from 'react-native-progress';
 import { AntDesign } from '@expo/vector-icons';
-
+import useAppSelector from 'hooks/useAppSelector';
 
 const ProgressPage = () => {
+  const user = useAppSelector((state) => state.users.selectedUser);
   const navigation = useNavigation<NavType>();
 
   const goals = [
@@ -31,6 +32,21 @@ const ProgressPage = () => {
     { progress: 1 },
   ];
 
+  const collectedTypes = {
+    1: user.Type1Collected,
+    2: user.Type2Collected,
+    3: user.Type3Collected,
+    4: user.Type4Collected,
+    5: user.Type5Collected,
+    6: user.Type6Collected,
+    7: user.Type7Collected,
+  };
+
+  const maxType = Object.entries(collectedTypes).reduce((max, [type, value]) => {
+    return value > max.value ? { type: Number(type), value } : max;
+  }, { type: 1, value: user?.Type1Collected });
+  
+  console.log(maxType);
   return (
     <SafeAreaView style={{ ...FormatStyle.container }}>
       <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
@@ -43,20 +59,20 @@ const ProgressPage = () => {
           <ProgressCard
             title={'Top Plastic'}
             text={'You\'ve recycled a lot!'}
-            number={1}
+            number={maxType.type}
             cornerComponent={
-              <PlasticSymbol color={Colors.highlight} width={80} height={100} number={3} top={35} left={35}></PlasticSymbol>
+              <PlasticSymbol color={Colors.highlight} width={80} height={100} number={maxType.type} top={35} left={35}></PlasticSymbol>
             }>
           </ProgressCard>
           <ProgressCard
             title={'Monthly Challenge'}
-            text={'You\'ve recycled 8 out of 10 PET plastics this month. Keep going to get the prize!'}
+            text={'You\'ve recycled out of 10 PET plastics this month. Keep going to get the prize!'}
             number={1}
             cornerComponent={
               <View>
 
                 <CircularProgress
-                  value={60 / 60 * 100}
+                  value={(user?.monthlyGoalPlasticAmount / user?.monthlyGoalPlasticTotal) * 100}
                   radius={50}
                   circleBackgroundColor={'transparent'}
                   progressValueColor={'transparent'}
@@ -64,7 +80,7 @@ const ProgressPage = () => {
                   inActiveStrokeColor={'transparent'}
                 />
                 <View style={{ position: 'relative', bottom: 60, alignItems: 'center' }}>
-                  <Text style={{ fontSize: 20, fontWeight: '800' }}>{40}/{40}</Text>
+                  <Text style={{ fontSize: 20, fontWeight: '800' }}>{user?.monthlyGoalPlasticAmount}/{user?.monthlyGoalPlasticTotal}</Text>
                 </View>
               </View>
             }>

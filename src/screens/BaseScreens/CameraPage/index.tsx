@@ -59,6 +59,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   const cameraRef = useRef<Camera | null>(null);
 
   const [modelVerdict, setModelVerdict] = useState<number | null>(null);
+  const [isModelRunning, setIsModelRunning] = useState(false);
   const model = useAppSelector((state: RootState) => state.model.model);
   const dispatch = useAppDispatch();
   
@@ -130,6 +131,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       // }
       //////////////// bypass this current model that isn't working
       if (capturedPhoto && model) {
+        setIsModelRunning(true);
         try {
           // Load image
           const response = await fetch(capturedPhoto);
@@ -149,6 +151,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
             const predictedIndex = predictionValues.indexOf(Math.max(...predictionValues));
             setModelVerdict(predictedIndex + 1);
             bottomSheetRef.current?.open();
+            setIsModelRunning(false);
           } else {
             console.error('Error classifying image: prediction is not a tensor');
           }
@@ -348,6 +351,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
                   <TouchableOpacity
                     style={styles.backButton}
                     onPress={() => goToFrontPage()}
+                    disabled={isModelRunning} 
                   >
                     <Ionicons name="arrow-back-outline" size={36} color="white" />
                   </TouchableOpacity>
@@ -355,6 +359,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
                 <View style={styles.manualEntryButtonContainer}>
                   <TouchableOpacity
                     style={styles.manualEntryButton}
+                    disabled={isModelRunning}
                     onPress={() => {
                       setManualEntryMode(true);
                       setIsAnimating(false);
@@ -407,6 +412,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
                 <View style={styles.flipButtonContainer}>
                   <TouchableOpacity
                     style={styles.flipButton}
+                    disabled={isModelRunning}
                     onPress={toggleCameraType}
                   >
                     <Ionicons
@@ -419,6 +425,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
                 <View style={styles.captureButtonContainer}>
                   <TouchableOpacity
                     style={styles.captureButton}
+                    disabled={isModelRunning}
                     onPress={takePicture}
                   ></TouchableOpacity>
                 </View>
@@ -460,6 +467,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
           
             <TouchableOpacity
               style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
+              disabled={isModelRunning}
               onPress={() => {
                 // bottomSheetRef.current?.close();
                 if (modelVerdict && user && capturedPhoto)
@@ -477,6 +485,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
 
             <TouchableOpacity
               style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
+              disabled={isModelRunning}
               onPress={() => {
                 setIsAnimating(false);
                 setIsAnimating(true);

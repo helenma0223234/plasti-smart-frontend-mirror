@@ -21,6 +21,7 @@ import * as tfjs from '@tensorflow/tfjs';
 import useAppSelector from '../../../hooks/useAppSelector';
 import useAppDispatch from 'hooks/useAppDispatch';
 import { cameraClosed, cameraOpened } from 'redux/slices/cameraSlice';
+import { createScan } from 'redux/slices/usersSlice';
 import { RootState } from 'redux/store';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
@@ -60,6 +61,17 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   const [modelVerdict, setModelVerdict] = useState<number | null>(null);
   const model = useAppSelector((state: RootState) => state.model.model);
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state: RootState) => state.auth.user);
+  const plasticTypes = {
+    1: 'PET',
+    2: 'HDPE',
+    3: 'PVC',
+    4: 'LDPE',
+    5: 'PP',
+    6: 'PS',
+    7: 'Other',
+    8: 'Unknown',
+  };
 
   const [manualEntryMode, setManualEntryMode] = useState<boolean>(false);
   const [isAnimating, setIsAnimating] = useState(true);
@@ -109,38 +121,38 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   useEffect(() => {
     const classifyImage = async () => {
       // for development purpose
-      if (capturedPhoto) {
-        setModelVerdict(4);
-        bottomSheetRef.current?.open();
-      }
-      //////////////// bypass this current model that isn't working
-      // if (capturedPhoto && model) {
-      //   try {
-      //     // Load image
-      //     const response = await fetch(capturedPhoto);
-      //     const imageDataArrayBuffer = await response.arrayBuffer();
-      //     const imageTensor = tf.decodeJpeg(new Uint8Array(imageDataArrayBuffer), 3);
-
-      //     // Preprocess image
-      //     const resizedImage = tfjs.image.resizeBilinear(imageTensor, [200, 200]);
-      //     const batchedImage = resizedImage.expandDims(0);
-
-      //     // Classify image
-      //     const prediction = await model.predict(batchedImage);
-      //     if (prediction instanceof tfjs.Tensor) {
-      //       const predictionArray = prediction.dataSync();
-      //       const predictionValues = Array.from(predictionArray);
-      //       // finding the index w/ maximum value (class with the highest probability)
-      //       const predictedIndex = predictionValues.indexOf(Math.max(...predictionValues));
-      //       setModelVerdict(predictedIndex + 1);
-      //       bottomSheetRef.current?.open();
-      //     } else {
-      //       console.error('Error classifying image: prediction is not a tensor');
-      //     }
-      //   } catch (error) {
-      //     console.error('Error classifying image:', error);
-      //   }
+      // if (capturedPhoto) {
+      //   setModelVerdict(4);
+      //   bottomSheetRef.current?.open();
       // }
+      //////////////// bypass this current model that isn't working
+      if (capturedPhoto && model) {
+        try {
+          // Load image
+          const response = await fetch(capturedPhoto);
+          const imageDataArrayBuffer = await response.arrayBuffer();
+          const imageTensor = tf.decodeJpeg(new Uint8Array(imageDataArrayBuffer), 3);
+
+          // Preprocess image
+          const resizedImage = tfjs.image.resizeBilinear(imageTensor, [200, 200]);
+          const batchedImage = resizedImage.expandDims(0);
+
+          // Classify image
+          const prediction = await model.predict(batchedImage);
+          if (prediction instanceof tfjs.Tensor) {
+            const predictionArray = prediction.dataSync();
+            const predictionValues = Array.from(predictionArray);
+            // finding the index w/ maximum value (class with the highest probability)
+            const predictedIndex = predictionValues.indexOf(Math.max(...predictionValues));
+            setModelVerdict(predictedIndex + 1);
+            bottomSheetRef.current?.open();
+          } else {
+            console.error('Error classifying image: prediction is not a tensor');
+          }
+        } catch (error) {
+          console.error('Error classifying image:', error);
+        }
+      }
     };
 
     classifyImage();
@@ -233,11 +245,11 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   /**************** Nav functions ****************/
   const selectButtonPressed = () => {
     const plasticNum = getCarouselIndex() + 1;
+    if (user)
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, plasticLetter: plasticTypes[plasticNum as keyof typeof plasticTypes], image: capturedPhoto }));
 
     setModelVerdict(plasticNum);
     setManualEntryMode(false);
-
-    //TODO: Send API request to backend with plastic number, plastic letter, and userID
     setIsAnimating(false);
     setCapturedPhoto(null);
     dispatch(cameraClosed());
@@ -447,14 +459,14 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
               style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
               onPress={() => {
                 // bottomSheetRef.current?.close();
+                if (modelVerdict && user && capturedPhoto)
+                  dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, plasticLetter: plasticTypes[modelVerdict as keyof typeof plasticTypes], image: capturedPhoto }));
                 setManualEntryMode(false);
                 setIsAnimating(false);
                 setCapturedPhoto(null);
                 dispatch(cameraClosed());
-                
                 bottomSheetRef.current?.close();
-                navigation.navigate(BaseTabRoutes.SCAN_COMPLETE);
-                // TODO: add integrate backend api here
+                navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});       
               }}
             >
               <Text style={styles.bottomSheetSelectButtonText}>Add to Diary</Text>
@@ -464,7 +476,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
               style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
               onPress={() => {
                 setIsAnimating(false);
-                setCapturedPhoto(null);
                 setIsAnimating(true);
                 bottomSheetRef.current?.close();
                 setManualEntryMode(true);

@@ -100,6 +100,24 @@ export const feedAvatar = createAsyncThunk(
   },
 );
 
+export const createScan = createAsyncThunk(
+  'users/createScan',
+  async (req: { scannedBy: string, plasticNumber: number, plasticLetter: string, image: string | null }, { dispatch }) => {
+    dispatch(startUsersLoading());
+    return axios
+      .post(`${SERVER_URL}scan/`, req)
+      .finally(() => dispatch(stopUsersLoading()))
+      .then((response) => {
+        dispatch(updateFirstLoginHistory(response.data.loginHistory));
+        return response.data.user;
+      })
+      .catch((error) => {
+        console.error('Error when creating scan', error);
+        return false;
+      });
+  },
+);
+
 export const usersSlice = createSlice({
   name: 'users',
   initialState,
@@ -127,13 +145,15 @@ export const usersSlice = createSlice({
       const user: IUser = action.payload as IUser;
       const curSelectedUser = state.selectedUser as IUser;
       if (curSelectedUser.id === user.id) {
-        state.selectedUser = undefined;
+        state.selectedUser = null;
       }
       alert('Deleted user with id ' + user.id);
     });
     builder.addCase(feedAvatar.fulfilled, (state, action) => {
       state.selectedUser = action.payload as IUser;
-      // alert('Updated user after feedAvatar: ' + JSON.stringify(action.payload));
+    });
+    builder.addCase(createScan.fulfilled, (state, action) => {
+      state.selectedUser = action.payload as IUser;
     });
   },
 });

@@ -103,7 +103,7 @@ const HomePage = () => {
             <SnackButton snacks={user.snacks} uid={user.id} uhealth={user.avatarHealth}></SnackButton>
             <Place number={1}></Place>
             <View style={{ flexDirection: 'column', justifyContent: 'flex-start', width: 70, gap: 5 }}>
-              <View style={{ borderWidth: 2, borderColor: Colors.primary.dark, borderRadius: 38, alignItems:'center', justifyContent:'center' }}>
+              <View style={{ borderWidth: user.monthlyGoalPlasticAmount >= 1 ? 0 : 2, borderColor: Colors.primary.dark, borderRadius: 38, alignItems:'center', justifyContent:'center', borderStyle:'dashed' }}>
                 <CircularProgress
                   value={(user.monthlyGoalPlasticAmount / user.monthlyGoalPlasticTotal) * 100}
                   radius={35}

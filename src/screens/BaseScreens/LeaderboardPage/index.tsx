@@ -8,6 +8,7 @@ import Colors from 'utils/Colors';
 import axios from 'axios';
 import Cat from '../../../assets/Cat.svg';
 import useAppSelector from 'hooks/useAppSelector';
+import usersSlice from 'redux/slices/usersSlice';
 
 interface leaderboardEntry {
   name: string;
@@ -15,7 +16,7 @@ interface leaderboardEntry {
 }
 
 const LeaderboardPage = () => {
-  const name = useAppSelector((state) => state.auth.name);
+  const user = useAppSelector((state) => state.users.selectedUser);
   const [leaderboard, setLeaderboard] = useState([] as leaderboardEntry[]);
 
   useEffect(() => {
@@ -70,7 +71,7 @@ const LeaderboardPage = () => {
             alignSelf: 'flex-start',
           }}
         >
-          {(() => {return name.charAt(0).toUpperCase() + name.slice(1);})()}'s Leaderboard
+          {(() => {return user.name.charAt(0).toUpperCase() + user.name.slice(1);})()}'s Leaderboard
         </Text>
         <View
           style={{

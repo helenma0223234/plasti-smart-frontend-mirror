@@ -37,11 +37,9 @@ const RootNavigation = () => {
 
 
   if (!authenticated) {
-    return <BaseNavigation />;
-
-    // return (
-    //   // <AuthNavigation />
-    // );
+    return (
+      <AuthNavigation />
+    );
   } else if (authenticated && role === UserScopes.Unverified) {
     return (
       <NavigationContainer>

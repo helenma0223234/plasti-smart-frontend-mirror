@@ -17,7 +17,7 @@ export default function App() {
   if (!fontsLoaded) {
     return <View />;
   }
-  
+
   return (
     <Provider store={store}>
       <StatusBar barStyle = 'dark-content' />

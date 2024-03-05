@@ -2,15 +2,16 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { SERVER_URL } from 'utils/constants.js';
 import axios from 'axios';
 import { UserScopes, IUser } from 'types/users.jsx';
+import { updateFirstLoginHistory } from './loginhistorySlice';
 
 export interface UserState {
   loading: boolean
-  selectedUser: IUser | undefined
+  selectedUser: IUser | null
 }
 
 const initialState: UserState = {
   loading: false,
-  selectedUser: undefined,
+  selectedUser: null,
 };
 
 export const createUser = createAsyncThunk(
@@ -81,12 +82,33 @@ export const deleteUser = createAsyncThunk(
   },
 );
 
+export const feedAvatar = createAsyncThunk(
+  'users/feedAvatar',
+  async (req: { id: string }, { dispatch }) => {
+    dispatch(startUsersLoading());
+    return axios
+      .post(`${SERVER_URL}users/${req.id}/feedAvatar`)
+      .finally(() => dispatch(stopUsersLoading()))
+      .then((response) => {
+        dispatch(updateFirstLoginHistory(response.data.loginHistory));
+        return response.data.user;
+      })
+      .catch((error) => {
+        console.error('Error when feeding avatar', error);
+        return false;
+      });
+  },
+);
+
 export const usersSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {
     startUsersLoading: (state) => ({ ...state, loading: true }),
     stopUsersLoading: (state) => ({ ...state, loading: false }),
+    setSelectedUser: (state, action) => {
+      state.selectedUser = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(createUser.fulfilled, (state, action) => {
@@ -109,10 +131,14 @@ export const usersSlice = createSlice({
       }
       alert('Deleted user with id ' + user.id);
     });
+    builder.addCase(feedAvatar.fulfilled, (state, action) => {
+      state.selectedUser = action.payload as IUser;
+      // alert('Updated user after feedAvatar: ' + JSON.stringify(action.payload));
+    });
   },
 });
 
-export const { startUsersLoading, stopUsersLoading } =
+export const { startUsersLoading, stopUsersLoading, setSelectedUser } =
   usersSlice.actions;
 
 export default usersSlice.reducer;

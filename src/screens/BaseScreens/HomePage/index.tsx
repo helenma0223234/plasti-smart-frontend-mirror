@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import { ScrollView, SafeAreaView, Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
 import useAppSelector from 'hooks/useAppSelector';
-import { logout } from '../../../redux/slices/authSlice';
 import AppButton from '../../../components/AppButton';
 import FormatStyle from '../../../utils/FormatStyle';
 import CircleBG from '../../../assets/Ellipse 66.svg';
@@ -22,36 +21,54 @@ import Calendar from 'components/Calendar';
 import Colors from 'utils/Colors';
 import DailyTasks from 'components/DailyTasks';
 
+import { useDispatch } from 'react-redux';
+import { feedAvatar } from '../../../redux/slices/usersSlice'; // import the action
+
 
 
 const HomePage = () => {
-  const user = useAppSelector((state) => state.auth.user);
+  const user = useAppSelector((state) => state.users.selectedUser);
+  const currentLoginHist = useAppSelector((state) => state.loginhistory.history);
 
-  if (user === null) {
-    return <Text>Loading...</Text>;
-  }
-  
-  const dispatch = useAppDispatch();
-  const TOTAL = 30;
-  const dummyDates = [29, 30, 1, 2, 3, 4, 5];
-  const [progress, setProgress] = useState(TOTAL);
-  const [hearts, setHearts] = useState(0);
-  const [snacks, setSnacks] = useState(user.snacks);
-
-  const addHeart = () => {
-    setHearts(hearts + 1);
-  };
-
-  const eatSnacks = () => {
-    setSnacks(Math.max(0, snacks - 1));
-  };
-  
   if (user === null) {
     return <Text>Loading...</Text>;
   }
 
   const today = new Date();
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  today.setUTCHours(0, 0, 0, 0);
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  let todayTasksCompletion = [false, false, false];
+  if (currentLoginHist.length > 0) {
+    const firstHist = new Date(currentLoginHist[0].date);
+    if (today.toDateString() === firstHist.toDateString()) {
+      todayTasksCompletion = [currentLoginHist[0].redGoal, currentLoginHist[0].yellowGoal, currentLoginHist[0].greenGoal];
+    }
+  }
+
+  const taskCompletionStatuses = [];
+  for (let i = 10; i > 0; i--) {
+    const day = new Date(today);
+    day.setHours(0, 0, 0, 0);
+    day.setDate(today.getDate() - i);
+  
+    const loginHistoryForDay = currentLoginHist.find(history => {
+      const historyDate = new Date(history.date);
+      return historyDate.toDateString() === day.toDateString();
+    });
+  
+    if (loginHistoryForDay) {
+      taskCompletionStatuses.push([+loginHistoryForDay.redGoal, +loginHistoryForDay.yellowGoal, +loginHistoryForDay.greenGoal]);    
+    } else {
+      taskCompletionStatuses.push([]);
+    }
+  }
+  // for today
+  taskCompletionStatuses.push([+todayTasksCompletion[0], +todayTasksCompletion[1], +todayTasksCompletion[2]]);  
+  // next 3 days are empty
+  for (let j = 0; j < 3; j++) {
+    taskCompletionStatuses.push([]);
+  }
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container, justifyContent: 'flex-start' }}>
@@ -73,45 +90,43 @@ const HomePage = () => {
         width: '100%',
         margin: 20,
       }}>
-
         <View style={{ position: 'absolute', top: 120, right: 20 }}>
           <Cat></Cat>
         </View>
 
         <View style={{ gap: 5, marginLeft: 20 }}>
           <Title></Title>
-          <Text>Ready to Recycle, Jack?</Text>
-          <HappyScale happiness={hearts} ></HappyScale>
+          <Text>Ready to Recycle, {user?.username ?? 'now'}?</Text>
+          <HappyScale happiness={user.avatarHealth} ></HappyScale>
 
           <View style={{ gap: 10, marginTop: 10 }}>
-            <SnackButton snacks={snacks} setHearts={addHeart} setSnacks={eatSnacks}></SnackButton>
+            <SnackButton snacks={user.snacks} uid={user.id} uhealth={user.avatarHealth}></SnackButton>
             <Place number={1}></Place>
             <View style={{ flexDirection: 'column', justifyContent: 'flex-start', width: 70, gap: 5 }}>
-              <CircularProgress
-                value={(progress / 40) * 100}
-                radius={35}
+              <View style={{ borderWidth: 2, borderColor: Colors.primary.dark, borderRadius: 38, alignItems:'center', justifyContent:'center' }}>
+                <CircularProgress
+                  value={(user.monthlyGoalPlasticAmount / user.monthlyGoalPlasticTotal) * 100}
+                  radius={35}
 
-                circleBackgroundColor={'transparent'}
-                progressValueColor={'transparent'}
-                activeStrokeColor={Colors.primary.dark}
-                inActiveStrokeColor={'transparent'}
-              />
-              <View style={{ position: 'absolute', bottom: 38, left: 23 }}>
-                <Text style={{ fontSize: 20 }}>{progress}</Text>
+                  circleBackgroundColor={'transparent'}
+                  progressValueColor={'transparent'}
+                  activeStrokeColor={Colors.primary.dark}
+                  inActiveStrokeColor={'transparent'}
+                />
+              </View>
+              <View style={{ position: 'absolute', alignItems: 'center', bottom: 40, left: 22 }}>
+                <Text style={{ fontSize: 20 }}>{user.monthlyGoalPlasticAmount}</Text>
                 <View style={{ height: 2, backgroundColor: 'black', width: '100%' }} />
-                <Text style={{ fontSize: 20 }}>40</Text>
+                <Text style={{ fontSize: 20 }}>{user.monthlyGoalPlasticTotal}</Text>
               </View>
               <Text style={{ fontSize: 10, flexWrap: 'wrap', textAlign: 'center' }}>{months[today.getMonth()]} monthly goal</Text>
             </View>
           </View>
         </View>
 
-
-
-
         <View style={{ ...styles.scroll, marginLeft: 20, marginRight: 100, gap: 20 }}>
-          <Calendar></Calendar>
-          <DailyTasks></DailyTasks>
+          <Calendar circlesArray={taskCompletionStatuses}></Calendar>
+          <DailyTasks taskCompletionStatuses={todayTasksCompletion}></DailyTasks>
         </View>
       </View>
     </SafeAreaView >
@@ -131,7 +146,6 @@ const HappyScale = ({ happiness }: HappyProps) => {
       <View style={{ width: 133.897, height: 31, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
         {Array(Math.min(5, happiness)).fill(1).map(() => (
           <Heart></Heart>
-          // <AntDesign name="heart" size={24} color="red" />
         ))}
         {Array(empty).fill(1).map(() => (
           <EmptyHeart></EmptyHeart>
@@ -164,17 +178,17 @@ const Place = ({ number }: PlaceProps) => {
 
 interface SnackProps {
   snacks: number
-  setHearts: () => void;
-  setSnacks: () => void;
-
+  uid: string
+  uhealth: number
 }
 
-const SnackButton = ({ snacks, setHearts, setSnacks }: SnackProps) => {
+const SnackButton = ({ snacks, uid, uhealth }: SnackProps) => {
+  const dispatch = useDispatch();
   const handlePress = () => {
-    // Increment the parent state by 1
-    if (snacks > 0) {
-      setHearts();
-      setSnacks();
+    if (snacks > 0 && uhealth < 5) {
+      dispatch(feedAvatar({ id: uid }));
+    } else {
+      alert('Can not feed Plasti sorry~');
     }
   };
 

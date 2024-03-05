@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, SafeAreaView, View, Text } from "react-native";
-import { SERVER_URL } from "utils/constants";
-import FormatStyle from "../../../utils/FormatStyle";
-import CircleBG from "../../../assets/Ellipse 66.svg";
-import TextStyles from "utils/TextStyles";
-import Colors from "utils/Colors";
-import axios from "axios";
-import Cat from "../../../assets/Cat.svg";
-import useAppSelector from "hooks/useAppSelector";
+import React, { useEffect, useState } from 'react';
+import { ScrollView, SafeAreaView, View, Text } from 'react-native';
+import { SERVER_URL } from 'utils/constants';
+import FormatStyle from '../../../utils/FormatStyle';
+import CircleBG from '../../../assets/Ellipse 66.svg';
+import TextStyles from 'utils/TextStyles';
+import Colors from 'utils/Colors';
+import axios from 'axios';
+import Cat from '../../../assets/Cat.svg';
+import useAppSelector from 'hooks/useAppSelector';
 
 interface leaderboardEntry {
   name: string;
@@ -19,14 +19,12 @@ const LeaderboardPage = () => {
   const [leaderboard, setLeaderboard] = useState([] as leaderboardEntry[]);
 
   useEffect(() => {
-    console.log("in use effect");
     (async () => {
       try {
-        console.log('Getting leaderboard');
-        const response = await axios.get(SERVER_URL + "users/leaderboard");
+        const response = await axios.get(SERVER_URL + 'users/leaderboard');
         // map response data from {username : string, monthlyTotalScans: number} to leaderboardEntry
         const leaderboardData = response.data.map((entry: { username: string, monthlyTotalScans: number }) => {
-          return { name: entry.username ? entry.username : "username", score: entry.monthlyTotalScans };
+          return { name: entry.username ? entry.username : 'username', score: entry.monthlyTotalScans };
         });
         console.log(leaderboardData);
         setLeaderboard(leaderboardData);
@@ -37,15 +35,15 @@ const LeaderboardPage = () => {
   }, []);
 
   return (
-    leaderboard.length > 0 && <SafeAreaView style={{ ...FormatStyle.topContainer, alignItems: "center" }}>
+    leaderboard.length > 0 && <SafeAreaView style={{ ...FormatStyle.topContainer, alignItems: 'center' }}>
       <View
         style={{
           width: 400,
           height: 1000,
-          overflow: "hidden",
+          overflow: 'hidden',
           aspectRatio: 1,
-          alignItems: "center",
-          position: "absolute",
+          alignItems: 'center',
+          position: 'absolute',
           bottom: -450,
         }}
       >
@@ -53,41 +51,41 @@ const LeaderboardPage = () => {
       </View>
 
       <>
-        <View style={{ position: "absolute", top: 120 }}>
+        <View style={{ position: 'absolute', top: 120 }}>
           <Podium name={leaderboard[0].name} place={1}></Podium>
         </View>
-        <View style={{ position: "absolute", left: 10, top: 150 }}>
+        <View style={{ position: 'absolute', left: 10, top: 150 }}>
           <Podium name={leaderboard[1].name} place={2}></Podium>
         </View>
-        <View style={{ position: "absolute", right: 10, top: 150 }}>
+        <View style={{ position: 'absolute', right: 10, top: 150 }}>
           <Podium name={leaderboard[2].name} place={3}></Podium>
         </View>
       </>
 
-      <View style={{ margin: 20, justifyContent: "center" }}>
+      <View style={{ margin: 20, justifyContent: 'center' }}>
         <Text
           style={{
             ...TextStyles.regular,
             fontSize: 30,
-            alignSelf: "flex-start",
+            alignSelf: 'flex-start',
           }}
         >
-          {(() => {return name.charAt(0).toUpperCase() + name.slice(1)})()}'s Leaderboard
+          {(() => {return name.charAt(0).toUpperCase() + name.slice(1);})()}'s Leaderboard
         </Text>
         <View
           style={{
             gap: 20,
-            position: "relative",
+            position: 'relative',
             top: 250,
             width: 330,
             height: 392,
-            justifyContent: "center",
+            justifyContent: 'center',
           }}
         >
           <ScrollView
             contentContainerStyle={{
-              justifyContent: "center",
-              alignItems: "center",
+              justifyContent: 'center',
+              alignItems: 'center',
               gap: 10,
               paddingBottom: 50,
               paddingTop: 20,
@@ -95,13 +93,13 @@ const LeaderboardPage = () => {
             showsVerticalScrollIndicator={false}
           >
             {leaderboard.slice(3).map((place, index) => (
-              <View style={{ gap: 10, width: "100%" }}>
+              <View style={{ gap: 10, width: '100%' }}>
                 <View
                   style={{
-                    flexDirection: "row",
-                    alignItems: "center",
+                    flexDirection: 'row',
+                    alignItems: 'center',
                     gap: 0,
-                    height: "auto",
+                    height: 'auto',
                     padding: 3,
                   }}
                 >
@@ -120,7 +118,7 @@ const LeaderboardPage = () => {
                       width: 23,
                       height: 23,
                       marginTop: 0,
-                      position: "relative",
+                      position: 'relative',
                       right: 42,
                       bottom: 15,
                     }}
@@ -162,14 +160,14 @@ interface PodiumProps {
 
 const Podium = ({ name, place }: PodiumProps) => {
   return (
-    <View style={{ flexDirection: "column", alignItems: "center", gap: 5 }}>
+    <View style={{ flexDirection: 'column', alignItems: 'center', gap: 5 }}>
       <View
         style={{
           width: 100,
-          height: "auto",
+          height: 'auto',
           // overflow: 'hidden',
           aspectRatio: 1,
-          alignItems: "center",
+          alignItems: 'center',
         }}
       >
         {/* <Cat></Cat> */}
@@ -180,7 +178,7 @@ const Podium = ({ name, place }: PodiumProps) => {
           width: 40,
           height: 40,
           marginTop: 0,
-          backgroundColor: place == 1 ? Colors.primary.dark : "#1B453C",
+          backgroundColor: place == 1 ? Colors.primary.dark : '#1B453C',
         }}
       >
         <Text style={{ ...TextStyles.regular, color: Colors.secondary.white }}>
@@ -188,7 +186,7 @@ const Podium = ({ name, place }: PodiumProps) => {
         </Text>
       </View>
 
-      <Text style={{ ...TextStyles.regular, width: 100, textAlign: "center" }}>
+      <Text style={{ ...TextStyles.regular, width: 100, textAlign: 'center' }}>
         {name}
       </Text>
     </View>

@@ -3,9 +3,11 @@ import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/too
 import { SERVER_URL } from 'utils/constants.js';
 import axios from 'axios';
 import { getBearerToken, setBearerToken } from 'utils/asyncStorage';
-import { IUser, UserScopes } from 'types/users';
+import { IUser } from 'types/users';
 import { setLoginHistory } from './loginhistorySlice';
 import { LoginHistory } from 'types/loginHistory';
+import { setSelectedUser } from './usersSlice';
+
 
 export interface AuthState {
   authenticated: boolean
@@ -55,11 +57,13 @@ export const signUp = createAsyncThunk(
       .finally(() => dispatch(stopAuthLoading()))
       .then((response) => {
         alert('Sign up successful!');
-        dispatch(setLoginHistory(response.data.history));
-        //////////// Question:
-        ///was not in the original template.. why not dispatch the token here?
+        
+        //////////// NOTE:
+        ///currently we don't sign users in automatically after signup
         ////////////
         // dispatch(setCredentials(response.data.token));
+        // dispatch(setLoginHistory(response.data.history));
+
         return response.data;
       })
       .catch((error) => {
@@ -85,8 +89,11 @@ export const signIn = createAsyncThunk(
             verified: false,
           };
         }
-        dispatch(setLoginHistory(response.data.history));
+
+        dispatch(setLoginHistory(response.data.loginHistory));
         dispatch(setCredentials(response.data.token));
+        dispatch(setSelectedUser(response.data.user));
+
         alert('Signed In!');
         return response.data;
       })
@@ -120,7 +127,9 @@ export const jwtSignIn = createAsyncThunk(
         if (token) {
           dispatch(setCredentials(token));
         }
-        dispatch(setLoginHistory(response.data.history));
+        // console.log('jwtSignIn response', response);
+        dispatch(setLoginHistory(response.data.loginHistory));
+        dispatch(setSelectedUser(response.data.user));
         return response.data;
       })
       .catch((err) => {

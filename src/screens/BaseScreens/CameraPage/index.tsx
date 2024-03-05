@@ -171,7 +171,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
     if (cameraRef.current) {
       try {
         const photo = await cameraRef.current.takePictureAsync();
-        console.log('photo', photo);
         setCapturedPhoto(photo.uri); // Store the photo URI in state
       } catch (error) {
         console.error('Error taking picture:', error);
@@ -181,13 +180,8 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   };
 
   const onPinchGestureEvent = (event: PinchGestureHandlerGestureEvent) => {
-    console.log(zoom);
-    console.log(event.nativeEvent.scale);
-    console.log('changing...');
     const { scale } = event.nativeEvent;
     const newZoom = Math.min(Math.max(0, scale / 80), 1); // clamp zoom between 0 and 1
-    console.log(newZoom);
-    console.log('done for this event...');
     setZoom(newZoom);
   };
 
@@ -239,7 +233,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   /**************** Nav functions ****************/
   const selectButtonPressed = () => {
     const plasticNum = getCarouselIndex() + 1;
-    console.log('Selected plastic number: ', plasticNum);
 
     setModelVerdict(plasticNum);
     setManualEntryMode(false);
@@ -321,7 +314,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
     setIsAnimating(false);
     dispatch(cameraClosed());
     console.log('camera closed');
-    navigation.navigate(BaseTabRoutes.FRONT, {});
+    navigation.navigate(BaseTabRoutes.HOME, {});
   };
   /**************** Done Nav functions ****************/
 

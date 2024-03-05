@@ -45,7 +45,7 @@ const info = [
 
 
 const EducationPage = () => {
-  const user = useAppSelector((state) => state.auth.user);
+  const user = useAppSelector((state) => state.users.selectedUser);
   const [currCard, setCurrCard] = useState(1);
   const [currCardPlastic, setCurrCardPlastic] = useState(1);
 
@@ -64,9 +64,25 @@ const EducationPage = () => {
     setCurrCardPlastic(index);
   };
 
+  const collectedTypes = {
+    1: user.Type1Collected,
+    2: user.Type2Collected,
+    3: user.Type3Collected,
+    4: user.Type4Collected,
+    5: user.Type5Collected,
+    6: user.Type6Collected,
+    7: user.Type7Collected,
+  };
+
+  const maxType = Object.entries(collectedTypes).reduce((max, [type, value]) => {
+    return value > max.value ? { type: Number(type), value } : max;
+  }, { type: 1, value: user?.Type1Collected });
+  
+
   // useEffect(() => {
 
   // }, [currCard]);
+
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container }}>
@@ -94,12 +110,10 @@ const EducationPage = () => {
         </View>
       </Modal>
 
-
-
       <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
         <View style={{ margin: 20, overflow: 'visible', gap: 20, marginBottom: 50 }}>
           <Text style={{ ...TextStyles.title }}>
-            Hello, Jack
+            Hello, {user?.username ?? 'you!'}
           </Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, alignItems: 'flex-end' }}>
             <Text style={{ ...TextStyles.subTitle }}>Your Progress</Text>
@@ -110,12 +124,12 @@ const EducationPage = () => {
               <ProgressCard
                 title={'Monthly Challenge'}
                 text={'You\'ve recycled 8 out of 10 PET plastics this month. Keep going to get the prize!'}
-                number={1}
+                number={user?.monthlyGoalPlasticType}
                 cornerComponent={
                   <View>
 
                     <CircularProgress
-                      value={60 / 60 * 100}
+                      value={(user?.monthlyGoalPlasticAmount / user?.monthlyGoalPlasticTotal) * 100}
                       radius={40}
                       circleBackgroundColor={'transparent'}
                       progressValueColor={'transparent'}
@@ -123,8 +137,7 @@ const EducationPage = () => {
                       inActiveStrokeColor={'transparent'}
                     />
                     <View style={{ position: 'relative', bottom: 48, alignItems: 'center' }}>
-                      {/* NEED REDUX TO ADD P */}
-                      <Text style={{ fontSize: 16, fontWeight: '800' }}>{40}/{40}</Text>
+                      <Text style={{ fontSize: 16, fontWeight: '800' }}>{user?.monthlyGoalPlasticAmount}/{user?.monthlyGoalPlasticTotal}</Text>
                     </View>
                   </View>
                 }>
@@ -132,7 +145,7 @@ const EducationPage = () => {
               <ProgressCard
                 title={'Top Plastic'}
                 text={'You\'ve recycled a lot!'}
-                number={1}
+                number={maxType.type}
                 cornerComponent={
                   <Trophy width={80} height={80} style={{ left: -10 }}></Trophy>
                 }>

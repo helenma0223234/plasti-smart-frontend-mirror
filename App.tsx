@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
 import RootNavigation from './src/navigation';
 import { useFonts, Raleway_400Regular, Raleway_600SemiBold, Raleway_800ExtraBold } from '@expo-google-fonts/raleway';
-import { LogBox } from "react-native";
+import { LogBox } from 'react-native';
 LogBox.ignoreAllLogs(true);
 
 export default function App() {

@@ -37,7 +37,6 @@ const RootNavigation = () => {
 
   }, []);
 
-  // return <BaseNavigation />;
 
   if (!authenticated) {
     return (

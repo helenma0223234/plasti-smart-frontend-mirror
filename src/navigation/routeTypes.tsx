@@ -25,6 +25,7 @@ export enum BaseTabRoutes {
   HOME = 'Home',
   LEADERBOARD = 'Leaderboard',
   EDUCATION = 'Education',
+  PROGRESS = 'Progress',
 }
 
 export type BaseNavigationList = {
@@ -37,4 +38,6 @@ export type BaseNavigationList = {
   [BaseTabRoutes.HOME]: Record<string, unknown>;
   [BaseTabRoutes.LEADERBOARD]: Record<string, unknown>;
   [BaseTabRoutes.EDUCATION]: Record<string, unknown>;
+  [BaseTabRoutes.PROGRESS]: Record<string, unknown>;
+
 };

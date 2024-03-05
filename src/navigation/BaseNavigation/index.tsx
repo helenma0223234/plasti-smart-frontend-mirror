@@ -15,6 +15,8 @@ import {
   ScanCompletePage,
   EducationPage,
   LeaderboardPage,
+  ProgressPage,
+
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
@@ -87,6 +89,11 @@ const EducationNavigator = () => {
       <BaseStack.Screen
         name={BaseTabRoutes.EDUCATION}
         component={EducationPage}
+        options={{ header: () => null }}
+      />
+      <BaseStack.Screen
+        name={BaseTabRoutes.PROGRESS}
+        component={ProgressPage}
         options={{ header: () => null }}
       />
     </BaseStack.Navigator>

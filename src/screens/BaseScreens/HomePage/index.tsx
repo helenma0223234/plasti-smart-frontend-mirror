@@ -35,10 +35,9 @@ const HomePage = () => {
   }
 
   const today = new Date();
-  today.setUTCHours(5, 0, 0, 0);
+  today.setUTCHours(0, 0, 0, 0);
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-  // console.log(currentLoginHist);
   let todayTasksCompletion = [false, false, false];
   if (currentLoginHist.length > 0) {
     const firstHist = new Date(currentLoginHist[0].date);
@@ -50,7 +49,7 @@ const HomePage = () => {
   const taskCompletionStatuses = [];
   for (let i = 10; i > 0; i--) {
     const day = new Date(today);
-    day.setUTCHours(5, 0, 0, 0);
+    day.setHours(0, 0, 0, 0);
     day.setDate(today.getDate() - i);
   
     const loginHistoryForDay = currentLoginHist.find(history => {

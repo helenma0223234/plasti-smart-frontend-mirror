@@ -9,9 +9,9 @@ export interface IUser {
   email: string;
   username: string;
   name?: string;
-  pronoun?: string;
+  // pronoun?: string;
   role: UserScopes;
-  teamID?: number;
+  // teamID?: number;
   lastLogin: Date;
   avatar: number;
   avatarHealth: number;

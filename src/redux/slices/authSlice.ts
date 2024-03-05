@@ -26,7 +26,7 @@ const initialState: AuthState = {
 interface LoginResponse {
   token: string
   user: IUser
-  history: LoginHistory[]
+  loginHistory: LoginHistory[]
 }
 
 export const setCredentials = createAsyncThunk(

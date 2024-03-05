@@ -12,7 +12,9 @@ import BaseNavigation from './BaseNavigation';
 
 const RootNavigation = () => {
   const { isConnected } = useAppSelector((state) => state.connection);
-  const { authenticated, role } = useAppSelector((state) => state.auth);
+  const { authenticated } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
+  const role = user?.role;
 
   const dispatch = useAppDispatch();
   useEffect(() => {

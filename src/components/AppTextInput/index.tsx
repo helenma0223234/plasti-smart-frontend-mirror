@@ -28,12 +28,10 @@ const AppTextInput = ({ onChangeText, value, placeholder, secureTextEntry, textS
 const styles = StyleSheet.create({
   appTextInputContainer: {
     ...TextStyles.regular,
-    borderColor: 'lightgrey',
-    borderRadius: 4,
+    borderColor: Colors.primary.dark,
+    borderRadius: 10,
     borderWidth: 1,
-    width: '75%',
-    padding: 10,
-    textAlign: 'center',
+    padding: 15,
   },
 });
 

@@ -7,7 +7,6 @@ export default StyleSheet.create({
     fontSize: 30,
     fontStyle: 'normal',
     fontWeight: '400',
-    lineHeight: 28, /* 93.333% */
     letterSpacing: -0.4,
     color: Colors.primary.dark,
 

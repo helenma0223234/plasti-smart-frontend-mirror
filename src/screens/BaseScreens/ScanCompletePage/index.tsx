@@ -68,7 +68,7 @@ const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
         <View style={styles.homeButtonContainer}>
           <TouchableOpacity 
             style={styles.homeButton}
-            onPress={() => {navigation.navigate(BaseTabRoutes.FRONT, {});}}
+            onPress={() => {navigation.navigate(BaseTabRoutes.HOME, {});}}
           >
             <Text style={styles.homeButtonText}>Return Home</Text>
           </TouchableOpacity>

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ScrollView, SafeAreaView, View, Text, StyleSheet, Modal, Pressable, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
 import { logout } from '../../../redux/slices/authSlice';
-import AppButton from '../../../components/AppButton';
 import FormatStyle from '../../../utils/FormatStyle';
 import TextStyles from 'utils/TextStyles';
 import { useNavigation } from '@react-navigation/native';
@@ -104,7 +103,7 @@ const EducationPage = () => {
           </Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, alignItems: 'flex-end' }}>
             <Text style={{ ...TextStyles.subTitle }}>Your Progress</Text>
-            <Text onPress={() => navigation.navigate(BaseTabRoutes.HOME)} style={{ ...TextStyles.small, textDecorationLine: 'underline' }}>See All</Text>
+            <Text onPress={() => navigation.navigate(BaseTabRoutes.PROGRESS)} style={{ ...TextStyles.small, textDecorationLine: 'underline' }}>See All</Text>
           </View>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <View style={{ gap: 10, flexDirection: 'row' }}>
@@ -151,7 +150,7 @@ const EducationPage = () => {
               {info.map((card, index) => (
                 // eslint-disable-next-line max-len
                 <TouchableOpacity style={{ ...FormatStyle.circle, marginTop: 0, width: 43, height: 43, backgroundColor: currCardPlastic != index ? Colors.secondary.white : Colors.primary.dark }} onPress={() => handlePress(index)}>
-                  <PlasticSymbol color = {currCardPlastic == index ? Colors.secondary.white : Colors.primary.dark} width={35} height={35} number={index + 1} top={5} left={15}></PlasticSymbol>
+                  <PlasticSymbol color = {currCardPlastic == index ? Colors.secondary.white : Colors.primary.dark} width={35} height={35} number={index + 1} top={10} left={15}></PlasticSymbol>
                 </TouchableOpacity >
               ))}
             </View>
@@ -188,7 +187,7 @@ const ProgressCard = ({ cornerComponent, title, text, number }: ProgressCardProp
       </View>
       {number &&
         <View style={{ ...FormatStyle.circle, alignSelf: 'flex-end', marginTop: 0, width: 50, height: 50, backgroundColor: Colors.secondary.white, position: 'absolute', top: 10, right: 10 }}>
-          <PlasticSymbol color={Colors.primary.dark} width={35} height={35} number={1} top={5} left={15}></PlasticSymbol>
+          <PlasticSymbol color={Colors.primary.dark} width={35} height={35} number={1} top={10} left={15}></PlasticSymbol>
         </View>
       }
 
@@ -220,7 +219,7 @@ const PolymerCard = ({ title, number }: PolymerCardProps) => {
         position: 'absolute',
       }}>
         <View>
-          <PlasticSymbol color={Colors.secondary.white} width={35} height={35} number={number} top={5} left={15}></PlasticSymbol>
+          <PlasticSymbol color={Colors.secondary.white} width={35} height={35} number={number} top={10} left={15}></PlasticSymbol>
         </View>
       </View>
       <Text style={{ ...TextStyles.subTitle, fontSize: 20, marginLeft: 40, marginTop: -5 }}>{title}</Text>

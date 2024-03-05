@@ -7,6 +7,7 @@ import ScanCompletePage from './ScanCompletePage';
 import HomePage from './HomePage';
 import LeaderboardPage from './LeaderboardPage';
 import EducationPage from './EducationPage';
+import ProgressPage from './ProgressPage';
 
 export {
   FrontPage,
@@ -18,4 +19,5 @@ export {
   HomePage,
   LeaderboardPage,
   EducationPage,
+  ProgressPage,
 };

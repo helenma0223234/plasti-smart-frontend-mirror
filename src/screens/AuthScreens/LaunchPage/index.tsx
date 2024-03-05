@@ -1,10 +1,10 @@
 import React from 'react';
-import { ScrollView, SafeAreaView, View, Text } from 'react-native';
+import { ScrollView, SafeAreaView, View, Text, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FormatStyle from '../../../utils/FormatStyle';
 import NavType from '../../../utils/NavType';
 import { AuthStackRoutes } from '../../../navigation/routeTypes';
-import Penguin from '../../../assets/Group.svg';
+import Cat from '../../../assets/Cat.svg';
 import Button from 'components/Button';
 import TextStyles from 'utils/TextStyles';
 
@@ -16,18 +16,13 @@ const FrontPage = () => {
     <SafeAreaView style={FormatStyle.container}>
       {/* <ScrollView> */}
       <View style={{
-        backgroundColor: 'red',
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        gap: 10,
       }}>
-        <Penguin
-          style={{
-            width: 309,
-            height: 117,
-          }}
-        />
-        <Text style={TextStyles.logo}>
+        <Cat width={400} style={{ position: 'absolute', top: 70, zIndex: '1' }}/>
+        <Text style={{ ...TextStyles.logo, fontSize: 70 }} >
           PlastiCycle
         </Text>
         <Text style={{ ...TextStyles.regular, textAlign: 'center' }}>

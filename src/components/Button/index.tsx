@@ -24,7 +24,7 @@ const Button = ({
   fullWidth,
   style,
   textStyle,
-  backgroundColor = Colors.primary.normal,
+  backgroundColor = Colors.primary.dark,
   textColor = 'white',
   inverted = false,
   disabled = false,
@@ -36,11 +36,12 @@ const Button = ({
       ...styles.appButtonContainer,
       backgroundColor,
       ...(style as object),
-      ...(inverted) && { backgroundColor: Colors.neutral[2] },
+      ...(inverted) && { backgroundColor: Colors.secondary.white, borderColor: Colors.primary.dark, borderWidth: 1 },
       ...(fullWidth) && { width: '100%' },
-      ...(disabled) && { opacity: 0.7 },
+      ...(disabled) && { backgroundColor: Colors.secondary.light },
+      
     }}>
-    <Text style={[styles.appButtonText, { color: textColor, ...(inverted) && { color: 'white' } }, textStyle]}>{title}</Text>
+    <Text style={[styles.appButtonText, { color: textColor, ...(inverted) && { color: Colors.primary.dark }, ...(disabled) && { color: Colors.primary.dark } }, textStyle]}>{title}</Text>
     {
       isArrow && <AntDesign name='caretright' size={25} color='white' />
     }
@@ -55,10 +56,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     marginTop: 30,
-    shadowColor: '#171717',
-    shadowOffset: { width: -2, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
@@ -71,7 +68,7 @@ const styles = StyleSheet.create({
     color: 'white',
     alignSelf: 'center',
     textTransform: 'uppercase',
-    fontSize: 14,
+    fontSize: 20,
   },
 });
 

@@ -4,7 +4,7 @@ import Colors from './Colors';
 const FormatStyle = StyleSheet.create({
   topContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary.white,
     alignItems: 'center',
   },
   

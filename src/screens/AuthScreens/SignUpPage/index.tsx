@@ -61,7 +61,6 @@ const SignUpPage = () => {
             onChangeText={(text) => setUsername(text)}
             value={username}
             placeholder='Username'
-            secureTextEntry
           />
         </View >
         <View style={{ gap: 5 }}>
@@ -81,8 +80,8 @@ const SignUpPage = () => {
             title={'Sign Up'}
             disabled={!email || !password || !name || !username}
           />
-          <Text style={TextStyles.small}>Don't have an account? <Text style={{ textDecorationLine: 'underline' }}
-            onPress={() => navigation.navigate(AuthStackRoutes.SIGNUP)}>Sign up!</Text></Text>
+          <Text style={TextStyles.small}>Already have an account? <Text style={{ textDecorationLine: 'underline' }}
+            onPress={() => navigation.navigate(AuthStackRoutes.SIGNIN)}>Sign in!</Text></Text>
 
         </View>
       </View>

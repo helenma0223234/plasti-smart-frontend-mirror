@@ -97,7 +97,7 @@ const HomePage = () => {
         <View style={{ gap: 5, marginLeft: 20 }}>
           <Title></Title>
           <Text>Ready to Recycle, {user?.username ?? 'now'}?</Text>
-          <HappyScale happiness={user.avatarHealth} ></HappyScale>
+          <HappyScale happiness={user?.avatarHealth} ></HappyScale>
 
           <View style={{ gap: 10, marginTop: 10 }}>
             <SnackButton snacks={user.snacks} uid={user.id} uhealth={user.avatarHealth}></SnackButton>
@@ -140,7 +140,8 @@ interface HappyProps {
 
 const HappyScale = ({ happiness }: HappyProps) => {
   if (typeof happiness !== 'number') {
-    throw new Error('Invalid happiness value');
+    // throw new Error('Invalid happiness value');
+    happiness = 3;
   }
   // hardcode for bug right now...
   if (happiness >= 5 ) happiness = 5;

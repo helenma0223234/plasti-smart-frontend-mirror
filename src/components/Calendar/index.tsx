@@ -41,8 +41,8 @@ const Calendar = ({ circlesArray }: CalendarProps) => {
   });
 
   return (
-    <View style={{ marginTop: 10 }}>
-      <Text style={{ color:Colors.primary.dark, marginBottom: -8 }}>Daily Goal</Text>
+    <View style={{ marginTop: 8 }}>
+      <Text style={{ color:Colors.primary.dark, marginBottom: -12 }}>Daily Goal</Text>
       <ScrollView horizontal={true} style={{ width: 350 }} contentOffset={{ x: 400, y: 0 }} bounces={true} showsHorizontalScrollIndicator={false}>
         <View style={{ flexDirection: 'row', gap: 10, marginRight: 6 }}>
           {dates.map((date: number, key: number) => (

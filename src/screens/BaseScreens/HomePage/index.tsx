@@ -114,7 +114,7 @@ const HomePage = () => {
                   inActiveStrokeColor={'transparent'}
                 />
               </View>
-              <View style={{ position: 'absolute', alignItems: 'center', bottom: 40, left: 22 }}>
+              <View style={{ position: 'absolute', alignItems: 'center', bottom: 38, left: 22 }}>
                 <Text style={{ fontSize: 20 }}>{user.monthlyGoalPlasticAmount}</Text>
                 <View style={{ height: 2, backgroundColor: 'black', width: '100%' }} />
                 <Text style={{ fontSize: 20 }}>{user.monthlyGoalPlasticTotal}</Text>
@@ -124,7 +124,7 @@ const HomePage = () => {
           </View>
         </View>
 
-        <View style={{ ...styles.scroll, marginLeft: 20, marginRight: 100, gap: 20 }}>
+        <View style={{ ...styles.scroll, marginLeft: 20, marginRight: 100, gap: 8 }}>
           <Calendar circlesArray={taskCompletionStatuses}></Calendar>
           <DailyTasks taskCompletionStatuses={todayTasksCompletion}></DailyTasks>
         </View>
@@ -149,7 +149,6 @@ const HappyScale = ({ happiness }: HappyProps) => {
   const empty = Math.max(0, 5 - happiness);
   return (
     <View style={{}}>
-      {/* <Text>Happiness</Text> */}
       <View style={{ width: 133.897, height: 31, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
         {Array(Math.min(5, happiness)).fill(1).map(() => (
           <Heart></Heart>

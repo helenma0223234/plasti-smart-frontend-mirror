@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import Colors from 'utils/Colors';
-import TextStyles from 'utils/TextStyles';
+// import Colors from 'utils/Colors';
+// import TextStyles from 'utils/TextStyles';
 
 /* eslint-disable max-len */
 interface PlasticSymbolProps {

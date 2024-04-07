@@ -46,7 +46,6 @@ const ProgressPage = () => {
     return value > max.value ? { type: Number(type), value } : max;
   }, { type: 1, value: user?.Type1Collected });
   
-  console.log(maxType);
   return (
     <SafeAreaView style={{ ...FormatStyle.container }}>
       <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
@@ -57,17 +56,16 @@ const ProgressPage = () => {
         </View>
         <View style={{ gap: 25, flexDirection: 'column', marginBottom: 50 }}>
           <ProgressCard
-            title={'Top Plastic'}
-            text={'You\'ve recycled a lot!'}
+            title={`Your Top Plastic is Plastic No.${maxType.value}`}
             number={maxType.type}
             cornerComponent={
-              <PlasticSymbol color={Colors.highlight} width={80} height={100} number={maxType.type} top={35} left={35}></PlasticSymbol>
-            }>
+              <PlasticSymbol color={Colors.highlight} width={80} height={100} number={user?.monthlyGoalPlasticType} top={35} left={35}></PlasticSymbol>
+            }
+            text={`You've recycled ${maxType.value} of them this month. Great work!`}>
           </ProgressCard>
           <ProgressCard
             title={'Monthly Challenge'}
-            text={'You\'ve recycled out of 10 PET plastics this month. Keep going to get the prize!'}
-            number={1}
+            text={`You've recycled ${user?.monthlyGoalPlasticAmount} out of ${user?.monthlyGoalPlasticTotal} PET plastics this month. Keep going to get the prize!`}
             cornerComponent={
               <View>
 

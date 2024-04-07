@@ -123,7 +123,7 @@ const EducationPage = () => {
             <View style={{ gap: 10, flexDirection: 'row' }}>
               <ProgressCard
                 title={'Monthly Challenge'}
-                text={'You\'ve recycled 8 out of 10 PET plastics this month. Keep going to get the prize!'}
+                text={`You've recycled ${user?.monthlyGoalPlasticAmount} out of ${user?.monthlyGoalPlasticTotal} PET plastics this month. Keep going to get the prize!`}
                 number={user?.monthlyGoalPlasticType}
                 cornerComponent={
                   <View>
@@ -146,9 +146,11 @@ const EducationPage = () => {
                 title={'Top Plastic'}
                 text={'You\'ve recycled a lot!'}
                 number={maxType.type}
+                text={`You've recycled ${maxType.value} No.${maxType.type} plastics this month. Great work!`}
                 cornerComponent={
-                  <Trophy width={80} height={80} style={{ left: -10 }}></Trophy>
-                }>
+                  <Trophy width={60} height={60} style={{ left: -6, top:6 }}></Trophy>
+                }
+              >
               </ProgressCard>
               <ProgressCard
                 title={'Avatar Points'}
@@ -200,7 +202,7 @@ const ProgressCard = ({ cornerComponent, title, text, number }: ProgressCardProp
       </View>
       {number &&
         <View style={{ ...FormatStyle.circle, alignSelf: 'flex-end', marginTop: 0, width: 50, height: 50, backgroundColor: Colors.secondary.white, position: 'absolute', top: 10, right: 10 }}>
-          <PlasticSymbol color={Colors.primary.dark} width={35} height={35} number={1} top={10} left={15}></PlasticSymbol>
+          <PlasticSymbol color={Colors.primary.dark} width={35} height={35} number={number} top={10} left={15}></PlasticSymbol>
         </View>
       }
 

@@ -3,6 +3,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { AntDesign, Octicons, Ionicons, MaterialIcons, Feather } from '@expo/vector-icons';
+
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+
 import useAppSelector from 'hooks/useAppSelector';
 import { UserScopes } from 'types/users';
 import {
@@ -33,6 +38,15 @@ const ProtectedRoute = (allowableScopes: UserScopes[]) => {
 
   return allowableScopes.includes(role) && authenticated;
 };
+
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+    shouldShowAlert: true,
+  }),
+});
 
 export const HomeNavigator = () => {
   return (
@@ -112,15 +126,81 @@ const LeaderboardNavigator = () => {
   );
 };
 
-
-
-
 const BaseNavigation = () => {
   const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
   const dispatch = useAppDispatch();
+  // useEffect(() => {
+  //   // registerForPushNotificationsAsync();
+  //   dispatch(loadModel());
+  // }, []);
+
   useEffect(() => {
+    registerForPushNotificationsAsync()
+      .then(token => {
+        // register / send to backend
+      })
+      .catch(error => {
+        console.error(error);
+      });
     dispatch(loadModel());
+    schedulePushNotification()
+      .catch(error => {
+        console.error(error);
+      });
   }, []);
+
+  async function registerForPushNotificationsAsync(): Promise<string> {
+    let token: string;
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return '';
+      }
+
+      const projectId =
+      Constants?.expoConfig?.extra?.eas?.projectId ??
+      Constants?.easConfig?.projectId;
+      if (!projectId) {
+        const errorMessage =
+        'Project ID not found';
+        alert(errorMessage);
+        throw new Error(errorMessage);
+      }
+      try {
+        const pushTokenString = (
+          await Notifications.getExpoPushTokenAsync({
+            projectId,
+          })
+        ).data;
+        return pushTokenString;
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          throw new Error(e.message);
+        } else { throw new Error(String(e));}
+      } 
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+  }
+
+  async function schedulePushNotification() {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "You've got notification! 🔔",
+        body: 'Here is the notification body',
+        data: { data: 'goes here' },
+      },
+      // trigger: { seconds: 2 },
+      trigger: { hour: 15, minute: 16, repeats: true },   // everyday at this time
+    });
+  }
 
   return (
     <NavigationContainer>

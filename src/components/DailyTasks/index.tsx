@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import FormatStyle from 'utils/FormatStyle';
 import TextStyles from 'utils/TextStyles';
 import Colors from 'utils/Colors';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Text, View } from 'react-native';
+// import { ScrollView } from 'react-native-gesture-handler';
+import { Text, View, ScrollView } from 'react-native';
 import CompletedDot from 'components/CompletedDot';
 
 interface DailyTasksProps {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
 import { signIn } from '../../../redux/slices/authSlice';
 import AppTextInput from '../../../components/AppTextInput';
@@ -10,7 +10,7 @@ import { AuthStackRoutes } from 'navigation/routeTypes';
 import { useNavigation } from '@react-navigation/native';
 import NavType from 'utils/NavType';
 import Button from 'components/Button';
-import { ScrollView } from 'react-native-gesture-handler';
+// import { ScrollView } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import Penguin from '../../../assets/Group.svg';
 

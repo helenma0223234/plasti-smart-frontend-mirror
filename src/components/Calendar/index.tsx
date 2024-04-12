@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, ScrollView } from 'react-native';
 
 import FormatStyle from 'utils/FormatStyle';
 import TextStyles from 'utils/TextStyles';
 import Colors from 'utils/Colors';
-import { ScrollView } from 'react-native-gesture-handler';
-
+// import { ScrollView } from 'react-native-gesture-handler';
 
 interface CalendarProps {
   // curr_date: number

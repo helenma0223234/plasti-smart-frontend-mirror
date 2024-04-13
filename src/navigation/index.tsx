@@ -59,6 +59,7 @@ const RootNavigation = () => {
   //     <BaseNavigation />
   //   );
   // } 
+  
   return (
     <NavigationContainer>
       {!authenticated ? (

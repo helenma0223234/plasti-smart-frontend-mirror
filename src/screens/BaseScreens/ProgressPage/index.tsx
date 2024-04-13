@@ -46,7 +46,6 @@ const ProgressPage = () => {
     return value > max.value ? { type: Number(type), value } : max;
   }, { type: 1, value: user?.Type1Collected });
   
-  console.log(maxType);
   return (
     <SafeAreaView style={{ ...FormatStyle.container }}>
       <ScrollView bounces={false} showsVerticalScrollIndicator={false}>

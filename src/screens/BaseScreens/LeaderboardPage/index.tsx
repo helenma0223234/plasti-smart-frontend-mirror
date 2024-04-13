@@ -27,7 +27,6 @@ const LeaderboardPage = () => {
         const leaderboardData = response.data.map((entry: { username: string, monthlyTotalScans: number }) => {
           return { name: entry.username ? entry.username : 'username', score: entry.monthlyTotalScans };
         });
-        console.log(leaderboardData);
         setLeaderboard(leaderboardData);
       } catch (error) {
         console.error('Error when getting leaderboard', error);
@@ -92,6 +91,7 @@ const LeaderboardPage = () => {
               paddingTop: 20,
             }}
             showsVerticalScrollIndicator={false}
+            scrollEventThrottle={20}
           >
             {leaderboard.slice(3).map((place, index) => (
               <View style={{ gap: 10, width: '100%' }}>

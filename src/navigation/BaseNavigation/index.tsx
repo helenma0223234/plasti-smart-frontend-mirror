@@ -203,98 +203,98 @@ const BaseNavigation = () => {
   }
 
   return (
-    <NavigationContainer>
-      <BaseTab.Navigator
-        screenOptions={{
-          header: () => null,
-          tabBarStyle: {
-            backgroundColor: Colors.secondary.white,
-            height: 100,
-            borderRadius: 20,
+  // <NavigationContainer>
+    <BaseTab.Navigator
+      screenOptions={{
+        header: () => null,
+        tabBarStyle: {
+          backgroundColor: Colors.secondary.white,
+          height: 100,
+          borderRadius: 20,
 
-            display: cameraOpen ? 'none' : 'flex',
+          display: cameraOpen ? 'none' : 'flex',
+        },
+        tabBarActiveTintColor: Colors.primary.dark,
+        tabBarInactiveTintColor: Colors.neutral[2],
+      }}
+      initialRouteName={BaseTabRoutes.HOME}
+    >
+
+
+      <BaseTab.Screen
+        name={BaseTabRoutes.HOME}
+        component={HomeNavigator}
+        options={{
+          tabBarLabel: (props) => {
+            return (null);
           },
-          tabBarActiveTintColor: Colors.primary.dark,
-          tabBarInactiveTintColor: Colors.neutral[2],
+          tabBarIcon: (props) => (
+            <Feather name="home" size={40} color={props.color} />
+          ),
         }}
-        initialRouteName={BaseTabRoutes.HOME}
-      >
+      />
+      <BaseTab.Screen
+        name={BaseTabRoutes.EDUCATION}
+        component={EducationNavigator}
+        options={{
+          tabBarLabel: (props) => {
+            return (
+              null
+            );
+          },
+          tabBarIcon: (props) => (
+            <Feather name="book-open" size={40} color={props.color} />),
 
-
-        <BaseTab.Screen
-          name={BaseTabRoutes.HOME}
-          component={HomeNavigator}
-          options={{
-            tabBarLabel: (props) => {
-              return (null);
-            },
-            tabBarIcon: (props) => (
-              <Feather name="home" size={40} color={props.color} />
-            ),
-          }}
-        />
-        <BaseTab.Screen
-          name={BaseTabRoutes.EDUCATION}
-          component={EducationNavigator}
-          options={{
-            tabBarLabel: (props) => {
-              return (
-                null
-              );
-            },
-            tabBarIcon: (props) => (
-              <Feather name="book-open" size={40} color={props.color} />),
-
-            // <Feather name="user" size={40} color={props.color} />),
-          }}
-        />
-        <BaseTab.Screen
-          name={BaseTabRoutes.CAMERA}
-          component={CameraNavigator}
-          options={{
-            tabBarLabel: (props) => {
-              return null;
-            },
-            tabBarIcon: (props) => (
-              <View style={{ ...FormatStyle.circle, width: 70, height: 70, backgroundColor: Colors.primary.dark, position: 'relative', bottom: 30 }}>
-                <AntDesign name="camera" color={Colors.secondary.white} size={40} />
-              </View>
-            ),
-          }}
-        />
-        <BaseTab.Screen
-          name={BaseTabRoutes.LEADERBOARD}
-          component={LeaderboardNavigator}
-          options={{
-            tabBarLabel: (props) => {
-              return (
-                null);
-            },
-            tabBarIcon: (props) => (
-              <Feather name="bar-chart-2" size={40} color={props.color} />
-            ),
-          }}
-        />
-        <BaseTab.Screen
-          name={BaseTabRoutes.FRONT}
-          component={FrontNavigator}
-          options={{
-            tabBarLabel: (props) => {
-              return (
-                null);
-            },
-            tabBarIcon: (props) => (
-              <Feather name="settings" size={40} color={props.color} />
-            ),
-          }}
-        />
-        <BaseTab.Screen
-          name={BaseTabRoutes.SCAN_COMPLETE}
-          component={ScanCompleteNavigator}
-          options={{ tabBarButton: () => null }}
-        />
-      </BaseTab.Navigator>
-    </NavigationContainer>
+          // <Feather name="user" size={40} color={props.color} />),
+        }}
+      />
+      <BaseTab.Screen
+        name={BaseTabRoutes.CAMERA}
+        component={CameraNavigator}
+        options={{
+          tabBarLabel: (props) => {
+            return null;
+          },
+          tabBarIcon: (props) => (
+            <View style={{ ...FormatStyle.circle, width: 70, height: 70, backgroundColor: Colors.primary.dark, position: 'relative', bottom: 30 }}>
+              <AntDesign name="camera" color={Colors.secondary.white} size={40} />
+            </View>
+          ),
+        }}
+      />
+      <BaseTab.Screen
+        name={BaseTabRoutes.LEADERBOARD}
+        component={LeaderboardNavigator}
+        options={{
+          tabBarLabel: (props) => {
+            return (
+              null);
+          },
+          tabBarIcon: (props) => (
+            <Feather name="bar-chart-2" size={40} color={props.color} />
+          ),
+        }}
+      />
+      <BaseTab.Screen
+        name={BaseTabRoutes.FRONT}
+        component={FrontNavigator}
+        options={{
+          tabBarLabel: (props) => {
+            return (
+              null);
+          },
+          tabBarIcon: (props) => (
+            <Feather name="settings" size={40} color={props.color} />
+          ),
+        }}
+      />
+      <BaseTab.Screen
+        name={BaseTabRoutes.SCAN_COMPLETE}
+        component={ScanCompleteNavigator}
+        options={{ tabBarButton: () => null }}
+      />
+    </BaseTab.Navigator>
+  // </NavigationContainer>
   );
 };
 

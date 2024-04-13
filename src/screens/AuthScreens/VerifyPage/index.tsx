@@ -13,7 +13,8 @@ import Button from 'components/Button';
 
 const VerifyPage = () => {
   const dispatch = useAppDispatch();
-  const { id, email } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
+  const { id, email } = user || { id: '', email: '' };
   const [code, setCode] = useState<string>('');
   const [timer, setTimer] = useState<number>(0);
 
@@ -30,25 +31,29 @@ const VerifyPage = () => {
   const handleResendCode = () => {
     if (timer === 0) {
       dispatch(resendCode({ id, email }));
-      setTimer(60); // Set timer to 60 seconds
+      setTimer(60);
     }
   };
 
   const handleSubmit = () => {
-    // Send only if all fields filled in
     if (!code) alert('Please enter a code!');
     else {
-      dispatch(verify({ id, email, code }));
+      if (id && email && id !== '' && email !== '') {
+        dispatch(verify({ id, email, code }));
+      } else {
+        alert('Please go to sign in page to continue');
+        console.error('User ID or email is undefined');
+      }
     }
   };
 
   return (
     <SafeAreaView style={FormatStyle.topContainer}>
-      <View style={{ marginTop: 50, width: 350, gap: 20 }}>
-        <Text style={TextStyles.title}>Welcome!</Text>
-        <View style={{ flex:0, flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', gap: 20 }}>
-          <Text style={TextStyles.subTitle}>VERIFICATION</Text>
-        
+      <Text style={[TextStyles.title, { width:350, marginTop: 50, textAlign: 'left' }]}>Welcome!</Text>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+
+        <View style={{ width: 350, alignItems: 'center' }}>
+          <Text style={[TextStyles.subTitle, { marginTop: 20 }]}>VERIFICATION</Text>
           <Text style={{
             color: '#000',
             textAlign: 'center',
@@ -58,44 +63,44 @@ const VerifyPage = () => {
             fontWeight: '400',
             lineHeight: 18,
             letterSpacing: 0.3,
+            marginTop: 8,
           }}> We have sent a temporary verification code to your email address.</Text>
         
-          <View style={{ marginTop: 20, gap: 1 }}>
+          <View style={{ marginTop: 18 }}>
             <AppTextInput
               onChangeText={(text) => setCode(text)}
               value={code}
               placeholder='Type your code'
             />
+            <AppButton
+              onPress={handleResendCode}
+              title={timer > 0 ? `Resend Code in 0:${timer}` : 'Resend Code'}
+              transparent={true}
+              underline={true}
+              textStyle={{
+                color: '#1B453C',
+                textAlign: 'right',
+                fontSize: 16,
+                fontStyle: 'normal',
+                fontWeight: '600',
+                lineHeight: 18,
+                letterSpacing: 0.3,
+                textDecorationLine: 'underline',
+                textTransform: 'capitalize',
+                textShadowColor: 'transparent',
+              }}
+              disabled={timer > 0}
+              style={{ marginTop: 8 }}
+            />
           </View>
-        
-          <AppButton
-            onPress={handleResendCode}
-            title={timer > 0 ? `Resend Code in 0:${timer}` : 'Resend Code'}
-            transparent={true}
-            underline={true}
-            textStyle={{
-              color: '#1B453C',
-              textAlign: 'right',
-              fontFamily: 'Inter',
-              fontSize: 16,
-              fontStyle: 'normal',
-              fontWeight: '600',
-              lineHeight: 18,
-              letterSpacing: 0.3,
-              textDecorationLine: 'underline',
-              textTransform: 'capitalize',
-            }}
-            disabled={timer > 0}
-          />
 
           <Button
             onPress={handleSubmit}
-            style={{ paddingTop: 15, paddingBottom: 15, width: '100%' }}
+            style={{ paddingTop: 15, paddingBottom: 15, width: '100%', marginTop: 100 }}
             title={'Verify'}
           />
         </View>
       </View>
-
     </SafeAreaView>
   );
 };

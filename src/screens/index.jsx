@@ -4,7 +4,7 @@ import {
   LaunchPage,
   VerifyPage,
   OnboardingPage,
-
+  MascotPage,
 } from './AuthScreens';
 
 import {
@@ -31,6 +31,7 @@ export {
   ForbiddenPage,
   CameraPage,
   ScanCompletePage,
+  MascotPage,
   // HomePage,
   // LeaderboardPage,
   // EducationPage,

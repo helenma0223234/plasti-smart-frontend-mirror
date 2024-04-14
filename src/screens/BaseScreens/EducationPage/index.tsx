@@ -170,7 +170,7 @@ const EducationPage = () => {
               ))}
             </View>
           </View>
-          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} contentOffset={{ x: 340 * currCard, y: 0 }} onScroll={handleScroll}>
+          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} contentOffset={{ x: 340 * currCard, y: 0 }} onScroll={handleScroll} scrollEventThrottle={16}>
             <View style={{ gap: 10, flexDirection: 'row' }}>
               {info.map((card, index) => (
                 <PolymerCard title={card.title} number={index + 1} />

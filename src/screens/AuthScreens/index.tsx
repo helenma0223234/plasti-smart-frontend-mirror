@@ -3,6 +3,7 @@ import SignUpPage from './SignUpPage';
 import LaunchPage from './LaunchPage';
 import VerifyPage from './VerifyPage';
 import OnboardingPage from './OnboardingPage';
+import MascotPage from './MascotPage';
 
 export {
   OnboardingPage,
@@ -10,4 +11,5 @@ export {
   SignUpPage,
   LaunchPage,
   VerifyPage,
+  MascotPage,
 };

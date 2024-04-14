@@ -15,6 +15,8 @@ interface AppButtonProps {
   inverted?: boolean
   disabled?: boolean
   textStyle?: StyleProp<TextStyle>
+  transparent?: boolean
+  underline?: boolean
 }
 
 const AppButton = ({ 
@@ -28,19 +30,25 @@ const AppButton = ({
   textColor = 'white',
   inverted = false,
   disabled = false,
+  transparent = false,
+  underline = false,
 }: AppButtonProps) => (
   <TouchableOpacity 
     onPress={onPress} 
     disabled={disabled}
     style={{ 
       ...styles.appButtonContainer, 
-      backgroundColor, 
+      backgroundColor: transparent ? 'transparent' : backgroundColor, 
       ...(style as object),
       ...(inverted) && { backgroundColor: Colors.primary.normal }, 
       ...(fullWidth) && { width: '100%' }, 
       ...(disabled) && { opacity: 0.7 },
     }}>
-    <Text style={[styles.appButtonText, { color: textColor, ...(inverted) && { color: 'white' } }, textStyle]}>{title}</Text>
+    <Text style={[
+      styles.appButtonText, 
+      { color: textColor, ...(inverted) && { color: 'white' }, ...(underline) && { textDecorationLine: 'underline' } }, 
+      textStyle,
+    ]}>{title}</Text>
     {
       isArrow && <AntDesign name='caretright' size={25} color='white' />
     }

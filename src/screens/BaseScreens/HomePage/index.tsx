@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ScrollView, SafeAreaView, Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { SafeAreaView, Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
 import useAppSelector from 'hooks/useAppSelector';
 import AppButton from '../../../components/AppButton';

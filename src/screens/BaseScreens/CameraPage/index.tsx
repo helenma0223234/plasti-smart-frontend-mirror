@@ -130,7 +130,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       //   bottomSheetRef.current?.open();
       // }
       //////////////// bypass this current model that isn't working
-      if (capturedPhoto && model) {
+      if (capturedPhoto && model && !isModelRunning) {
         setIsModelRunning(true);
         try {
           // Load image

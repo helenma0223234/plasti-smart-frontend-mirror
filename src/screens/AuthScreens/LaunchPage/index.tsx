@@ -1,15 +1,17 @@
-import React from "react";
+import React from 'react';
 import {
   SafeAreaView,
   View,
   Text,
   StyleSheet,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import NavType from "../../../utils/NavType";
-import { AuthStackRoutes } from "../../../navigation/routeTypes";
-import Cat from "../../../assets/Cat.svg";
-import { TouchableOpacity } from "react-native-gesture-handler";
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import NavType from '../../../utils/NavType';
+import { AuthStackRoutes } from '../../../navigation/routeTypes';
+import Cat from '../../../assets/Cat.svg';
+
 
 const FrontPage = () => {
   const navigation = useNavigation<NavType>();
@@ -49,72 +51,72 @@ const FrontPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 10,
-    borderColor: "white",
-    borderTopWidth: "120%",
-    backgroundColor: "white",
+    borderColor: 'white',
+    borderTopWidth: '120%',
+    backgroundColor: 'white',
   },
   header: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   logo: {
     fontSize: 70,
-    textAlign: "center", // Ensure logo text is centered
-    color: "#1B453C",
+    textAlign: 'center', // Ensure logo text is centered
+    color: '#1B453C',
     marginTop: 20,
     marginBottom: -20,
   },
   catContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 30,
     zIndex: 0, // This will place the Cat behind the text
   },
   subtitle: {
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 30, // Adjust spacing if needed
-    color: "#1B453C",
+    color: '#1B453C',
     fontSize: 18,
   },
   buttonContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: "50%",
-    marginBottom: "-30%",
-    width: "100%",
-    alignSelf: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: '50%',
+    marginBottom: '-30%',
+    width: '100%',
+    alignSelf: 'center',
   },
   button: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: "#1B453C",
+    backgroundColor: '#1B453C',
     borderRadius: 5,
     marginTop: 10,
-    minWidth: "80%",
-    maxWidth: "80%",
-    minHeight: "10%",
+    minWidth: '90%',
+    maxWidth: '90%',
+    minHeight: '10%',
     maxHeight: 50,
   },
   invertedButton: {
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: "#1B453C",
+    borderColor: '#1B453C',
   },
   buttonText: {
-    textAlign: "center",
-    color: "white",
+    textAlign: 'center',
+    color: 'white',
     fontSize: 15,
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
   },
   invertedButtonText: {
-    textAlign: "center",
-    color: "#1B453C",
+    textAlign: 'center',
+    color: '#1B453C',
     fontSize: 15,
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
   },
 });
 

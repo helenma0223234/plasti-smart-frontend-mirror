@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { SafeAreaView, Text, View, StyleSheet, Dimensions } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { SafeAreaView, Text, View, StyleSheet, Dimensions, Button } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import SvgUri from 'react-native-svg-uri';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 
 import useAppSelector from '../../../hooks/useAppSelector';
 import useAppDispatch from '../../../hooks/useAppDispatch';
@@ -11,12 +10,10 @@ import TextStyles from '../../../utils/TextStyles';
 import Cat from '../../../assets/Cat.svg';
 import Cat1 from '../../../assets/Cat1.svg';
 import Cat2 from '../../../assets/Cat2.svg';
+import GoRightButton from '../../../assets/GoRightButton.svg';
+import GoLeftButton from '../../../assets/GoLeftButton.svg';
 
 const { width: screenWidth } = Dimensions.get('window');
-
-// const Cat1 = () => <SvgUri width="100" height="100" source={require('../../../assets/Cat.svg')} />;
-// const Cat2 = () => <SvgUri width="100" height="100" source={require('../../../assets/Cat1.svg')} />;
-// const Cat3 = () => <SvgUri width="100" height="100" source={require('../../../assets/Cat2.svg')} />;
 
 const svgs = [Cat, Cat1, Cat2];
 
@@ -24,12 +21,20 @@ const MascotPage = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { id, email } = user || { id: '', email: '' };
+  const [activeIndex, setActiveIndex] = useState(0);
+  const carouselRef = useRef(null);
 
   const handleSubmit = () => {
     alert('Please enter a code!');
   };
 
-  const [activeIndex, setActiveIndex] = useState(0);
+  const goPrev = () => {
+    carouselRef.current.snapToPrev();
+  };
+
+  const goNext = () => {
+    carouselRef.current.snapToNext();
+  };
 
   const renderItem = ({ item, index }) => {
     const SvgComponent = item;
@@ -42,36 +47,42 @@ const MascotPage = () => {
 
   return (
     <SafeAreaView style={[FormatStyle.topContainer, { justifyContent: 'center' }]}>
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={[TextStyles.subTitle, { marginTop: -600, textAlign: 'center' }]}>Choose your mascot</Text>
+      <View style={{ justifyContent: 'space-around', alignItems: 'center' }}>
+        <Text style={[TextStyles.subTitle, { marginTop: -500, textAlign: 'center' }]}>Choose your mascot</Text>
         <View style={styles.catContainer}>
           <Carousel
+            ref={carouselRef}
             layout={'default'}
             data={svgs}
             sliderWidth={screenWidth}
-            itemWidth={200}
+            itemWidth={180}
             renderItem={renderItem}
             onSnapToItem={index => setActiveIndex(index)}
+            enableSnap={true}
+            enableMomentum={true}
           />
+          <TouchableOpacity style={{ position: 'absolute', right: 280, bottom: 204, zIndex:1 }} onPress={goPrev}>
+            <GoLeftButton  width={40} height={40}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ position: 'absolute', right: 78, bottom: 206, zIndex:1 }} onPress={goNext}>
+            <GoRightButton  width={40} height={40}/>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate(AuthStackRoutes.SIGNUP)}
         >
           <Text style={styles.buttonText}>Continue</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.invertedButton]}
-          onPress={() => navigation.navigate(AuthStackRoutes.SIGNIN)}
         >
           <Text style={styles.invertedButtonText}>
             Customize later
           </Text>
         </TouchableOpacity>
       </View>
-      {/* </View> */}
     </SafeAreaView>
   );
 };
@@ -79,9 +90,9 @@ const MascotPage = () => {
 const styles = StyleSheet.create({
   catContainer: {
     position: 'absolute',
-    bottom: -200,
+    bottom: -300,
     zIndex: 0,
-    minHeight:400,
+    minHeight:300,
   },
   subtitle: {
     textAlign: 'center',
@@ -90,10 +101,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   buttonContainer: {
-    borderRadius:1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: '50%',
+    marginTop: '80%',
     marginBottom: '-70%',
     width: '100%',
     alignSelf: 'center',
@@ -106,7 +116,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1B453C',
     borderRadius: 5,
     marginTop: 10,
-    marginBottom: -12,
+    marginBottom: -14,
     minWidth: '90%',
     maxWidth: '90%',
     minHeight: '10%',

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 
 import useAppSelector from 'hooks/useAppSelector';
@@ -63,22 +62,17 @@ const RootNavigation = () => {
   // } 
   
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-
-      <NavigationContainer>
-        {!authenticated ? (
-        // <AuthNavigation />
-          <MascotPage />
-        ) : role === UserScopes.Unverified ? (
-          <VerifyPage />
-        ) : authenticated && history?.length <= 1 ? (
-          <MascotPage />
-        ) : (
-          <BaseNavigation />
-        )}
-        {/* <MascotPage /> */}
-      </NavigationContainer>
-    </GestureHandlerRootView>
+    <NavigationContainer>
+      {!authenticated ? (
+        <AuthNavigation />
+      ) : role === UserScopes.Unverified ? (
+        <VerifyPage />
+      ) : authenticated && history?.length <= 1 ? (
+        <MascotPage />
+      ) : (
+        <BaseNavigation />
+      )}
+    </NavigationContainer>
   );
 };
 

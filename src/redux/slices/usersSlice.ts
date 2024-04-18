@@ -48,9 +48,49 @@ export const getUser = createAsyncThunk(
   },
 );
 
+// export const updateUser = createAsyncThunk(
+//   'users/updateUser',
+//   async (req: { id: string, email: string, password: string, role: UserScopes }, { dispatch }) => {
+//     dispatch(startUsersLoading());
+//     return axios
+//       .patch(`${SERVER_URL}users/${req.id}`, req)
+//       .finally(() => dispatch(stopUsersLoading()))
+//       .then((response) => {
+//         return response.data;
+//       })
+//       .catch((error) => {
+//         console.error('Error when updating user', error);
+//         return false;
+//       });
+//   },
+// );
+
+// subject to change!!
 export const updateUser = createAsyncThunk(
   'users/updateUser',
-  async (req: { id: string, email: string, password: string, role: UserScopes }, { dispatch }) => {
+  async (req: { 
+    id: string, 
+    name?: string, 
+    email?: string, 
+    username?: string, 
+    pronoun?: string, 
+    avatar?: number, 
+    teamID?: string, 
+    lastLogin?: string, 
+    avatarHealth?: number, 
+    monthlyTotalScans?: number, 
+    snacks?: number,
+    Type1Collected?: number, 
+    Type2Collected?: number, 
+    Type3Collected?: number, 
+    Type4Collected?: number, 
+    Type5Collected?: number, 
+    Type6Collected?: number, 
+    Type7Collected?: number,
+    monthlyGoalPlasticType?: number, 
+    monthlyGoalPlasticAmount?: number, 
+    monthlyGoalPlasticTotal?: number
+  }, { dispatch }) => {
     dispatch(startUsersLoading());
     return axios
       .patch(`${SERVER_URL}users/${req.id}`, req)

@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { SafeAreaView, Text, View, StyleSheet, Dimensions, Button } from 'react-native';
+import { SafeAreaView, Text, View, StyleSheet, Dimensions } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { updateUser } from '../../../redux/slices/usersSlice';
 
 import useAppSelector from '../../../hooks/useAppSelector';
 import useAppDispatch from '../../../hooks/useAppDispatch';
@@ -21,11 +23,18 @@ const MascotPage = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { id, email } = user || { id: '', email: '' };
+  
+  const userData = useAppSelector((state) => state.users.selectedUser);
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef(null);
 
-  const handleSubmit = () => {
-    alert('Please enter a code!');
+  const handleUpdateUser = () => {
+    const updatedUser = {
+      ...user,
+      avatar: activeIndex,
+    };
+  
+    dispatch(updateUser(updatedUser));
   };
 
   const goPrev = () => {

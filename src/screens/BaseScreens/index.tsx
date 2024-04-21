@@ -8,6 +8,8 @@ import HomePage from './HomePage';
 import LeaderboardPage from './LeaderboardPage';
 import EducationPage from './EducationPage';
 import ProgressPage from './ProgressPage';
+import ManualEntryPage from './ManualEntryPage';
+import UnknownPlasticPage from './UnknownPlasticPage';
 
 export {
   FrontPage,
@@ -20,4 +22,6 @@ export {
   LeaderboardPage,
   EducationPage,
   ProgressPage,
+  ManualEntryPage,
+  UnknownPlasticPage,
 };

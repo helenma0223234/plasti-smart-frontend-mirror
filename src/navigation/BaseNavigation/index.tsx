@@ -21,13 +21,14 @@ import {
   EducationPage,
   LeaderboardPage,
   ProgressPage,
-
+  ManualEntryPage,
+  UnknownPlasticPage,
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
 import useAppDispatch from 'hooks/useAppDispatch';
 import { loadModel } from 'redux/slices/modelSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import FormatStyle from 'utils/FormatStyle';
 
 const BaseTab = createBottomTabNavigator<BaseNavigationList>();
@@ -127,12 +128,22 @@ const LeaderboardNavigator = () => {
 };
 
 const BaseNavigation = () => {
+  const [isModalVisible, setModalVisible] = useState(false);
   const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
   const dispatch = useAppDispatch();
   // useEffect(() => {
   //   // registerForPushNotificationsAsync();
   //   dispatch(loadModel());
   // }, []);
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleOptionSelect = (screen: keyof BaseNavigationList) => {
+    setModalVisible(false);
+    navigation.navigate(screen);
+  };
 
   useEffect(() => {
     registerForPushNotificationsAsync()

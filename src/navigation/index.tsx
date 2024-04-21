@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+
 import useAppSelector from 'hooks/useAppSelector';
 import useAppDispatch from 'hooks/useAppDispatch';
 import { UserScopes } from 'types/users';
@@ -64,6 +65,7 @@ const RootNavigation = () => {
     <NavigationContainer>
       {!authenticated ? (
         <AuthNavigation />
+        // <MascotPage />
       ) : role === UserScopes.Unverified ? (
         <VerifyPage />
       ) : authenticated && history?.length <= 1 ? (

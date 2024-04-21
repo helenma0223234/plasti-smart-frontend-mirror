@@ -23,7 +23,6 @@ const MascotPage = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { id, email } = user || { id: '', email: '' };
-  
   const userData = useAppSelector((state) => state.users.selectedUser);
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef(null);

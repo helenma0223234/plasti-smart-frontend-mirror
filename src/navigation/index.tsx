@@ -65,6 +65,7 @@ const RootNavigation = () => {
     <NavigationContainer>
       {!authenticated ? (
         <AuthNavigation />
+        // <MascotPage />
       ) : role === UserScopes.Unverified ? (
         <VerifyPage />
       ) : authenticated && history?.length <= 1 ? (

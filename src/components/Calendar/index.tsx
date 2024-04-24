@@ -5,6 +5,7 @@ import FormatStyle from 'utils/FormatStyle';
 import TextStyles from 'utils/TextStyles';
 import Colors from 'utils/Colors';
 import { ScrollView } from 'react-native-gesture-handler';
+import { transformer } from '../../../metro.config';
 
 
 interface CalendarProps {
@@ -39,6 +40,7 @@ const Calendar = ({ circlesArray }: CalendarProps) => {
     const numberOfOnes = subArray.filter(value => value === 1).length;
     return Array(numberOfOnes).fill(1);
   });
+  const isEmpty = newCirclesArray.every(subArray => subArray.length === 0);
 
   return (
     <View style={{ marginTop: 8 }}>
@@ -46,7 +48,7 @@ const Calendar = ({ circlesArray }: CalendarProps) => {
       <ScrollView horizontal={true} style={{ width: 350 }} contentOffset={{ x: 400, y: 0 }} bounces={true} showsHorizontalScrollIndicator={false}>
         <View style={{ flexDirection: 'row', gap: 10, marginRight: 6 }}>
           {dates.map((date: number, key: number) => (
-            <DateCircle date={date} key={key} active={key == 10} isPast={key < 10} circles={newCirclesArray[key]} colorcircles={circlesArray[key]}></DateCircle>
+            <DateCircle date={date} key={key} active={key == 10} isPast={key < 10} circles={newCirclesArray[key]} colorcircles={circlesArray[key]} isEmpty={isEmpty} />
           ))}
         </View>
       </ScrollView>
@@ -59,9 +61,10 @@ interface DateProps {
   active?: boolean
   isPast: boolean
   colorcircles: number[]
+  isEmpty?: boolean
 }
 
-const DateCircle = ({ isPast, active, date, colorcircles }: DateProps) => {
+const DateCircle = ({ isPast, active, date, colorcircles, isEmpty }: DateProps) => {
   const circleColors = [Colors.secondary.red, Colors.secondary.yellow, Colors.primary.dark];
 
   return (
@@ -77,7 +80,7 @@ const DateCircle = ({ isPast, active, date, colorcircles }: DateProps) => {
         <Text style={{ ...TextStyles.small, color: active && Colors.secondary.white }}>{date}</Text>
       </View>
       <View style={{ alignItems: 'center', flexDirection: 'row', gap: 4 }}>
-        {colorcircles.map((circle: number, key: number) => (
+        {/* {colorcircles.map((circle: number, key: number) => (
           circle === 1 ? (
             <View style={{
               ...FormatStyle.circle,
@@ -87,7 +90,22 @@ const DateCircle = ({ isPast, active, date, colorcircles }: DateProps) => {
               borderWidth: 0,
             }} key={key}></View>
           ) : null
-        ))}
+        ))} */}
+        {isEmpty ? (
+          <View style={FormatStyle.circle2} />
+        ) : (
+          colorcircles.map((circle: number, key: number) => (
+            circle === 1 ? (
+              <View style={{
+                ...FormatStyle.circle,
+                backgroundColor: circleColors[key],
+                width: 6,
+                height: 6,
+                borderWidth: 0,
+              }} key={key}></View>
+            ) : null
+          ))
+        )}
       </View>
     </View>
   );

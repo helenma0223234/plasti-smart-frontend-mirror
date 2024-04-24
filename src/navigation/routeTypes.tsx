@@ -16,16 +16,19 @@ export type AuthNavigationList = {
 };
 
 export enum BaseTabRoutes {
-  FRONT = 'Front Page',
+  FRONT = 'FrontPage',
   USERS = 'Users',
   RESOURCES = 'Resources',
   FORBIDDEN = 'Forbidden',
   CAMERA = 'Camera',
-  SCAN_COMPLETE = 'Scan Complete',
+  SCAN_COMPLETE = 'ScanComplete',
   HOME = 'Home',
   LEADERBOARD = 'Leaderboard',
   EDUCATION = 'Education',
   PROGRESS = 'Progress',
+  MANUAL_ENTRY = 'ManualEntry',
+  UNKNOWN_PLASTIC = 'UnknownPlastic',
+  CAMERA_MODAL = 'CameraModal',
 }
 
 export type BaseNavigationList = {
@@ -39,5 +42,7 @@ export type BaseNavigationList = {
   [BaseTabRoutes.LEADERBOARD]: Record<string, unknown>;
   [BaseTabRoutes.EDUCATION]: Record<string, unknown>;
   [BaseTabRoutes.PROGRESS]: Record<string, unknown>;
-
+  [BaseTabRoutes.MANUAL_ENTRY]: Record<string, unknown>;
+  [BaseTabRoutes.UNKNOWN_PLASTIC]: Record<string, unknown>;
+  [BaseTabRoutes.CAMERA_MODAL]: Record<string, unknown>;
 };

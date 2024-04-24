@@ -29,6 +29,9 @@ export default StyleSheet.create({
   small: {
     fontSize: 15,
     fontFamily: 'Raleway_400Regular',
+    fontStyle: 'normal',
+    fontWeight: '500',
+    letterSpacing: -0.3,
     color: Colors.primary.dark,
   },
 });

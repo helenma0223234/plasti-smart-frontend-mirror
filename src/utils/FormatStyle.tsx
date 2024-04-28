@@ -44,6 +44,17 @@ const FormatStyle = StyleSheet.create({
     marginTop: 20,
   },
 
+  circle2: {
+    borderColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 100,
+    height: 100,
+    borderRadius: 100,
+    backgroundColor: 'transparent',
+    marginTop: 20,
+  },
+
   lf: {
     fontSize: 27.5,
   },

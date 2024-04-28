@@ -331,7 +331,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
     setCapturedPhoto(null);
     setIsAnimating(false);
     dispatch(cameraClosed());
-    console.log('camera closed');
     navigation.navigate(BaseTabRoutes.HOME, {});
   };
   /**************** Done Nav functions ****************/

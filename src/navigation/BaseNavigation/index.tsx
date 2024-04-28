@@ -1,8 +1,10 @@
-import { Text, View } from 'react-native';
+import { Text, View, TouchableOpacity, Modal, Button } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { AntDesign, Octicons, Ionicons, MaterialIcons, Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+
 
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
@@ -21,14 +23,16 @@ import {
   EducationPage,
   LeaderboardPage,
   ProgressPage,
-
+  ManualEntryPage,
+  UnknownPlasticPage,
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
 import useAppDispatch from 'hooks/useAppDispatch';
 import { loadModel } from 'redux/slices/modelSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import FormatStyle from 'utils/FormatStyle';
+import CameraOptionsModal from './CameraOptionsModal';
 
 const BaseTab = createBottomTabNavigator<BaseNavigationList>();
 const BaseStack = createStackNavigator<BaseNavigationList>();
@@ -38,7 +42,7 @@ const ProtectedRoute = (allowableScopes: UserScopes[]) => {
 
   return allowableScopes.includes(role) && authenticated;
 };
-
+const EmptyComponent = () => null;
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -126,13 +130,53 @@ const LeaderboardNavigator = () => {
   );
 };
 
+const ManualEntryNavigator = () => {
+  return (
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.MANUAL_ENTRY}>
+      <BaseStack.Screen
+        name={BaseTabRoutes.MANUAL_ENTRY}
+        component={ManualEntryPage}
+        options={{ header: () => null }}
+      />
+    </BaseStack.Navigator>
+  );
+};
+
+const UnknownPlasticNavigator = () => {
+  return (
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.UNKNOWN_PLASTIC}>
+      <BaseStack.Screen
+        name={BaseTabRoutes.UNKNOWN_PLASTIC}
+        component={UnknownPlasticPage}
+        options={{ header: () => null }}
+      />
+    </BaseStack.Navigator>
+  );
+};
+
 const BaseNavigation = () => {
+  const [isModalVisible, setModalVisible] = useState(false);
   const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
   const dispatch = useAppDispatch();
   // useEffect(() => {
   //   // registerForPushNotificationsAsync();
   //   dispatch(loadModel());
   // }, []);
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+  const navigation = useNavigation();
+
+  // const handleOptionSelect = (screen: keyof BaseNavigationList) => {
+  //   setModalVisible(false);
+  //   navigation.navigate(screen);
+  // };
+  
 
   useEffect(() => {
     registerForPushNotificationsAsync()
@@ -203,98 +247,115 @@ const BaseNavigation = () => {
   }
 
   return (
-  // <NavigationContainer>
-    <BaseTab.Navigator
-      screenOptions={{
-        header: () => null,
-        tabBarStyle: {
-          backgroundColor: Colors.secondary.white,
-          height: 100,
-          borderRadius: 20,
+    <>
+      <BaseTab.Navigator
+        screenOptions={{
+          header: () => null,
+          tabBarStyle: {
+            backgroundColor: Colors.secondary.white,
+            height: 100,
+            borderRadius: 20,
 
-          display: cameraOpen ? 'none' : 'flex',
-        },
-        tabBarActiveTintColor: Colors.primary.dark,
-        tabBarInactiveTintColor: Colors.neutral[2],
-      }}
-      initialRouteName={BaseTabRoutes.HOME}
-    >
+            display: cameraOpen ? 'none' : 'flex',
+          },
+          tabBarActiveTintColor: Colors.primary.dark,
+          tabBarInactiveTintColor: Colors.neutral[2],
+        }}
+        initialRouteName={BaseTabRoutes.HOME}
+      >
 
 
-      <BaseTab.Screen
-        name={BaseTabRoutes.HOME}
-        component={HomeNavigator}
-        options={{
-          tabBarLabel: (props) => {
-            return (null);
-          },
-          tabBarIcon: (props) => (
-            <Feather name="home" size={40} color={props.color} />
-          ),
-        }}
-      />
-      <BaseTab.Screen
-        name={BaseTabRoutes.EDUCATION}
-        component={EducationNavigator}
-        options={{
-          tabBarLabel: (props) => {
-            return (
-              null
-            );
-          },
-          tabBarIcon: (props) => (
-            <Feather name="book-open" size={40} color={props.color} />),
+        <BaseTab.Screen
+          name={BaseTabRoutes.HOME}
+          component={HomeNavigator}
+          options={{
+            tabBarLabel: (props) => {
+              return (null);
+            },
+            tabBarIcon: (props) => (
+              <Feather name="home" size={40} color={props.color} />
+            ),
+          }}
+        />
+        <BaseTab.Screen
+          name={BaseTabRoutes.EDUCATION}
+          component={EducationNavigator}
+          options={{
+            tabBarLabel: (props) => {
+              return (
+                null
+              );
+            },
+            tabBarIcon: (props) => (
+              <Feather name="book-open" size={40} color={props.color} />),
 
-          // <Feather name="user" size={40} color={props.color} />),
-        }}
-      />
-      <BaseTab.Screen
-        name={BaseTabRoutes.CAMERA}
-        component={CameraNavigator}
-        options={{
-          tabBarLabel: (props) => {
-            return null;
-          },
-          tabBarIcon: (props) => (
-            <View style={{ ...FormatStyle.circle, width: 70, height: 70, backgroundColor: Colors.primary.dark, position: 'relative', bottom: 30 }}>
-              <AntDesign name="camera" color={Colors.secondary.white} size={40} />
-            </View>
-          ),
-        }}
-      />
-      <BaseTab.Screen
-        name={BaseTabRoutes.LEADERBOARD}
-        component={LeaderboardNavigator}
-        options={{
-          tabBarLabel: (props) => {
-            return (
-              null);
-          },
-          tabBarIcon: (props) => (
-            <Feather name="bar-chart-2" size={40} color={props.color} />
-          ),
-        }}
-      />
-      <BaseTab.Screen
-        name={BaseTabRoutes.FRONT}
-        component={FrontNavigator}
-        options={{
-          tabBarLabel: (props) => {
-            return (
-              null);
-          },
-          tabBarIcon: (props) => (
-            <Feather name="settings" size={40} color={props.color} />
-          ),
-        }}
-      />
-      <BaseTab.Screen
-        name={BaseTabRoutes.SCAN_COMPLETE}
-        component={ScanCompleteNavigator}
-        options={{ tabBarButton: () => null }}
-      />
-    </BaseTab.Navigator>
-  // </NavigationContainer>
+            // <Feather name="user" size={40} color={props.color} />),
+          }}
+        />
+        <BaseTab.Screen
+          name={BaseTabRoutes.CAMERA_MODAL}
+          component={EmptyComponent}
+          options={{
+            tabBarLabel: () => null,
+            tabBarIcon: (props) => (
+              <View style={{ ...FormatStyle.circle, width: 70, height: 70, backgroundColor: Colors.primary.dark, position: 'relative', bottom: 30 }}>
+                <TouchableOpacity onPress={() => setModalVisible(!isModalVisible)}>
+                  <AntDesign name="camera" color={Colors.secondary.white} size={40} />
+                </TouchableOpacity>
+              </View>
+            ),
+          }}
+        />
+
+        <BaseTab.Screen
+          name={BaseTabRoutes.LEADERBOARD}
+          component={LeaderboardNavigator}
+          options={{
+            tabBarLabel: (props) => {
+              return (
+                null);
+            },
+            tabBarIcon: (props) => (
+              <Feather name="bar-chart-2" size={40} color={props.color} />
+            ),
+          }}
+        />
+        <BaseTab.Screen
+          name={BaseTabRoutes.FRONT}
+          component={FrontNavigator}
+          options={{
+            tabBarLabel: (props) => {
+              return (
+                null);
+            },
+            tabBarIcon: (props) => (
+              <Feather name="settings" size={40} color={props.color} />
+            ),
+          }}
+        />
+        <BaseTab.Screen
+          name={BaseTabRoutes.SCAN_COMPLETE}
+          component={ScanCompleteNavigator}
+          options={{ tabBarButton: () => null }}
+        />
+        <BaseTab.Screen
+          name={BaseTabRoutes.UNKNOWN_PLASTIC}
+          component={UnknownPlasticNavigator}
+          options={{ tabBarButton: () => null }}
+        />
+        <BaseTab.Screen
+          name={BaseTabRoutes.MANUAL_ENTRY}
+          component={ManualEntryNavigator}
+          options={{ tabBarButton: () => null }}
+        />
+        <BaseTab.Screen
+          name={BaseTabRoutes.CAMERA}
+          component={CameraNavigator}
+          options={{ tabBarButton: () => null }}
+        />
+      </BaseTab.Navigator>
+      <CameraOptionsModal isVisible={isModalVisible} onClose={closeModal} navigation={navigation}/>
+    </>
   );
 };
 

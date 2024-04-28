@@ -16,6 +16,7 @@ import Cat from '../../../assets/Cat.svg';
 import Trophy from '../../../assets/Trophy.svg';
 import useAppSelector from 'hooks/useAppSelector';
 import PlasticSymbol from 'components/RecycleSymbol';
+import Globe from '../../../assets/Globe.svg';
 // import PlasticSymbol from 'components/RecycleSymbol';
 
 
@@ -79,10 +80,6 @@ const EducationPage = () => {
   }, { type: 1, value: user?.Type1Collected });
   
 
-  // useEffect(() => {
-
-  // }, [currCard]);
-
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container }}>
@@ -90,6 +87,7 @@ const EducationPage = () => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}>
+
         <View style={{
           flex: 1,
           justifyContent: 'center',
@@ -119,32 +117,13 @@ const EducationPage = () => {
             <Text style={{ ...TextStyles.subTitle }}>Your Progress</Text>
             <Text onPress={() => navigation.navigate(BaseTabRoutes.PROGRESS)} style={{ ...TextStyles.small, textDecorationLine: 'underline' }}>See All</Text>
           </View>
+          
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            
             <View style={{ gap: 10, flexDirection: 'row' }}>
-              <ProgressCard
-                title={'Monthly Challenge'}
-                text={`You've recycled ${user?.monthlyGoalPlasticAmount} out of ${user?.monthlyGoalPlasticTotal} PET plastics this month. Keep going to get the prize!`}
-                number={user?.monthlyGoalPlasticType}
-                cornerComponent={
-                  <View>
 
-                    <CircularProgress
-                      value={(user?.monthlyGoalPlasticAmount / user?.monthlyGoalPlasticTotal) * 100}
-                      radius={40}
-                      circleBackgroundColor={'transparent'}
-                      progressValueColor={'transparent'}
-                      activeStrokeColor={Colors.highlight}
-                      inActiveStrokeColor={'transparent'}
-                    />
-                    <View style={{ position: 'relative', bottom: 48, alignItems: 'center' }}>
-                      <Text style={{ fontSize: 16, fontWeight: '800' }}>{user?.monthlyGoalPlasticAmount}/{user?.monthlyGoalPlasticTotal}</Text>
-                    </View>
-                  </View>
-                }>
-              </ProgressCard>
-              <ProgressCard
+            <ProgressCard
                 title={'Top Plastic'}
-                text={'You\'ve recycled a lot!'}
                 number={maxType.type}
                 text={`You've recycled ${maxType.value} No.${maxType.type} plastics this month. Great work!`}
                 cornerComponent={
@@ -152,6 +131,24 @@ const EducationPage = () => {
                 }
               >
               </ProgressCard>
+
+              <ProgressCard
+                title={'Earth Conscious'}
+                text={`You've reused ${user?.monthlyGoalPlasticAmount} plastics this month! Keep going!`}
+                // number={user?.monthlyGoalPlasticType}
+                cornerComponent={
+                  <View>
+
+                    <Globe width={60} height={60}></Globe>
+                    <View style={{ position: 'relative', bottom: 40, justifyContent: 'center', alignItems: 'center' }}>
+                      <Text style={{ fontSize: 16, fontWeight: '700', color:Colors.primary.dark }}>{user?.monthlyGoalPlasticAmount}</Text>
+                    </View>
+                  </View>
+                }>
+              </ProgressCard>
+              
+              
+              
               <ProgressCard
                 title={'Avatar Points'}
                 text={'You monthly challenge progress has gained you the most points!'}
@@ -257,7 +254,7 @@ const PolymerCard = ({ title, number }: PolymerCardProps) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.secondary.light,
+    backgroundColor: "#F4F3E7",
     borderRadius: 10,
   },
 });

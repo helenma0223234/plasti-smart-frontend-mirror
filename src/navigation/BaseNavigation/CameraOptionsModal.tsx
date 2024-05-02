@@ -1,5 +1,5 @@
-import React from 'react';
-import { Modal, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import React,  { useEffect, useRef }  from 'react';
+import { Animated, Modal, View, StyleSheet, TouchableOpacity, Text, TouchableWithoutFeedback } from 'react-native';
 import { BaseNavigationList, BaseTabRoutes } from '../routeTypes'; // Adjust import as necessary
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -13,12 +13,20 @@ interface CameraOptionsModalProps {
 }
   
 const CameraOptionsModal: React.FC<CameraOptionsModalProps> = ({ isVisible, onClose, navigation }) => {
+  const modalAnimation = useRef(new Animated.Value(0)).current;
 
   const handleOptionSelect = (screen: keyof BaseNavigationList) => {
     onClose();
-    console.log(screen);
     navigation.navigate(screen, {});
   };
+
+  useEffect(() => {
+    Animated.timing(modalAnimation, {
+      toValue: isVisible ? 1 : 0,
+      duration: 550,
+      useNativeDriver: true,
+    }).start();
+  }, [isVisible]);
 
   return (
     <Modal
@@ -27,38 +35,42 @@ const CameraOptionsModal: React.FC<CameraOptionsModalProps> = ({ isVisible, onCl
       visible={isVisible}
       onRequestClose={onClose}
     >
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <View style={styles.buttonBlock1}>
-            <TouchableOpacity onPress={() => handleOptionSelect(BaseTabRoutes.CAMERA)}>
-              <Text style={[TextStyles.regular, { textAlign: 'center', color: '#FFFFFF', fontSize:14 }]}>Scan label</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View style={styles.buttonBlock}>
-              <TouchableOpacity onPress={() => handleOptionSelect(BaseTabRoutes.MANUAL_ENTRY)}>
-                <Text style={[TextStyles.regular, { textAlign: 'center', color: '#FFFFFF', fontSize:14 }]}>Manually enter</Text>
-              </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={onClose} >
+        <Animated.View style={[styles.modalContainer, { opacity: modalAnimation }]}>
+
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <View style={styles.buttonBlock1}>
+                <TouchableOpacity onPress={() => handleOptionSelect(BaseTabRoutes.CAMERA)}>
+                  <Text style={[TextStyles.regular, { textAlign: 'center', color: '#FFFFFF', fontSize:14 }]}>Scan label</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.buttonBlock1}>
+                <TouchableOpacity onPress={() => handleOptionSelect(BaseTabRoutes.MANUAL_ENTRY)}>
+                  <Text style={[TextStyles.regular, { textAlign: 'center', color: '#FFFFFF', fontSize:14 }]}>Manually enter</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.buttonBlock1}>
+                <TouchableOpacity onPress={() => handleOptionSelect(BaseTabRoutes.UNKNOWN_PLASTIC)}>
+                  <Text style={[TextStyles.regular, { textAlign: 'center', color: '#FFFFFF', fontSize:14 }]}>No label</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.buttonBlock}>
-              <TouchableOpacity onPress={() => handleOptionSelect(BaseTabRoutes.UNKNOWN_PLASTIC)}>
-                <Text style={[TextStyles.regular, { textAlign: 'center', color: '#FFFFFF', fontSize:14 }]}>No label</Text>
-              </TouchableOpacity>
-            </View>
           </View>
-        </View>
-      </View>
+        </Animated.View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   modalContainer: {
-    position: 'absolute',
-    bottom: '12%',
+    flex:1,
     width: '100%',
+    backgroundColor: 'transparent',
   },
   modalContent: {
+    marginTop:'140%',
     padding: 20,
     backgroundColor: 'transparent',
     alignItems: 'center',
@@ -67,29 +79,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     elevation: 3,
   },
-  buttonBlock: {
-    flex: 1,
-    margin: 6,
-    padding: 10,
-    backgroundColor: Colors.primary.dark,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // marginTop: '16%',
-    // marginBottom: '-10%',
-    alignSelf: 'center',
-  },
   buttonBlock1: {
-    // flex: 1,
     margin: 6,
     padding: 10,
     backgroundColor: Colors.primary.dark,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    // marginBottom: '-10%',
-    width: '50%',
-    // height: 70,
+    width: '60%',
     alignSelf: 'center',
   },
 });

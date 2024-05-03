@@ -3,7 +3,6 @@ import {  SafeAreaView, StyleSheet, View, TouchableOpacity, Text } from 'react-n
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
-import { RadioButton } from 'react-native-paper';
 import { cameraOpened, cameraClosed } from 'redux/slices/cameraSlice';
 import { useFocusEffect } from '@react-navigation/native';
 

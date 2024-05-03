@@ -20,6 +20,10 @@ export default StyleSheet.create({
     fontSize: 22,
     fontFamily: 'Raleway_600SemiBold',
     color: Colors.primary.dark,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 36,
+    letterSpacing: -0.3,
   },
   regular: {
     fontSize: 18,

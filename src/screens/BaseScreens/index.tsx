@@ -10,6 +10,7 @@ import EducationPage from './EducationPage';
 import ProgressPage from './ProgressPage';
 import ManualEntryPage from './ManualEntryPage';
 import UnknownPlasticPage from './UnknownPlasticPage';
+import UnknownInfoPage from './UnknownInfoPage';
 
 export {
   FrontPage,
@@ -24,4 +25,5 @@ export {
   ProgressPage,
   ManualEntryPage,
   UnknownPlasticPage,
+  UnknownInfoPage,
 };

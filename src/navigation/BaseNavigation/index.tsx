@@ -22,6 +22,7 @@ import {
   ProgressPage,
   ManualEntryPage,
   UnknownPlasticPage,
+  UnknownInfoPage,
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
@@ -145,6 +146,18 @@ const UnknownPlasticNavigator = () => {
       <BaseStack.Screen
         name={BaseTabRoutes.UNKNOWN_PLASTIC}
         component={UnknownPlasticPage}
+        options={{ header: () => null }}
+      />
+    </BaseStack.Navigator>
+  );
+};
+
+const UnknownInfoNavigator = () => {
+  return (
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.UNKNOWN_INFO}>
+      <BaseStack.Screen
+        name={BaseTabRoutes.UNKNOWN_INFO}
+        component={UnknownInfoPage}
         options={{ header: () => null }}
       />
     </BaseStack.Navigator>
@@ -369,6 +382,11 @@ const BaseNavigation = () => {
         <BaseTab.Screen
           name={BaseTabRoutes.CAMERA}
           component={CameraNavigator}
+          options={{ tabBarButton: () => null }}
+        />
+        <BaseTab.Screen
+          name={BaseTabRoutes.UNKNOWN_INFO}
+          component={UnknownInfoNavigator}
           options={{ tabBarButton: () => null }}
         />
 

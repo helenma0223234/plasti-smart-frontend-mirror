@@ -44,8 +44,6 @@ import ColdBeverageCup from '../../../assets/ColdBeverageCup.svg';
 import Union from '../../../assets/Union.svg';
 import ModalExit from '../../../assets/ModalExit.svg';
 
-// import PlasticSymbol from 'components/RecycleSymbol';
-
 
 const info = [
   {
@@ -57,6 +55,10 @@ const info = [
       { title: 'Ovenable film', svg: MicrowaveFilm },
       { title: 'Water bottle', svg: WaterBottle },
       { title: 'Packing envelope', svg: PackingEnvelope }
+    ],
+    reusedIn: [
+      { title: 'Fibers', svg: MicrowaveFilm },
+      { title: 'Packaging Materials', svg: MicrowaveFilm },
     ]
   },
   {

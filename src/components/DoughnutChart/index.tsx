@@ -23,8 +23,8 @@ const DoughnutChart = ({ data, size }: DoughnutChartProps) => {
     const outerRadius = radius - 1;
     const padAngle = 0.02;
 
-    const arcs = pie<PieChartData>().value((d) => d.population).padAngle(padAngle)(data);
-    const arcPath = arc<PieArcDatum<PieChartData>>().outerRadius(outerRadius).innerRadius(innerRadius).cornerRadius(7.5);;
+    const arcs = pie().value((d) => d.population).padAngle(padAngle)(data);
+    const arcPath = arc().outerRadius(outerRadius).innerRadius(innerRadius).cornerRadius(7.5);;
 
     return (
         <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>

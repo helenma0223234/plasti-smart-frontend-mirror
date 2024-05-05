@@ -26,6 +26,7 @@
     "@tensorflow/tfjs": "^4.17.0",
     "@tensorflow/tfjs-react-native": "^1.0.0",
     "@types/axios": "^0.14.0",
+    "@types/d3": "^7.4.3",
     "@types/react-native-snap-carousel": "^3.8.10",
     "axios": "^0.27.2",
     "babel-plugin-module-resolver": "^5.0.0",

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-len */
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -17,10 +17,12 @@ import { cameraClosed, cameraOpened } from 'redux/slices/cameraSlice';
 import { createScan } from 'redux/slices/usersSlice';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
-import CircleBG from '../../../assets/Ellipse 66.svg';
+import { useFocusEffect } from '@react-navigation/native';
 
 // components
+import TextStyles from 'utils/TextStyles';
 import Carousel from 'react-native-snap-carousel';
+import CircleBG from '../../../assets/Ellipse 66.svg';
 
 type ManualEntryPageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;
@@ -92,21 +94,15 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
     navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(cameraOpened());
+      return () => {};
+    }, [dispatch]),
+  );
+
   return (
     <View style={manualEntryStyles.container}>
-      <View style={{
-        width: 400,
-        overflow: 'hidden',
-        aspectRatio: 1,
-
-        alignItems: 'center',
-        position: 'absolute',
-        bottom: 0,
-
-      }}>
-        <Image source={require('../../../assets/Ellipse 66.svg')}></Image>
-        <CircleBG></CircleBG>
-      </View>
       <View style={manualEntryStyles.topContainer}>
         <View style={manualEntryStyles.backButtonContainer}>
           <TouchableOpacity
@@ -121,9 +117,7 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
         </View>
       </View>
       <View style={manualEntryStyles.textContainer}>
-        <Text style={manualEntryStyles.text}>
-          Manually enter the polymer on your plastic
-        </Text>
+        <Text style={[TextStyles.subTitle, { fontSize: 32, marginLeft:20, marginTop:8, marginBottom:0 }]}>Manually enter the polymer on your plastic</Text>
       </View>
       <View style={manualEntryStyles.middleContainer}>
         <View style={manualEntryStyles.carouselContainer}>
@@ -142,12 +136,22 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
         </View>
         <View style={manualEntryStyles.selectButtonContainer}>
           <TouchableOpacity
-            style={manualEntryStyles.selectButton}
+            style={[manualEntryStyles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
             onPress={() => {
               selectButtonPressed();
             }}
           >
-            <Text style={manualEntryStyles.selectButtonText}>SELECT</Text>
+            <Text style={manualEntryStyles.bottomSheetSelectButtonText}>I'M REUSING</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[manualEntryStyles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
+            onPress={() => {
+              // REDUX HERE
+              selectButtonPressed();
+            }}
+          >
+            <Text style={[manualEntryStyles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>I'M RECYCLING</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -186,8 +190,7 @@ const manualEntryStyles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   textContainer: {
-    marginTop: '10%',
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   text: {
     color: '#1B453C',
@@ -199,8 +202,7 @@ const manualEntryStyles = StyleSheet.create({
     letterSpacing: -0.3,
   },
   middleContainer: {
-    marginTop: 60,
-  
+    marginTop: 40,
     height: '50%',
   },
   carouselContainer: {
@@ -231,6 +233,7 @@ const manualEntryStyles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop:20,
   },
   selectButton: {
     justifyContent: 'center',
@@ -246,6 +249,24 @@ const manualEntryStyles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '500',
     letterSpacing: -0.1,
+  },
+  bottomSheetSelectButton: {
+    justifyContent: 'center',
+    width: 180,
+    height: 46,
+    backgroundColor: '#1B453C',
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  bottomSheetSelectButtonText: {
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 14,
+    letterSpacing: -0.3,
+    textTransform: 'uppercase',
   },
 });
 

@@ -9,6 +9,7 @@ import useAppDispatch from 'hooks/useAppDispatch';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { useEffect } from 'react';
+// import { useFocusEffect } from '@react-navigation/native';
 import { cameraClosed } from 'redux/slices/cameraSlice';
 
 import CircleBG from '../../../assets/Ellipse 66.svg';
@@ -19,7 +20,6 @@ type ScanCompletePageProps = {
 };
 
 const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
-
   return (
     <View style={styles.container}>
 
@@ -60,17 +60,19 @@ const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
         <View style={styles.scanButtonContainer}>
           <TouchableOpacity 
             style={styles.scanButton}
-            onPress={() => {navigation.navigate(BaseTabRoutes.CAMERA, {});}}
+            onPress={() => {navigation.navigate(BaseTabRoutes.EDUCATION, {});}}
           >
-            <Text style={styles.scanButtonText}>Scan Again</Text>
+            <Text style={styles.scanButtonText}>LEARN MORE</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.homeButtonContainer}>
           <TouchableOpacity 
             style={styles.homeButton}
-            onPress={() => {navigation.navigate(BaseTabRoutes.HOME, {});}}
+            onPress={() => {
+              navigation.navigate(BaseTabRoutes.HOME, {});
+            }}
           >
-            <Text style={styles.homeButtonText}>Return Home</Text>
+            <Text style={styles.homeButtonText}>RETURN HOME</Text>
           </TouchableOpacity>
         </View>
       </View>

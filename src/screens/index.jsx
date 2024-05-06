@@ -19,6 +19,7 @@ import {
   HomePage,
   LeaderboardPage,
   EducationPage,
+  UnknownInfoPage,
 } from './BaseScreens';
 
 export {
@@ -39,4 +40,5 @@ export {
   // HomePage,
   // LeaderboardPage,
   // EducationPage,
+  UnknownInfoPage,
 };

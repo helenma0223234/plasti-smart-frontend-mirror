@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, Modal, Button } from 'react-native';
+import { View, TouchableWithoutFeedback } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -14,9 +14,6 @@ import useAppSelector from 'hooks/useAppSelector';
 import { UserScopes } from 'types/users';
 import {
   FrontPage,
-  ResourcesPage,
-  UsersPage,
-  ForbiddenPage,
   HomePage,
   CameraPage,
   ScanCompletePage,
@@ -25,6 +22,7 @@ import {
   ProgressPage,
   ManualEntryPage,
   UnknownPlasticPage,
+  UnknownInfoPage,
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
@@ -154,43 +152,63 @@ const UnknownPlasticNavigator = () => {
   );
 };
 
+const UnknownInfoNavigator = () => {
+  return (
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.UNKNOWN_INFO}>
+      <BaseStack.Screen
+        name={BaseTabRoutes.UNKNOWN_INFO}
+        component={UnknownInfoPage}
+        options={{ header: () => null }}
+      />
+    </BaseStack.Navigator>
+  );
+};
+
+const ExtraTab = createBottomTabNavigator();
+
+const ExtraNavigator = () => {
+  return (
+    <ExtraTab.Navigator initialRouteName={BaseTabRoutes.HOME}>
+      <ExtraTab.Screen
+        name={BaseTabRoutes.UNKNOWN_PLASTIC}
+        component={UnknownPlasticNavigator}
+      />
+      <ExtraTab.Screen
+        name={BaseTabRoutes.MANUAL_ENTRY}
+        component={ManualEntryNavigator}
+      />
+      <ExtraTab.Screen
+        name={BaseTabRoutes.CAMERA}
+        component={CameraNavigator}
+      />
+    </ExtraTab.Navigator>
+  );
+};
+
 const BaseNavigation = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
   const dispatch = useAppDispatch();
-  // useEffect(() => {
-  //   // registerForPushNotificationsAsync();
-  //   dispatch(loadModel());
-  // }, []);
-
-  const openModal = () => {
-    setModalVisible(true);
-  };
 
   const closeModal = () => {
     setModalVisible(false);
   };
   const navigation = useNavigation();
 
-  // const handleOptionSelect = (screen: keyof BaseNavigationList) => {
-  //   setModalVisible(false);
-  //   navigation.navigate(screen);
-  // };
-  
-
   useEffect(() => {
-    registerForPushNotificationsAsync()
-      .then(token => {
-        // register / send to backend
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    dispatch(loadModel());
-    schedulePushNotification()
-      .catch(error => {
-        console.error(error);
-      });
+    // UNCOMMENT WHEN BUILDING FOR PRODUCTION
+    // registerForPushNotificationsAsync()
+    //   .then(token => {
+    //     // register / send to backend
+    //   })
+    //   .catch(error => {
+    //     console.error(error);
+    //   });
+    // dispatch(loadModel());
+    // schedulePushNotification()
+    //   .catch(error => {
+    //     console.error(error);
+    //   });
   }, []);
 
   async function registerForPushNotificationsAsync(): Promise<string> {
@@ -247,7 +265,7 @@ const BaseNavigation = () => {
   }
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <BaseTab.Navigator
         screenOptions={{
           header: () => null,
@@ -297,13 +315,26 @@ const BaseNavigation = () => {
           component={EmptyComponent}
           options={{
             tabBarLabel: () => null,
+            // tabBarIcon: (props) => (
+            //   <View style={{ ...FormatStyle.circle, width: 70, height: 70, backgroundColor: Colors.primary.dark, position: 'relative', bottom: 20 }}>
+            //     <AntDesign name="camera" color={Colors.secondary.white} size={40} />
+            //   </View>
+            // ),
+            // tabBarButton: () => {
+            //   // return <CustomModal refRBSheet={refRBSheet} onClose={onClose}>; // call your modal here directly.
+            //   return <CameraOptionsModal isVisible={isModalVisible} onClose={closeModal} navigation={navigation}/>;
+            // },
             tabBarIcon: (props) => (
-              <View style={{ ...FormatStyle.circle, width: 70, height: 70, backgroundColor: Colors.primary.dark, position: 'relative', bottom: 30 }}>
-                <TouchableOpacity onPress={() => setModalVisible(!isModalVisible)}>
-                  <AntDesign name="camera" color={Colors.secondary.white} size={40} />
-                </TouchableOpacity>
+              <View style={{ ...FormatStyle.circle, width: 70, height: 70, backgroundColor: Colors.primary.dark, position: 'relative', bottom: 20 }}>
+                <AntDesign name="camera" color={Colors.secondary.white} size={40} />
               </View>
             ),
+          }}
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault();
+              setModalVisible(currentVisible => !currentVisible);
+            },
           }}
         />
 
@@ -353,9 +384,19 @@ const BaseNavigation = () => {
           component={CameraNavigator}
           options={{ tabBarButton: () => null }}
         />
+        <BaseTab.Screen
+          name={BaseTabRoutes.UNKNOWN_INFO}
+          component={UnknownInfoNavigator}
+          options={{ tabBarButton: () => null }}
+        />
+
       </BaseTab.Navigator>
-      <CameraOptionsModal isVisible={isModalVisible} onClose={closeModal} navigation={navigation}/>
-    </>
+      <TouchableWithoutFeedback onPress={closeModal}>
+        <View style={{ flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} pointerEvents={isModalVisible ? 'auto' : 'none'}>
+          <CameraOptionsModal isVisible={isModalVisible} onClose={closeModal} navigation={navigation}/>
+        </View>
+      </TouchableWithoutFeedback>
+    </View>
   );
 };
 

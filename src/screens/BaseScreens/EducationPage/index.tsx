@@ -17,12 +17,6 @@ import PlasticSymbol from 'components/RecycleSymbol';
 import Globe from '../../../assets/Globe.svg';
 import RecycleSymbol from '../../../assets/Recycle.svg';
 import Polymer from '../../../assets/polymer.svg';
-import Detergent from '../../../assets/Detergent.svg';
-import Fences from '../../../assets/Fences.svg';
-import Fleece from '../../../assets/Fleece.svg';
-import MilkJug from '../../../assets/MilkJug.svg';
-import Furniture from '../../../assets/Furniture.svg';
-import TrashBag from '../../../assets/TrashBag.svg';
 import MicrowaveFilm from '../../../assets/MicrowaveFilm.svg';
 import PackingEnvelope from '../../../assets/PackingEnvelope.svg';
 import WaterBottle from '../../../assets/WaterBottle.svg';
@@ -32,7 +26,7 @@ import Shampoo from '../../../assets/Shampoo.svg';
 import Pipes from '../../../assets/Pipes.svg';
 import FloorPanels from '../../../assets/FloorPanels.svg';
 import MedicalApp from '../../../assets/MedicalApp.svg';
-import PliableBag from '../../../assets/PliableBag.svg';
+import PillableBag from '../../../assets/PillableBag.svg';
 import SqueezeBottles from '../../../assets/SqueezeBottles.svg';
 import FoodContainers from '../../../assets/FoodContainers.svg';
 import BottleCaps from '../../../assets/BottleCaps.svg';
@@ -44,6 +38,31 @@ import ColdBeverageCup from '../../../assets/ColdBeverageCup.svg';
 import Union from '../../../assets/Union.svg';
 import ModalExit from '../../../assets/ModalExit.svg';
 
+import AutopartsGreen from '../../../assets/AutopartsGreen.svg';
+import BeverageContainerGreen from '../../../assets/BeverageContainerGreen.svg';
+import BottleCapsGreen from '../../../assets/BottleCapsGreen.svg';
+import CerealBagGreen from '../../../assets/CerealBagGreen.svg';
+import ColdBeverageCupGreen from '../../../assets/ColdBeverageCupGreen.svg';
+import FibersGreen from '../../../assets/FibersGreen.svg';
+import FloorPanelsGreen from '../../../assets/FloorPanelsGreen.svg';
+import FoodContainersGreen from '../../../assets/FoodContainersGreen.svg';
+import FluidBagGreen from  '../../../assets/FluidBagGreen.svg';
+import GardeningToolsGreen from '../../../assets/GardeningToolsGreen.svg';
+import MilkJarsGreen from '../../../assets/MilkJarsGreen.svg';
+import NoLandfillGreen from '../../../assets/NoLandfillGreen.svg';
+import OvenableFilmGreen from '../../../assets/OvenableFilmGreen.svg';
+import PackingEnvelopeGreen from '../../../assets/PackingEnvelopeGreen.svg';
+import PillableBagGreen from '../../../assets/PillableBagGreen.svg';
+import PipesGreen from '../../../assets/PipesGreen.svg';
+import PlasticFurnitureGreen from '../../../assets/PlasticFurnitureGreen.svg';
+import ShampooGreen from '../../../assets/ShampooGreen.svg';
+import SqueezeBottlesGreen from '../../../assets/SqueezeBottlesGreen.svg';
+import StyrofoamGreen from '../../../assets/StyrofoamGreen.svg';
+import UnionGreen from '../../../assets/UnionGreen.svg';
+import WaterBottleGreen from '../../../assets/WaterBottleGreen.svg';
+
+
+
 
 const info = [
   {
@@ -52,13 +71,18 @@ const info = [
     modalInfo: '*PET/PETE* is currently the most recycled plastic in the world. They’re used to make water bottles oven-able films, and packaging. Recycled PET can be used again for packaging or as fibers used in clothing. Check for a microwave-safe label before microwaving.',
     info: '*PET* (or PETE) is pretty *common*! They’re used to make bottles for soda, water, and other drinks. Recycled PET can be used again for packaging or as fibers used in clothing.',
     foundIn: [
-      { title: 'Ovenable film', svg: MicrowaveFilm },
-      { title: 'Water bottle', svg: WaterBottle },
-      { title: 'Packing envelope', svg: PackingEnvelope }
+      { title: 'Ovenable film', SvgComponent: MicrowaveFilm },
+      { title: 'Water bottle', SvgComponent: WaterBottle },
+      { title: 'Packing envelope', SvgComponent: PackingEnvelope }
     ],
-    reusedIn: [
-      { title: 'Fibers', svg: MicrowaveFilm },
-      { title: 'Packaging Materials', svg: MicrowaveFilm },
+    modalFoundIn: [
+      { title: 'Ovenable film', SvgComponent: OvenableFilmGreen },
+      { title: 'Water bottle', SvgComponent: WaterBottleGreen },
+      { title: 'Packing envelope', SvgComponent: PackingEnvelopeGreen }
+    ],
+    reusedToMake: [
+      { title: 'Fibers', SvgComponent: FibersGreen },
+      { title: 'Packaging\nMaterials', SvgComponent: PackingEnvelopeGreen },
     ]
   },
   {
@@ -67,9 +91,18 @@ const info = [
     modalInfo: '*HDPE* is currently widely *recycled!* You can find HDPE in cereal bags, milk jars, and shampoo bottles. Recycled HDPE can be reprocessed into non-food-related applications such as plastic bins, and agricultural pipes. HDPE is *typically safe* to microwave, but check labels.',
     info: '*HDPE* is widely *recycled*! You can find HDPE in cereal bags, milk jars, and even shampoo bottles. Recycled HDPE can be reprocessed into plastic bins, and agricultural pipes.',
     foundIn: [
-      { title: 'Milk jars', svg: MilkJars },
-      { title: 'Cereal bags', svg: CerealBag },
-      { title: 'Shampoo bottles', svg: Shampoo }
+      { title: 'Milk jars', SvgComponent: MilkJars },
+      { title: 'Cereal bags', SvgComponent: CerealBag },
+      { title: 'Shampoo bottles', SvgComponent: Shampoo }
+    ],
+    modalFoundIn: [
+      { title: 'Milk jars', SvgComponent: MilkJarsGreen },
+      { title: 'Cereal bags', SvgComponent: CerealBagGreen },
+      { title: 'Shampoo bottles', SvgComponent: ShampooGreen }
+    ],
+    reusedToMake: [
+      { title: 'Plastic bins', SvgComponent: NoLandfillGreen },
+      { title: 'Agricultural pipes', SvgComponent: PipesGreen },
     ]
   },
   {
@@ -78,9 +111,14 @@ const info = [
     modalInfo: '*PVC*, although widely used, is *not currently recycled*. PVC can be found in water and sewage pipes, floor panels, and other materials. PVC is *rarely* used for food, and is typically not microwave-safe.',
     info: '*PVC*, although widely used, is *not* currently recycled. PVC can be found in water and sewage pipes, floor panels, and other materials.',
     foundIn: [
-      { title: 'Pipes', svg: Pipes },
-      { title: 'Floor panels', svg: FloorPanels },
-      { title: 'Medical\napplications', svg: MedicalApp }
+      { title: 'Pipes', SvgComponent: Pipes },
+      { title: 'Floor panels', SvgComponent: FloorPanels },
+      { title: 'Medical\napplications', SvgComponent: MedicalApp }
+    ],
+    modalFoundIn: [
+      { title: 'Pipes', SvgComponent: PipesGreen },
+      { title: 'Floor panels', SvgComponent: FloorPanelsGreen },
+      { title: 'Medical\napplications', SvgComponent: FluidBagGreen }
     ]
   },
   {
@@ -89,9 +127,19 @@ const info = [
     modalInfo: '*LDPE* is a *recyclable* polymer. The recycling rate, however, is low (but increasing). LDPE can be found in thin and pliable bags, squeeze bottles, etc. Once recycled, LDPE can be used as garbage bags, trash bins, etc. LDPE is less heat-tolerant, so avoid when microwaving food.',
     info: '*LDPE* is a *recyclable* polymer. LDPE can be found in thin and pliable bags, squeeze bottles, etc. Once recycled, LDPE can be used as garbage bags, trash bins, etc.',
     foundIn: [
-      { title: 'Thin, pliable\nbags', svg: PliableBag },
-      { title: 'Squeeze bottles', svg: SqueezeBottles },
-      { title: 'Flexible\npackaging', svg: PackingEnvelope }
+      { title: 'Thin, pliable\nbags', SvgComponent: PillableBag },
+      { title: 'Squeeze bottles', SvgComponent: SqueezeBottles },
+      { title: 'Flexible\npackaging', SvgComponent: PackingEnvelope }
+    ],
+    modalFoundIn: [
+      { title: 'Thin, pliable\nbags', SvgComponent: PillableBagGreen },
+      { title: 'Squeeze bottles', SvgComponent: SqueezeBottlesGreen },
+      { title: 'Flexible\npackaging', SvgComponent: PackingEnvelopeGreen }
+    ],
+    reusedToMake: [
+      { title: 'Garbage bags', SvgComponent: NoLandfillGreen },
+      { title: 'Trash bins', SvgComponent: PillableBagGreen },
+      { title: 'Packaging Materials', SvgComponent: PackingEnvelopeGreen},
     ]
   },
   {
@@ -100,9 +148,19 @@ const info = [
     modalInfo: '*PP* is currently *widely recycled* in the US and the world. PP can be found in *microwave-safe* food containers, bottle caps, and plastic furniture. Recycled PP can be found in gardening tools, trash bins, and auto parts. This is the safest polymer for microwaving.',
     info: '*PP* is currently widely *recycled* in the US and the world. PP can be found in microwave-safe food containers, bottle caps, and plastic furniture. Recycled PP can be found in gardening tools, trash bins, etc.',
     foundIn: [
-      { title: 'Microwave-safe food containers', svg: FoodContainers },
-      { title: 'Bottle caps', svg: BottleCaps },
-      { title: 'Plastic furniture', svg: PlasticFurniture }
+      { title: 'Microwave-safe food containers', SvgComponent: FoodContainers },
+      { title: 'Bottle caps', SvgComponent: BottleCaps },
+      { title: 'Plastic furniture', SvgComponent: PlasticFurniture }
+    ],
+    modalFoundIn: [
+      { title: 'Microwave-safe food containers', SvgComponent: FoodContainersGreen },
+      { title: 'Bottle caps', SvgComponent: BottleCapsGreen },
+      { title: 'Plastic furniture', SvgComponent: PlasticFurnitureGreen }
+    ],
+    reusedToMake: [
+      { title: 'Gardening Tools', SvgComponent: GardeningToolsGreen },
+      { title: 'Trash bins', SvgComponent: NoLandfillGreen },
+      { title: 'Autoparts', SvgComponent: AutopartsGreen },
     ]
   },
   {
@@ -111,9 +169,14 @@ const info = [
     modalInfo: '*PS* is *not recycled*. It is often used in *beverage* containers, packaging peanuts (as styrofoam), and in synthetic rubber tires. ',
     info: '*PS* is a polymer that is *not* recycled. It is often found in beverage containers and packaging peanuts, and in synthetic rubber tires.',
     foundIn: [
-      { title: 'Beverage containers', svg: BeverageContainer },
-      { title: 'Styrofoam', svg: Styrofoam },
-      { title: 'Synthetic rubber tires', svg: CarTires }
+      { title: 'Beverage containers', SvgComponent: BeverageContainer },
+      { title: 'Styrofoam', SvgComponent: Styrofoam },
+      { title: 'Synthetic rubber tires', SvgComponent: CarTires }
+    ],
+    modalFoundIn: [
+      { title: 'Beverage containers', SvgComponent: BeverageContainerGreen },
+      { title: 'Styrofoam', SvgComponent: StyrofoamGreen },
+      { title: 'Synthetic rubber tires', SvgComponent: AutopartsGreen }
     ]
   },
   {
@@ -122,16 +185,20 @@ const info = [
     modalInfo: 'Polymer 7 is considered an *umbrella polymer* for mixed plastics. There are two distinct polymers, however, that fall under Polymer 7:\n*Polylactic acid (PLA)* is a *sustainable bioplastic* that can be made from *renewable* biological sources. PLA is not widely considered recyclable—only selected recycling facilities can perform mechanical recycling of this polymer.\n*Polycarbonate (PC)* is *not widely recycled* but can be found in water dispensers, lightning fixtures, and construction materials.',
     info: 'This polymer is considered an *umbrella* category for *mixed* plastics. There are two distinct polymers, however, that fall under Polymer 7: *Polylactic acid* (PLA; this is a sustainable bioplastic!), and *Polycarbonate (PC)*. Explore more inside this card.',
     foundIn: [
-      { title: 'Cold\nbeverage cups', svg: ColdBeverageCup },
-      { title: 'Alternatives\nto PS coating', svg: Union }
-    ]
+      { title: 'Cold\nbeverage cups', SvgComponent: ColdBeverageCup },
+      { title: 'Alternatives\nto PS coating', SvgComponent: Union }
+    ],
+    modalFoundIn: [
+      { title: 'Cold\nbeverage cups', SvgComponent: ColdBeverageCupGreen },
+      { title: 'Alternatives\nto PS coating', SvgComponent: UnionGreen}
+    ],
   },
 ];
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const modalCardWidth = screenWidth * 0.85;
-const modalCardHeight = screenHeight * 0.75;
+const modalCardHeight = screenHeight * 0.78;
 const polymerCardWidth = screenWidth * 0.85;
 const polymerCardHeight = screenHeight * 0.7;
 const progressCardWidth = screenWidth * 0.425;
@@ -174,73 +241,125 @@ const EducationPage = () => {
   return (
     <SafeAreaView style={{ ...FormatStyle.container }}>
       <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        style={{flex: 1, alignSelf:'center'}}>
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          style={{ flex: 1, alignSelf: 'center' }}
+      >
+          <View style={styles.modalOuterContainer}>
+              <View style={styles.modalInnerContainer}>
+              <View style={{
+                          width: screenHeight * 0.075,
+                          height: screenHeight * 0.075,
+                          borderTopLeftRadius: 20,
+                          borderBottomRightRadius: 20,
+                          backgroundColor: info[modalPlasticType - 1].color,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          zIndex: 2
+                      }}>
+                          <PlasticSymbol color={Colors.secondary.white}
+                                        width={screenHeight * 0.06}
+                                        height={screenHeight * 0.06}
+                                        number={modalPlasticType}
+                                        top={15}
+                                        left={23} />
+                      </View>
+                  <View style={{ flex: 1 }}>
+                      
 
-        <View style={{ ...styles.card, borderRadius: 20, width: modalCardWidth, 
-            maxHeight: modalCardHeight, padding: 20, flexDirection: 'column',
-            backgroundColor: Colors.secondary.normal, marginLeft: screenWidth * 0.075,
-            marginTop: screenHeight * 0.1, flex: 1}}>
+                      <View style={{ zIndex: 1 }}>
+                          <TouchableOpacity onPress={() => setModalVisible(false)}
+                                            style={{ position: 'absolute', right: 0, top: 0, zIndex: 1 }}>
+                              <ModalExit width={35} height={35} />
+                          </TouchableOpacity>
+                      </View>
 
-          <View style={{
-            width: screenHeight*0.075, height: screenHeight*0.075,
-            borderTopLeftRadius: 20, borderBottomRightRadius: 20,
-            backgroundColor: info[modalPlasticType - 1].color,
-            alignItems: 'center', justifyContent: 'center',
-            position: 'absolute',
-          }}>
+                      <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: -30, marginTop: -20 }}>
+                          <Polymer style={{ position: 'relative', maxHeight: polymerCardHeight * 0.25 }} />
+                      </View>
 
-            <View>
-              <PlasticSymbol color={Colors.secondary.white} width={screenHeight*0.06} height={screenHeight*0.06} number={modalPlasticType} top={15} left={23}></PlasticSymbol>
-            </View>
-          </View>
+                      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                          <Text style={{ ...styles.PolymerCardTitle, color: Colors.primary.dark }}>
+                              {info[modalPlasticType - 1].title}
+                          </Text>
+                      </View>
 
-          <View style={{zIndex: 1}}>
-            <TouchableOpacity onPress={() => {
-              setModalVisible(false);
-              console.log('PRESSED IT OMFL');
-              }} 
-              style={{position: 'absolute', right: 0, top: 0, zIndex: 1}}>
-              <ModalExit width={35} height={35}></ModalExit>
-            </TouchableOpacity>
-          </View>
+                      <View style={{
+                          alignItems: 'center',
+                          marginTop: modalCardHeight * 0.02,
+                          width: '100%',
+                          alignSelf: 'center',
+                          maxHeight: modalCardHeight * 0.6,
+                          justifyContent: 'space-evenly',
+                      }}>
+                          <View style={{
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              minHeight: modalCardHeight * 0.2,
+                          }}>
+                              <TextBolded text={info[modalPlasticType - 1].modalInfo}
+                                          regularStyles={styles.ModalText}
+                                          boldStyles={styles.ModalTextBold} />
+                          </View>
 
-          <View style={{justifyContent: 'center', alignItems: 'center', marginBottom:-30, marginTop: -20}}>
-            <Polymer style={{position:'relative', maxHeight: polymerCardHeight * 0.25}}></Polymer>
-          </View>
+                          <Text style={{
+                              ...TextStyles.small,
+                              fontFamily: 'Inter_600SemiBold',
+                              fontSize: modalCardHeight * 0.027,
+                              marginTop: modalCardHeight * 0.0075,
+                              color: Colors.primary.dark
+                          }}>Found in:</Text>
+                          <View style={styles.ExampleObjectsContainer}>
+                              {info[modalPlasticType - 1].modalFoundIn.map((item) => (
+                                  <ExampleObjects title={item.title}
+                                                  SvgComponent={item.SvgComponent}
+                                                  textColor={Colors.primary.dark} />
+                              ))}
+                          </View>
 
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={{...styles.PolymerCardTitle, color:Colors.primary.dark}}>{info[modalPlasticType-1].title}</Text>
-          </View>
+                          {info[modalPlasticType - 1].reusedToMake && (
+                              <View style={{ alignItems: 'center', alignSelf: 'center', marginTop: modalCardHeight * 0.03 }}>
+                                  <Text style={{
+                                      ...TextStyles.small,
+                                      fontFamily: 'Inter_600SemiBold',
+                                      fontSize: modalCardHeight * 0.0255
+                                  }}>Reused in:</Text>
+                                  <View style={styles.ExampleObjectsContainer}>
+                                      {info[modalPlasticType - 1].reusedToMake?.map((item) => (
+                                          <ExampleObjects title={item.title}
+                                                          SvgComponent={item.SvgComponent}
+                                                          textColor={Colors.primary.dark} />
+                                      ))}
+                                  </View>
+                              </View>
+                          )}
 
-          <View style={{ alignItems: 'center', marginTop: 10,  width: '100%', alignSelf: 'center', maxHeight: modalCardHeight * 0.6,  justifyContent: 'space-evenly'}}>
-            <View style={{alignItems: 'center', justifyContent: 'center', minHeight: modalCardHeight * 0.2, }}>
-              <TextBolded text={info[modalPlasticType-1].modalInfo} regularStyles={styles.ModalText} boldStyles={styles.ModalTextBold}></TextBolded>
-            </View>
+                      </View>
 
-            <Text style={{...TextStyles.small, fontFamily: 'Inter_600SemiBold', fontSize: 18, marginTop: 20, color: Colors.primary.dark}}>Found in:</Text>
-            <View style = {{...styles.ExampleObjectsContainer}}>
-              <ExampleObjects title={'Milk Jug'} svg={MilkJug} textColor={Colors.primary.dark}></ExampleObjects>
-              <ExampleObjects title={'Trash Bag'} svg={TrashBag} textColor={Colors.primary.dark}></ExampleObjects>
-              <ExampleObjects title={'Detergent'} svg={Detergent} textColor={Colors.primary.dark}></ExampleObjects>
-            </View>
-
-            {modalPlasticType != 7 && 
-            <View style={{alignItems: 'center', alignSelf: 'center',}}>
-              <Text style={{...TextStyles.small, fontFamily: 'Inter_600SemiBold', fontSize: 18, marginTop: 10}}>Reused in:</Text>
-              <View style = {{...styles.ExampleObjectsContainer}}>
-                <ExampleObjects title={'Milk Jug'} svg={MilkJug} textColor={Colors.primary.dark}></ExampleObjects>
-                <ExampleObjects title={'Trash Bag'} svg={TrashBag} textColor={Colors.primary.dark}></ExampleObjects>
-                <ExampleObjects title={'Detergent'} svg={Detergent} textColor={Colors.primary.dark}></ExampleObjects>
+                      <View style={{
+                          alignItems: 'center',
+                          alignSelf: 'center',
+                          justifyContent: 'flex-end',
+                          flex: 1,
+                          minHeight: modalCardHeight * 0.03,
+                      }}>
+                          <TouchableOpacity onPress={() => { }}>
+                              <Text style={{
+                                  ...styles.ModalTextBold,
+                                  textDecorationLine: 'underline',
+                                  fontSize: modalCardHeight * 0.02
+                              }}>Still Curious? Learn More Here!</Text>
+                          </TouchableOpacity>
+                      </View>
+                  </View>
               </View>
-            </View>
-            }
-
           </View>
-        </View>
       </Modal>
+
 
       <ScrollView bounces={false} showsVerticalScrollIndicator={false} >
         <View style={{ margin: 20, overflow: 'visible', gap: 20 }}>
@@ -400,7 +519,7 @@ const PolymerCard = ({number, setModalVisible, setModalPlasticType }: PolymerCar
         <Text style={{ fontFamily: 'Inter_600SemiBold', fontSize: 18, marginTop: 10, color:'white'}}>Found in:</Text>
         <View style = {{...styles.ExampleObjectsContainer}}>
           {info[number-1].foundIn.map((item) => {
-            return <ExampleObjects title={item.title} svg={item.svg} textColor={'white'}></ExampleObjects>
+            return <ExampleObjects title={item.title} SvgComponent={item.SvgComponent} textColor={'white'}></ExampleObjects>
           })}
         </View>
         
@@ -441,18 +560,17 @@ const TextBolded = ({ text, boldStyles, regularStyles } : TextBoldedProps) => {
 
 interface ExampleObjectProps {
   title: string;
-  svg: React.FC<React.SVGProps<SVGSVGElement>>;
+  SvgComponent: React.FC<React.SVGProps<SVGSVGElement>>;
   textColor : string;
 }
 
-const ExampleObjects = ({title, svg: SvgComponent, textColor}: ExampleObjectProps) => {
+const ExampleObjects = ({title, SvgComponent, textColor}: ExampleObjectProps) => {
   return (
     <View style={styles.ExampleObject}>
-    
       <View style={styles.ExampleObjectTextContainer}>
         <Text style={{...styles.PolymerCardText, fontSize:screenWidth * 0.035, color: textColor}}>{title}</Text>
       </View>
-      <SvgComponent width={55} height={55}/>
+        <SvgComponent width={60} height={60} />
     </View>
   );
 };
@@ -490,7 +608,7 @@ const styles = StyleSheet.create({
   ModalText: {
     ...TextStyles.small,
     fontFamily: 'Inter_400Regular',
-    fontSize: screenWidth * 0.04,
+    fontSize: screenWidth * 0.0375,
     textAlign: 'center',
     color: Colors.primary.dark
     
@@ -498,7 +616,7 @@ const styles = StyleSheet.create({
   ModalTextBold: {
     ...TextStyles.small,
     fontFamily: 'Inter_600SemiBold',
-    fontSize: screenWidth * 0.04,
+    fontSize: screenWidth * 0.0375,
     textAlign: 'center',
     fontWeight: 'bold',
     color: Colors.primary.dark
@@ -516,9 +634,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   ExampleObjectTextContainer: {
-    minHeight: 50,
+    height: modalCardHeight * 0.05,
     justifyContent: 'center',
     alignSelf: 'center',
+  },
+  modalOuterContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: screenHeight * 0.075,
+  },
+  modalInnerContainer: {
+      borderRadius: 20,
+      width: modalCardWidth,
+      maxHeight: modalCardHeight,
+      padding: 20,
+      flexDirection: 'column',
+      backgroundColor: Colors.secondary.normal,
+      flex: 1,
   },
 });
 

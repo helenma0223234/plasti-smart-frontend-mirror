@@ -233,7 +233,7 @@ const manualEntryStyles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:20,
+    marginTop:50,
   },
   selectButton: {
     justifyContent: 'center',

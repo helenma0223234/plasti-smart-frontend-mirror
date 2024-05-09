@@ -38,13 +38,13 @@ const LeaderboardPage = () => {
     leaderboard.length > 0 && <SafeAreaView style={{ ...FormatStyle.topContainer, alignItems: 'center' }}>
       <View
         style={{
-          width: 400,
+          width: '100%',
           height: 1000,
           overflow: 'hidden',
           aspectRatio: 1,
           alignItems: 'center',
           position: 'absolute',
-          bottom: -450,
+          bottom: -420,
         }}
       >
         <CircleBG></CircleBG>

@@ -58,7 +58,7 @@ const UnknownPlasticPage = ({ navigation }: UnknownPlasticPageProps) => {
           </TouchableOpacity>
         </View>
       </View>
-      <Text style={[TextStyles.subTitle, { fontSize: 32, marginLeft:20, marginTop:8, marginBottom:40 }]}>What kind of plastic 
+      <Text style={[TextStyles.subTitle, { fontSize: 32, marginLeft:20, marginTop:8, marginBottom:40, marginRight:20 }]}>What kind of plastic 
 do you have?</Text>
       <View style={styles.selectContainer}>
         <View style={styles.rowContainer}>

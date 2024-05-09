@@ -73,13 +73,13 @@ const HomePage = () => {
   return (
     <SafeAreaView style={{ ...FormatStyle.container, justifyContent: 'flex-start' }}>
       <View style={{
-        width: 400,
+        width: '100%',
         overflow: 'hidden',
         aspectRatio: 1,
 
         alignItems: 'center',
         position: 'absolute',
-        bottom: 0,
+        bottom: '-10%',
 
       }}>
         <Image source={require('../../../assets/Ellipse 66.svg')}></Image>

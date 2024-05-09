@@ -14,6 +14,10 @@ import { cameraClosed } from 'redux/slices/cameraSlice';
 
 import CircleBG from '../../../assets/Ellipse 66.svg';
 import Confetti from '../../../assets/confetti.svg';
+import Colors from 'utils/Colors';
+import Penguine from '../../../assets/Penguine.svg';
+import Shiba from '../../../assets/Shiba.svg';
+import CatAvatar from '../../../assets/CatAvatar.svg';
 
 type ScanCompletePageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;
@@ -38,13 +42,13 @@ const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
       </View>
 
       <View style={{
-        width: 400,
+        width: '100%',
         overflow: 'hidden',
         aspectRatio: 1,
 
         alignItems: 'center',
         position: 'absolute',
-        bottom: -50,
+        bottom: '-10%',
 
       }}>
         <Image source={require('../../../assets/Ellipse 66.svg')}></Image>
@@ -52,29 +56,32 @@ const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
       </View>
 
       <View style={styles.textContainer}>
-        <Text style={styles.title}>
-          Congratulations! You've just earned points
+        <Text style={styles.congratsText}>
+          {"Congratulations Luke! You've just earned "}
+          <Text style={styles.boldText}>10</Text>
+          {' points for recycling'}
         </Text>
       </View>
-      <View style={styles.buttonContainer}>
-        <View style={styles.scanButtonContainer}>
-          <TouchableOpacity 
-            style={styles.scanButton}
-            onPress={() => {navigation.navigate(BaseTabRoutes.EDUCATION, {});}}
-          >
-            <Text style={styles.scanButtonText}>LEARN MORE</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.homeButtonContainer}>
-          <TouchableOpacity 
-            style={styles.homeButton}
-            onPress={() => {
-              navigation.navigate(BaseTabRoutes.HOME, {});
-            }}
-          >
-            <Text style={styles.homeButtonText}>RETURN HOME</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.svgContainer}>
+        <CatAvatar />
+      </View>
+      <View style={styles.selectButtonContainer}>
+        <TouchableOpacity
+          style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent', marginRight: 14 }]}
+          onPress={() => {
+            // selectButtonPressed();
+          }}
+        >
+          <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>LEARN MORE</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C' }]}
+          onPress={() => {
+            // reuseButtonPressed();
+          }}
+        >
+          <Text style={styles.bottomSheetSelectButtonText}>RETURN HOME</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -82,74 +89,67 @@ const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex:1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FBFBF4',
     flexDirection: 'column',
   },
   textContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    maxHeight: 200,
+    marginLeft:20,
+    marginRight:20,
   },
-  title: {
-    fontSize: 32,
+  boldText: {
     fontWeight: 'bold',
+  },
+  congratsText: {
+    fontSize: 32,
+    fontWeight: 'normal',
     marginBottom: 20,
+    marginLeft:4,
+    marginRight:4,
+    textAlign: 'center',
   },
-  buttonContainer: {
+  middleContainer: {
+    marginTop: 20,
+  },
+  svgContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  selectButtonContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop:20,
+  },
+  selectButton: {
     justifyContent: 'center',
-    margin: 20,
-    marginTop: 40,
-  },
-  scanButtonContainer: {
-    position: 'relative',
-    backgroundColor: 'transparent',
-    borderColor: '#1B453C',
-    borderWidth: 3,
-    borderRadius: 10,
-    width: 175,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  scanButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    border: 1,
-    borderColor: '#1B453C',
-  },
-  scanButtonText: {
-    color: '#1B453C',
-    fontSize: 20,
-    fontWeight: '600',
-    letterSpacing: 0.3,
-  },
-  homeButtonContainer: {
-    backgroundColor: '#1B453C',
-    borderWidth: 1,
-    borderRadius: 10,
-    width: 175,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 20,
-  },
-  homeButton: {
     width: 200,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: 60,
+    backgroundColor: '#1B453C',
+    borderRadius: 10,
+    borderWidth: 1,
   },
-  homeButtonText: {
-    color: '#FBFBF4',
-    fontSize: 20,
+  bottomSheetSelectButton: {
+    justifyContent: 'center',
+    width: 180,
+    height: 46,
+    backgroundColor: '#1B453C',
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  bottomSheetSelectButtonText: {
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 14,
+    fontStyle: 'normal',
     fontWeight: '600',
-    letterSpacing: 0.3,
+    lineHeight: 14,
+    letterSpacing: -0.3,
+    textTransform: 'uppercase',
   },
 });
 

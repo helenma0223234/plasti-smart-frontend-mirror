@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     borderWidth: 10,
     borderColor: 'white',
     borderTopWidth: '120%',
-    backgroundColor: 'white',
+    backgroundColor: '#FBFBF4',
   },
   header: {
     alignItems: 'center',

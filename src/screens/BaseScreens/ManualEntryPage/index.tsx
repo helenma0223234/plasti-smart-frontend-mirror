@@ -22,7 +22,6 @@ import { useFocusEffect } from '@react-navigation/native';
 // components
 import TextStyles from 'utils/TextStyles';
 import Carousel from 'react-native-snap-carousel';
-import CircleBG from '../../../assets/Ellipse 66.svg';
 
 type ManualEntryPageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;

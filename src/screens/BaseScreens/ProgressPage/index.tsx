@@ -1,184 +1,220 @@
 import React, { useState } from 'react';
-import { ScrollView, SafeAreaView, View, Text, StyleSheet, Modal, Pressable, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
-import useAppDispatch from '../../../hooks/useAppDispatch';
-import { logout } from '../../../redux/slices/authSlice';
-import FormatStyle from '../../../utils/FormatStyle';
-import TextStyles from 'utils/TextStyles';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, SafeAreaView, ScrollView } from 'react-native';
+import { PieChartData, DoughnutChartProps} from '../../../components/DoughnutChart';
+import DoughnutChart from '../../../components/DoughnutChart';
+import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import { useNavigation } from '@react-navigation/native';
 import NavType from 'utils/NavType';
-import { BaseTabRoutes } from 'navigation/routeTypes';
+import { Svg, Circle } from 'react-native-svg';
+
+
+
+import { Ionicons } from '@expo/vector-icons';
 import Colors from 'utils/Colors';
 
-import Svg, { G, Circle } from 'react-native-svg';
-import Animated from 'react-native-reanimated';
-import CircularProgress from 'react-native-circular-progress-indicator';
-import PlasticSymbol from 'components/RecycleSymbol';
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
-import * as Progress from 'react-native-progress';
-import { AntDesign } from '@expo/vector-icons';
-import useAppSelector from 'hooks/useAppSelector';
+const data: PieChartData[] = [
+  { name: 'PET (Pol. 1)', population: 5, color: '#CC554E' },
+  { name: 'HDPE (Pol. 2)', population: 3, color: '#50776F' },
+  { name: 'PVC (Pol. 3)', population: 2, color: '#CD775C' },
+  { name: 'LDPE (Pol. 4)', population: 3, color: '#586E97' },
+  { name: 'PP (Pol. 5)', population: 8, color: '#DBA26D' },
+  { name: 'PS (Pol. 6)', population: 4, color: '#5E5672' },
+  { name: 'Other (Pol. 7)', population: 1, color: '#676761' },
+];
 
-const ProgressPage = () => {
-  const user = useAppSelector((state) => state.users.selectedUser);
-  const navigation = useNavigation<NavType>();
+const ProgressReport = () => {
+    const [selectedIndex, setSelectedIndex] = useState(1);
+    const navigation = useNavigation<NavType>();
 
-  const goals = [
-    { progress: 0 },
-    { progress: 4 },
-    { progress: 10 },
-    { progress: 3 },
-    { progress: 6 },
-    { progress: 4 },
-    { progress: 1 },
-  ];
+    const buttonLabels = ['Reused', 'All', 'Recycled'];
 
-  const collectedTypes = {
-    1: user.Type1Collected,
-    2: user.Type2Collected,
-    3: user.Type3Collected,
-    4: user.Type4Collected,
-    5: user.Type5Collected,
-    6: user.Type6Collected,
-    7: user.Type7Collected,
-  };
+    const getPopulationData = (): PieChartData[] => {
+        if (selectedIndex === 0) {
+            return [
+                { name: 'PET (Pol. 1)', population: 0, color: '#CC554E' },
+                { name: 'HDPE (Pol. 2)', population: 3, color: '#50776F' },
+                { name: 'PVC (Pol. 3)', population: 2, color: '#CD775C' },
+                { name: 'LDPE (Pol. 4)', population: 3, color: '#586E97' },
+                { name: 'PP (Pol. 5)', population: 8, color: '#DBA26D' },
+                { name: 'PS (Pol. 6)', population: 4, color: '#5E5672' },
+                { name: 'Other (Pol. 7)', population: 1, color: '#676761' },
+            ];
+        } else if (selectedIndex === 1) {
+            return [
+                { name: 'PET (Pol. 1)', population: 5 + 0, color: '#CC554E' },
+                { name: 'HDPE (Pol. 2)', population: 3 + 3, color: '#50776F' },
+                { name: 'PVC (Pol. 3)', population: 2 + 2, color: '#CD775C' },
+                { name: 'LDPE (Pol. 4)', population: 3 + 3, color: '#586E97' },
+                { name: 'PP (Pol. 5)', population: 8 + 8, color: '#DBA26D' },
+                { name: 'PS (Pol. 6)', population: 4 + 4, color: '#5E5672' },
+                { name: 'Other (Pol. 7)', population: 1 + 1, color: '#676761' },
+            ];
+        } else {
+            return data;
+        }
+    };
 
-  const maxType = Object.entries(collectedTypes).reduce((max, [type, value]) => {
-    return value > max.value ? { type: Number(type), value } : max;
-  }, { type: 1, value: user?.Type1Collected });
-  
-  return (
-    <SafeAreaView style={{ ...FormatStyle.container }}>
-      <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
-        <View style={{ marginTop: 40, overflow: 'visible', gap: 20, marginBottom: 30 }}>
-          <Text style={{ ...TextStyles.title, fontSize: 30, marginLeft: 0, alignSelf: 'flex-start' }}>
-            Your Progress Report
-          </Text>
-        </View>
-        <View style={{ gap: 25, flexDirection: 'column', marginBottom: 50 }}>
-          <ProgressCard
-            title={`Your Top Plastic is Plastic No.${maxType.value}`}
-            number={maxType.type}
-            cornerComponent={
-              <PlasticSymbol color={Colors.highlight} width={80} height={100} number={user?.monthlyGoalPlasticType} top={35} left={35}></PlasticSymbol>
-            }
-            text={`You've recycled ${maxType.value} of them this month. Great work!`}>
-          </ProgressCard>
-          <ProgressCard
-            title={'Monthly Challenge'}
-            text={`You've recycled ${user?.monthlyGoalPlasticAmount} out of ${user?.monthlyGoalPlasticTotal} PET plastics this month. Keep going to get the prize!`}
-            cornerComponent={
-              <View>
+    return (
+        <SafeAreaView style={styles.container}>
+          <View style={styles.topContainer}>
+            <View style={styles.backButtonContainer}>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => {
+                  navigation.navigate(BaseTabRoutes.EDUCATION, {});
+                }}>
+                <Ionicons name="arrow-back-outline" size={screenHeight*0.03} color="#1B453C" />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <Text style={styles.header}>Your Progress Report</Text>
 
-                <CircularProgress
-                  value={(user?.monthlyGoalPlasticAmount / user?.monthlyGoalPlasticTotal) * 100}
-                  radius={50}
-                  circleBackgroundColor={'transparent'}
-                  progressValueColor={'transparent'}
-                  activeStrokeColor={Colors.highlight}
-                  inActiveStrokeColor={'transparent'}
-                />
-                <View style={{ position: 'relative', bottom: 60, alignItems: 'center' }}>
-                  <Text style={{ fontSize: 20, fontWeight: '800' }}>{user?.monthlyGoalPlasticAmount}/{user?.monthlyGoalPlasticTotal}</Text>
-                </View>
-              </View>
-            }>
-          </ProgressCard>
-
-          <View style={{ ...styles.card, gap: 20 }}>
-            <Text style={{ ...TextStyles.subTitle, fontSize: 20, flexWrap: 'wrap', alignSelf: 'flex-start' }}>Your Monthly Summary</Text>
-
-            {goals.map((goal, index) => (
-              <Goal number={index + 1} progress={goal.progress} total={10}></Goal>
+          <View style={styles.buttonContainer}>
+            {buttonLabels.map((label, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                    styles.button,
+                    index === 0 && styles.leftButton,
+                    index === buttonLabels.length - 1 && styles.rightButton,
+                    index !== 0 && index !== buttonLabels.length - 1 && styles.middleButton,
+                    selectedIndex === index && styles.selectedButton,]}
+                onPress={() => setSelectedIndex(index)}>
+                <Text style={[
+                  styles.buttonText,
+                  selectedIndex === index && styles.selectedButtonText]}>
+                  {label}
+                </Text>
+              </TouchableOpacity>
             ))}
           </View>
+
+          <View style={styles.chartContainer}>
+              <DoughnutChart data={getPopulationData()} size={screenWidth * 0.9} />
+          </View>
+
+          <View style={styles.legendContainer}>
+            {getPopulationData().map((item, index) => (
+              // item.population > 0 &&
+                <View key={index} style={styles.legendItem}>
+                    <Svg height="20" width="20">
+                        <Circle cx="10" cy="10" r="10" fill={item.color} />
+                    </Svg>
+                    <Text style={styles.legendText}>{item.population} {item.name}</Text>
+                </View>
+            ))}
         </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+
+        </SafeAreaView>
+    );
 };
-
-
-interface ProgressCardProps {
-  cornerComponent: JSX.Element;
-  title: string;
-  text: string;
-  number?: number
-}
-
-
-const ProgressCard = ({ cornerComponent, title, text, number }: ProgressCardProps) => {
-  return (
-    <View style={{ ...styles.card, gap: 10 }}>
-      {cornerComponent}
-
-      <View style={{ marginTop: 0, gap: 10 }}>
-        <Text style={{ ...TextStyles.subTitle, fontSize: 24, flexWrap: 'wrap', textAlign: 'center' }}>{title}</Text>
-        <Text style={{ flexWrap: 'wrap', fontSize: 18, textAlign: 'center' }}>{text}</Text>
-      </View>
-    </View>
-  );
-};
-
-interface GoalProps {
-  number: number;
-  total: number;
-  progress: number;
-}
-
-const Goal = ({ number, total, progress }: GoalProps) => {
-  const p = progress / total;
-
-  return (
-    <View style={{ flexDirection: 'row', gap: 15, alignItems: 'center' }}>
-      <PlasticSymbol color={Colors.primary.dark} width={40} height={40} number={number} top={12} left={17}></PlasticSymbol>
-      <View style={{ flexDirection: 'column', gap: 3 }}>
-        <Text>
-          {total - progress > 0 && total - progress < total && `${total - progress} more to reach you goal`}
-          {total == progress && 'Great Job!'}
-          {total - progress == total && 'Keep recycling to earn!'}
-        </Text>
-        <View>
-          <Progress.Bar
-            progress={p}
-            color={Colors.primary.dark}
-            unfilledColor={Colors.secondary.white}
-            width={200}
-            height={20}
-            borderWidth={0}
-            borderRadius={100}
-          />
-          {progress != 1 &&
-            <Text style={{
-              position: 'absolute', left: 3 + 187 * p - (Math.min(progress, 1) * (30)), top: 1,
-              color: progress > 0 ? Colors.secondary.white : Colors.primary.dark,
-            }}>{progress}/{total}</Text>
-          }
-          {progress == total &&
-            <AntDesign style={{ position: 'absolute', left: 7, top: 2 }} name="star" size={14} color={Colors.highlight} />
-          }
-        </View>
-      </View>
-
-    </View >
-  );
-};
-
-
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: Colors.secondary.light,
-    borderRadius: 10,
-    minHeight: 200,
-    width: 330,
+    container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: "#f2f2f2",
+    },
+    header: {
+        textAlign: 'center',
+        fontSize: screenHeight * 0.0325,
+        fontFamily: 'Inter_500Medium',
+        marginBottom: 10,
+        color: Colors.primary.dark,
+    },
+    buttonContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginBottom: 10,
+      width: screenWidth * 0.85, // 75% width of the screen
+      alignSelf: 'center', // Center the container horizontally
+  },
+  button: {
+      flex: 1,
+      padding: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderColor: 'black',
+      borderWidth: 1,
+  },
+  leftButton: {
+      borderTopLeftRadius: 5,
+      borderBottomLeftRadius: 5,
+      borderRightWidth: 0,
+  },
+  middleButton: {
+      borderRadius: 0,
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+  },
+  rightButton: {
+      borderTopRightRadius: 5,
+      borderBottomRightRadius: 5,
+      borderLeftWidth: 0,
+  },
+  selectedButton: {
+      backgroundColor: '#2C3E50',
+  },
+  buttonText: {
+      color: 'black',
+  },
+  selectedButtonText: {
+      color: 'white',
+  },
+  chartContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'relative',
+  },
+  backButtonContainer: {
+    position: 'absolute',
+    left: '4%',
+    borderColor: '#1B453C',
+    borderWidth: 1,
+    width: screenHeight*0.05,
+    height: screenHeight*0.05,
+    borderRadius: 50,
+    justifyContent: 'center',
     alignItems: 'center',
+  },
+  topContainer: {
+    flexDirection: 'row',
+    height: screenHeight*0.07,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  backButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  legendContainer: {
+    marginTop: screenHeight * 0.02,
+    marginLeft: screenWidth * 0.1,
+    width: screenWidth * 0.8,  
+    minHeight: screenHeight * 0.7,
+    alignSelf: 'center', 
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',  // Space between items
+    gap: 10,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    width: '48%', 
+  },
+  legendText: {
+    marginLeft: 5,
+    fontSize: screenHeight * 0.0175,
+    color: '#2C3E50',
     textAlign: 'center',
-    padding: 25,
   },
 });
 
-
-
-
-
-export default ProgressPage;
+export default ProgressReport;

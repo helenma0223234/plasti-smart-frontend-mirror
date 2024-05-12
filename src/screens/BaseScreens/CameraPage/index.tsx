@@ -27,7 +27,6 @@ import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { PinchGestureHandler } from 'react-native-gesture-handler';
 import { PinchGestureHandlerGestureEvent } from 'react-native-gesture-handler';
-import CircleBG from '../../../assets/Ellipse 66.svg';
 
 // components
 import RBSheet from 'react-native-raw-bottom-sheet';

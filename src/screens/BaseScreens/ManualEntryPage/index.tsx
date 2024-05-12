@@ -22,7 +22,6 @@ import { useFocusEffect } from '@react-navigation/native';
 // components
 import TextStyles from 'utils/TextStyles';
 import Carousel from 'react-native-snap-carousel';
-import CircleBG from '../../../assets/Ellipse 66.svg';
 
 type ManualEntryPageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;
@@ -233,7 +232,7 @@ const manualEntryStyles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:20,
+    marginTop:50,
   },
   selectButton: {
     justifyContent: 'center',

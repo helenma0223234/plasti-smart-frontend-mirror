@@ -18,31 +18,33 @@ const FrontPage = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.catContainer}>
-          <Cat width={400} />
-        </View>
-        <Text style={styles.logo}>PlastiCycle</Text>
-        <Text style={styles.subtitle}>
+      <View style={styles.innerContainer}>
+        <View style={styles.header}>
+          <View style={styles.catContainer}>
+            <Cat width={400} />
+          </View>
+          <Text style={styles.logo}>PlastiCycle</Text>
+          <Text style={styles.subtitle}>
           The free, fun, and effective way to learn, recycle, and compete with
           friends
-        </Text>
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(AuthStackRoutes.SIGNUP)}
-        >
-          <Text style={styles.buttonText}>Get Started</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.invertedButton]}
-          onPress={() => navigation.navigate(AuthStackRoutes.SIGNIN)}
-        >
-          <Text style={styles.invertedButtonText}>
-            I Already Have an Account
           </Text>
-        </TouchableOpacity>
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate(AuthStackRoutes.SIGNUP)}
+          >
+            <Text style={styles.buttonText}>Get Started</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.invertedButton]}
+            onPress={() => navigation.navigate(AuthStackRoutes.SIGNIN)}
+          >
+            <Text style={styles.invertedButtonText}>
+            I Already Have an Account
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -53,10 +55,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 10,
     borderColor: 'white',
+    backgroundColor: '#FBFBF4',
+  },
+  innerContainer: {
+    borderWidth: 10,
     borderTopWidth: '120%',
-    backgroundColor: 'white',
+    borderColor:'#FBFBF4',
   },
   header: {
     alignItems: 'center',

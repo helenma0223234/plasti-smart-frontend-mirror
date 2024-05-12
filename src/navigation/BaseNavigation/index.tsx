@@ -23,6 +23,7 @@ import {
   ManualEntryPage,
   UnknownPlasticPage,
   UnknownInfoPage,
+  AvatarCustomizationPage,
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
@@ -53,6 +54,11 @@ Notifications.setNotificationHandler({
 export const HomeNavigator = () => {
   return (
     <BaseStack.Navigator initialRouteName={BaseTabRoutes.HOME}>
+      <BaseStack.Screen
+        name={BaseTabRoutes.AVATAR_CUSTOMIZATION}
+        component={AvatarCustomizationPage}
+        options={{ header: () => null }}
+      />
       <BaseStack.Screen
         name={BaseTabRoutes.HOME}
         component={HomePage}
@@ -279,7 +285,7 @@ const BaseNavigation = () => {
           tabBarActiveTintColor: Colors.primary.dark,
           tabBarInactiveTintColor: Colors.neutral[2],
         }}
-        initialRouteName={BaseTabRoutes.HOME}
+        initialRouteName={BaseTabRoutes.AVATAR_CUSTOMIZATION}
       >
 
 
@@ -389,6 +395,11 @@ const BaseNavigation = () => {
           component={UnknownInfoNavigator}
           options={{ tabBarButton: () => null }}
         />
+        {/* <BaseStack.Screen
+        name={BaseTabRoutes.AVATAR_CUSTOMIZATION}
+        component={AvatarCustomizationPage}
+        options={{ tabBarButton: () => null }}
+        /> */}
 
       </BaseTab.Navigator>
       <TouchableWithoutFeedback onPress={closeModal}>

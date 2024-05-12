@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, SafeAreaView, ScrollView } from 'react-native';
-import { PieChartData, DoughnutChartProps} from '../../../components/DoughnutChart';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, SafeAreaView } from 'react-native';
+import { PieChartData} from '../../../components/DoughnutChart';
 import DoughnutChart from '../../../components/DoughnutChart';
-import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
+import { BaseTabRoutes } from 'navigation/routeTypes';
 import { useNavigation } from '@react-navigation/native';
 import NavType from 'utils/NavType';
 import { Svg, Circle } from 'react-native-svg';
-
-
 
 import { Ionicons } from '@expo/vector-icons';
 import Colors from 'utils/Colors';
@@ -113,31 +111,31 @@ const ProgressReport = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: "#f2f2f2",
-    },
-    header: {
-        textAlign: 'center',
-        fontSize: screenHeight * 0.0325,
-        fontFamily: 'Inter_500Medium',
-        marginBottom: 10,
-        color: Colors.primary.dark,
-    },
-    buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
+  container: {
+      flex: 1,
+      padding: 20,
+      backgroundColor: Colors.secondary.white,
+  },
+  header: {
+      textAlign: 'center',
+      fontSize: screenHeight * 0.0325,
+      fontFamily: 'Inter_500Medium',
       marginBottom: 10,
-      width: screenWidth * 0.85, // 75% width of the screen
-      alignSelf: 'center', // Center the container horizontally
+      color: Colors.primary.dark,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
+    width: screenWidth * 0.85, // 75% width of the screen
+    alignSelf: 'center', // Center the container horizontally
   },
   button: {
       flex: 1,
       padding: 10,
       alignItems: 'center',
       justifyContent: 'center',
-      borderColor: 'black',
+      borderColor:  Colors.primary.dark,
       borderWidth: 1,
   },
   leftButton: {
@@ -156,10 +154,10 @@ const styles = StyleSheet.create({
       borderLeftWidth: 0,
   },
   selectedButton: {
-      backgroundColor: '#2C3E50',
+      backgroundColor:  Colors.primary.dark,
   },
   buttonText: {
-      color: 'black',
+      color:  Colors.primary.dark,
   },
   selectedButtonText: {
       color: 'white',
@@ -172,7 +170,7 @@ const styles = StyleSheet.create({
   backButtonContainer: {
     position: 'absolute',
     left: '4%',
-    borderColor: '#1B453C',
+    borderColor: Colors.primary.dark,
     borderWidth: 1,
     width: screenHeight*0.05,
     height: screenHeight*0.05,

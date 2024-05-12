@@ -24,6 +24,10 @@ import DailyTasks from 'components/DailyTasks';
 import { useDispatch } from 'react-redux';
 import { feedAvatar } from '../../../redux/slices/usersSlice'; // import the action
 
+import { BaseTabRoutes } from 'navigation/routeTypes';
+import { useNavigation } from '@react-navigation/native';
+import NavType from 'utils/NavType';
+
 
 
 const HomePage = () => {
@@ -70,6 +74,9 @@ const HomePage = () => {
     taskCompletionStatuses.push([]);
   }
 
+  const navigation = useNavigation<NavType>();
+
+
   return (
     <SafeAreaView style={{ ...FormatStyle.container, justifyContent: 'flex-start' }}>
       <View style={{
@@ -95,6 +102,9 @@ const HomePage = () => {
         </View>
 
         <View style={{ gap: 5, marginLeft: 20 }}>
+          <TouchableOpacity onPress={() => navigation.navigate(BaseTabRoutes.AVATAR_CUSTOMIZATION, {})}>
+            <Text>Customize</Text>
+          </TouchableOpacity>
           <Title></Title>
           <Text>Ready to Recycle, {user?.username ?? 'now'}?</Text>
           <HappyScale happiness={user?.avatarHealth} ></HappyScale>

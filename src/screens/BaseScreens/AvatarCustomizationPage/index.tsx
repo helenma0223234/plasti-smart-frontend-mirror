@@ -330,10 +330,9 @@ const styles = StyleSheet.create({
   },
   rowButton: {
     flex: 1,
-    // padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: 'black',
+    borderColor: Colors.primary.dark,
     borderWidth: 1,
   },
   grid :{

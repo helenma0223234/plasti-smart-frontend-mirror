@@ -145,11 +145,16 @@ const HomePage = ({ navigation }: HomePageProps) => {
             <Text style={getPointsStyle(20)}>20 </Text>
             <Text style={styles.badgeText}>POINTS</Text>
           </View>
+          {/* <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.545, right: -screenWidth * 0.04 }} onPress={() => navigation.navigate(BaseTabRoutes.EDUCATION, {})}>
+            <HomeBook width={screenWidth * 0.25} height ={screenHeight * 0.3}></HomeBook>
+          </TouchableOpacity> */}
+          <HomeShelf style={{ position: 'absolute', bottom: screenHeight * 0.37, right: -screenWidth * 0.14 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></HomeShelf>
+          <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.1, right: -screenWidth * 0.15 }} onPress={() => navigation.navigate(BaseTabRoutes.AVATAR_CUSTOMIZATION, {})}>
+            <Wardrobe width={screenWidth * 0.65} height ={screenHeight * 0.65}></Wardrobe>
+          </TouchableOpacity>
           <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.545, right: -screenWidth * 0.04 }} onPress={() => navigation.navigate(BaseTabRoutes.EDUCATION, {})}>
             <HomeBook width={screenWidth * 0.25} height ={screenHeight * 0.3}></HomeBook>
           </TouchableOpacity>
-          <HomeShelf style={{ position: 'absolute', bottom: screenHeight * 0.37, right: -screenWidth * 0.14 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></HomeShelf>
-          <Wardrobe style={{ position: 'absolute', bottom: screenHeight * 0.1, right: -screenWidth * 0.15 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></Wardrobe>
           <Lamp style={{ position: 'absolute', bottom: screenHeight * 0.435, right: screenWidth * 0.22 }} width={screenWidth * 0.28} height ={screenHeight * 0.28}></Lamp>
           <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.45, right: screenWidth * 0.017 }} onPress={() => navigation.navigate(BaseTabRoutes.LEADERBOARD, {})}>
             <HomeTrophy width={screenWidth * 0.2} height ={screenHeight * 0.2}></HomeTrophy>

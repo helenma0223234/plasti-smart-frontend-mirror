@@ -39,6 +39,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 
+import FullAlertModal from './fullAlertModal';
 
 type HomePageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;
@@ -51,6 +52,9 @@ const HomePage = ({ navigation }: HomePageProps) => {
   const user = useAppSelector((state) => state.users.selectedUser);
   const currentLoginHist = useAppSelector((state) => state.loginhistory.history);
   const dispatch = useDispatch();
+
+  const [modalVisible, setModalVisible] = React.useState(false);
+
   
   interface SnackProps {
     snacks: number
@@ -61,7 +65,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
     if (snacks > 0 && uhealth < 5) {
       dispatch(feedAvatar({ id: uid }));
     } else {
-      alert('Can not feed Plasti sorry~');
+      setModalVisible(true);
     }
   };
 
@@ -71,7 +75,6 @@ const HomePage = ({ navigation }: HomePageProps) => {
 
   const today = new Date();
   // today.setUTCHours(0, 0, 0, 0);
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
   let todayTasksCompletion = [false, false, false];
   if (currentLoginHist.length > 0) {
@@ -171,6 +174,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
           <DailyTasks taskCompletionStatuses={todayTasksCompletion}></DailyTasks>
         </View>
       </ScrollView>
+      <FullAlertModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
     </SafeAreaView>
   );
 };
@@ -266,7 +270,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute', 
     bottom: screenHeight * 0.695, 
-    right: screenWidth * 0.66,
+    right: screenWidth * 0.65,
   },
   badgeText: {
     fontSize: screenHeight * 0.015,

@@ -5,6 +5,7 @@ import ForbiddenPage from './ForbiddenPage';
 import CameraPage from './CameraPage';
 import ScanCompletePage from './ScanCompletePage';
 import HomePage from './HomePage';
+import AvatarCustomizationPage from './AvatarCustomizationPage';
 import LeaderboardPage from './LeaderboardPage';
 import EducationPage from './EducationPage';
 import ProgressPage from './ProgressPage';
@@ -20,6 +21,7 @@ export {
   CameraPage,
   ScanCompletePage,
   HomePage,
+  AvatarCustomizationPage,
   LeaderboardPage,
   EducationPage,
   ProgressPage,

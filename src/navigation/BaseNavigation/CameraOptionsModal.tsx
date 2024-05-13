@@ -2,6 +2,8 @@ import React,  { useEffect, useRef }  from 'react';
 import { Animated, Modal, View, StyleSheet, TouchableOpacity, Text, TouchableWithoutFeedback } from 'react-native';
 import { BaseNavigationList, BaseTabRoutes } from '../routeTypes'; // Adjust import as necessary
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Dimensions } from 'react-native';
+
 
 import Colors from 'utils/Colors';
 import TextStyles from 'utils/TextStyles';
@@ -11,8 +13,11 @@ interface CameraOptionsModalProps {
   onClose: () => void;
   navigation: StackNavigationProp<BaseNavigationList>;
 }
+
+const screenHeight = Dimensions.get('window').height;
   
 const CameraOptionsModal: React.FC<CameraOptionsModalProps> = ({ isVisible, onClose, navigation }) => {
+
   const modalAnimation = useRef(new Animated.Value(0)).current;
 
   const handleOptionSelect = (screen: keyof BaseNavigationList) => {
@@ -70,8 +75,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   modalContent: {
-    marginTop:'140%',
-    padding: 28,
+    marginTop:screenHeight * 0.64,
+    padding: screenHeight * 0.016,
     backgroundColor: 'transparent',
     alignItems: 'center',
     shadowOpacity: 0.45,
@@ -80,8 +85,8 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   buttonBlock1: {
-    margin: 6,
-    padding: 14,
+    margin: screenHeight * 0.0076,
+    padding: screenHeight * 0.017,
     backgroundColor: Colors.primary.dark,
     borderRadius: 12,
     alignItems: 'center',

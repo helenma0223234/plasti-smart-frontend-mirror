@@ -1,0 +1,77 @@
+<svg width="272" height="170" viewBox="0 0 272 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="6" y="136" width="210" height="31" fill="#838981"/>
+<rect x="4" y="29" width="240" height="128" rx="2" fill="#847867"/>
+<path d="M12 121H236V147C236 148.105 235.105 149 234 149H14C12.8954 149 12 148.105 12 147V121Z" fill="#B6A58D"/>
+<rect x="12" y="89" width="224" height="28" fill="#B6A58D"/>
+<rect x="12" y="57" width="224" height="28" fill="#B6A58D"/>
+<path d="M12 31C12 29.8954 12.8954 29 14 29H122V53H12V31Z" fill="#B6A58D"/>
+<path d="M126 29H234C235.105 29 236 29.8954 236 31V53H126V29Z" fill="#B6A58D"/>
+<path d="M0 12H248V21C248 22.1046 247.105 23 246 23H2C0.895429 23 0 22.1046 0 21V12Z" fill="#847867"/>
+<circle cx="67" cy="37" r="4" fill="#D9D9D9"/>
+<circle cx="67" cy="37" r="4" fill="#383746"/>
+<mask id="mask0_4317_2729" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="63" y="33" width="8" height="8">
+<circle cx="67" cy="37" r="4" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_4317_2729)">
+<circle cx="64" cy="34" r="5" fill="#484C60"/>
+</g>
+<circle cx="181" cy="37" r="4" fill="#D9D9D9"/>
+<circle cx="181" cy="37" r="4" fill="#383746"/>
+<mask id="mask1_4317_2729" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="177" y="33" width="8" height="8">
+<circle cx="181" cy="37" r="4" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask1_4317_2729)">
+<circle cx="178" cy="34" r="5" fill="#484C60"/>
+</g>
+<circle cx="197" cy="65" r="4" fill="#D9D9D9"/>
+<circle cx="197" cy="65" r="4" fill="#383746"/>
+<mask id="mask2_4317_2729" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="193" y="61" width="8" height="8">
+<circle cx="197" cy="65" r="4" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask2_4317_2729)">
+<circle cx="194" cy="62" r="5" fill="#484C60"/>
+</g>
+<circle cx="51" cy="65" r="4" fill="#D9D9D9"/>
+<circle cx="51" cy="65" r="4" fill="#383746"/>
+<mask id="mask3_4317_2729" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="47" y="61" width="8" height="8">
+<circle cx="51" cy="65" r="4" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask3_4317_2729)">
+<circle cx="48" cy="62" r="5" fill="#484C60"/>
+</g>
+<circle cx="51" cy="97" r="4" fill="#383746"/>
+<mask id="mask4_4317_2729" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="47" y="93" width="8" height="8">
+<circle cx="51" cy="97" r="4" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask4_4317_2729)">
+<circle cx="48" cy="94" r="5" fill="#484C60"/>
+</g>
+<circle cx="197" cy="97" r="4" fill="#383746"/>
+<mask id="mask5_4317_2729" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="193" y="93" width="8" height="8">
+<circle cx="197" cy="97" r="4" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask5_4317_2729)">
+<circle cx="194" cy="94" r="5" fill="#484C60"/>
+</g>
+<circle cx="197" cy="129" r="4" fill="#383746"/>
+<mask id="mask6_4317_2729" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="193" y="125" width="8" height="8">
+<circle cx="197" cy="129" r="4" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask6_4317_2729)">
+<circle cx="194" cy="126" r="5" fill="#484C60"/>
+</g>
+<circle cx="51" cy="129" r="4" fill="#383746"/>
+<mask id="mask7_4317_2729" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="47" y="125" width="8" height="8">
+<circle cx="51" cy="129" r="4" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask7_4317_2729)">
+<circle cx="48" cy="126" r="5" fill="#484C60"/>
+</g>
+<rect x="4" y="23" width="240" height="9" fill="#5C554B"/>
+<path d="M12 30C12 28.8954 12.8954 28 14 28H120C121.105 28 122 28.8954 122 30V32H12V30Z" fill="#847867"/>
+<path d="M126 30C126 28.8954 126.895 28 128 28H234C235.105 28 236 28.8954 236 30V32H126V30Z" fill="#847867"/>
+<path d="M4 156C4 154.895 4.89543 154 6 154H14C15.1046 154 16 154.895 16 156V170H6C4.89543 170 4 169.105 4 168V156Z" fill="#847867"/>
+<path d="M232 156C232 154.895 232.895 154 234 154H242C243.105 154 244 154.895 244 156V168C244 169.105 243.105 170 242 170H234C232.895 170 232 169.105 232 168V156Z" fill="#847867"/>
+<path d="M24 0H272L248 12H0L24 0Z" fill="#B6A58D"/>
+<path d="M16 157H25V164L16 170V157Z" fill="#5C554B"/>
+</svg>

@@ -6,12 +6,6 @@ import useAppSelector from 'hooks/useAppSelector';
 import AppButton from '../../../components/AppButton';
 import FormatStyle from '../../../utils/FormatStyle';
 import CircleBG from '../../../assets/Ellipse 66.svg';
-import Title from 'components/Title';
-import { AntDesign } from '@expo/vector-icons';
-
-import Svg, { G, Circle } from 'react-native-svg';
-import Animated from 'react-native-reanimated';
-import CircularProgress from 'react-native-circular-progress-indicator';
 
 import Heart from '../../../assets/Heart.svg';
 import EmptyHeart from '../../../assets/EmptyHeart.svg';
@@ -22,7 +16,6 @@ import Wardrobe from '../../../assets/Wardrobe.svg';
 import Lamp from '../../../assets/Lamp.svg';
 import HomeTrophy from '../../../assets/HomeTrophy.svg';
 import Bowl from '../../../assets/Bowl.svg';
-import Bookshelf from '../../../assets/Bookshelf.svg';
 import HomePointBadge from '../../../assets/HomePointBadge.svg';
 import HomeShelf from '../../../assets/HomeShelf.svg';
 import HomeBook from '../../../assets/HomeBook.svg';

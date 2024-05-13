@@ -48,23 +48,6 @@ export const getUser = createAsyncThunk(
   },
 );
 
-// export const updateUser = createAsyncThunk(
-//   'users/updateUser',
-//   async (req: { id: string, email: string, password: string, role: UserScopes }, { dispatch }) => {
-//     dispatch(startUsersLoading());
-//     return axios
-//       .patch(`${SERVER_URL}users/${req.id}`, req)
-//       .finally(() => dispatch(stopUsersLoading()))
-//       .then((response) => {
-//         return response.data;
-//       })
-//       .catch((error) => {
-//         console.error('Error when updating user', error);
-//         return false;
-//       });
-//   },
-// );
-
 // subject to change!!
 export const updateUser = createAsyncThunk(
   'users/updateUser',

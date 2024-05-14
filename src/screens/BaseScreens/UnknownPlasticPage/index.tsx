@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import {  SafeAreaView, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';

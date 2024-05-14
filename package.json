@@ -2,7 +2,7 @@
   "name": "platic-sorting-frontend",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
-  "author": "Aneesh Patnaik, Jack Macy, Yuchuan Ma",
+  "author": "Aneesh Patnaik, Jack Macy, Herbert, Yuchuan Ma",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",

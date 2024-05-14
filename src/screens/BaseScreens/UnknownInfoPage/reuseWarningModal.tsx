@@ -52,6 +52,7 @@ const ReuseWarningModal: React.FC<PlasticModalProps> = ({ modalVisible, setModal
           <TouchableOpacity
             style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
             onPress={() => setModalVisible(!modalVisible)}
+            // TODO: add nav to education page
           >
             <Text style={styles.bottomSheetSelectButtonText}>RECYCLE INSTEAD</Text>
           </TouchableOpacity>

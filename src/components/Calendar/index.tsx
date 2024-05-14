@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import { Text, View } from "react-native";
+import React from 'react';
+import { Text, View } from 'react-native';
 
-import FormatStyle from "utils/FormatStyle";
-import TextStyles from "utils/TextStyles";
-import Colors from "utils/Colors";
-import { ScrollView } from "react-native-gesture-handler";
-import { transformer } from "../../../metro.config";
+import FormatStyle from 'utils/FormatStyle';
+import TextStyles from 'utils/TextStyles';
+import Colors from 'utils/Colors';
+import { ScrollView } from 'react-native-gesture-handler';
+
+import { Dimensions } from 'react-native';
+
+const screenWidth = Dimensions.get('window').width;
 
 interface CalendarProps {
-  // curr_date: number
-  // dates: number[]
   children?: React.ReactNode;
   circlesArray: number[][];
 }
@@ -39,20 +40,20 @@ const Calendar = ({ circlesArray }: CalendarProps) => {
     return Array(numberOfOnes).fill(1);
   });
   const isEmpty = newCirclesArray.every((subArray) => subArray.length === 0);
-  console.log(isEmpty);
+
   return (
-    <View style={{ marginTop: 8 }}>
+    <View style={{ marginTop: 8, marginLeft:6 }}>
       <Text style={{ color: Colors.primary.dark, marginBottom: -12 }}>
         Daily Goal
       </Text>
       <ScrollView
         horizontal={true}
-        style={{ width: 350 }}
+        style={{ width: screenWidth * 0.88 }}
         contentOffset={{ x: 400, y: 0 }}
         bounces={true}
         showsHorizontalScrollIndicator={false}
       >
-        <View style={{ flexDirection: "row", gap: 10, marginRight: 6 }}>
+        <View style={{ flexDirection: 'row', gap: 10, marginRight: 6 }}>
           {dates.map((date: number, key: number) => (
             <DateCircle
               date={date}
@@ -91,24 +92,26 @@ const DateCircle = ({
     Colors.primary.dark,
   ];
 
+  const circleDim = screenWidth * 0.018;
+
   return (
     <View
       style={{
-        flexDirection: "column",
-        marginBottom: 0,
+        flexDirection: 'column',
+        marginBottom: 10,
         gap: -11,
-        alignItems: "center",
+        alignItems: 'center',
       }}
     >
       <View
         style={{
           ...FormatStyle.circle,
           backgroundColor:
-            (isPast && "#ADC0AB") ||
+            (isPast && '#ADC0AB') ||
             (active && Colors.primary.dark) ||
             Colors.secondary.white,
-          width: 40,
-          height: 40,
+          width: screenWidth * 0.102,
+          height: screenWidth * 0.102,
         }}
       >
         <Text
@@ -120,7 +123,7 @@ const DateCircle = ({
           {date}
         </Text>
       </View>
-      <View style={{ alignItems: "center", flexDirection: "row", gap: 4 }}>
+      <View style={{ alignItems: 'center', flexDirection: 'row', gap: 4 }}>
         {/* {colorcircles.map((circle: number, key: number) => (
           circle === 1 ? (
             <View style={{
@@ -133,12 +136,11 @@ const DateCircle = ({
           ) : null
         ))} */}
         {isEmpty ? (
-          // <View style={FormatStyle.circle2} />
           <View style={{
             ...FormatStyle.circle,
             backgroundColor: 'transparent',
-            width: 6,
-            height: 6,
+            width: circleDim,
+            height: circleDim,
             borderWidth: 0,
           }}></View>
         ) : (
@@ -148,13 +150,13 @@ const DateCircle = ({
                 style={{
                   ...FormatStyle.circle,
                   backgroundColor: circleColors[key],
-                  width: 6,
-                  height: 6,
+                  width: circleDim,
+                  height: circleDim,
                   borderWidth: 0,
                 }}
                 key={key}
               ></View>
-            ) : null
+            ) : null,
           )
         )}
       </View>

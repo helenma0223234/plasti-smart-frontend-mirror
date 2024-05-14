@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useMemo, useState } from 'react';
 import { SafeAreaView, Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
@@ -5,17 +6,20 @@ import useAppSelector from 'hooks/useAppSelector';
 import AppButton from '../../../components/AppButton';
 import FormatStyle from '../../../utils/FormatStyle';
 import CircleBG from '../../../assets/Ellipse 66.svg';
-import Title from 'components/Title';
-import { AntDesign } from '@expo/vector-icons';
 
-import Svg, { G, Circle } from 'react-native-svg';
-import Animated from 'react-native-reanimated';
-import CircularProgress from 'react-native-circular-progress-indicator';
-
-import Cat from '../../../assets/Cat.svg';
 import Heart from '../../../assets/Heart.svg';
 import EmptyHeart from '../../../assets/EmptyHeart.svg';
 import Snack from '../../../assets/Snack.svg';
+import HomeShiba from '../../../assets/HomeShiba.svg';
+import HomeAvaShadow from '../../../assets/HomeAvaShadow.svg';
+import Wardrobe from '../../../assets/Wardrobe.svg';
+import Lamp from '../../../assets/Lamp.svg';
+import HomeTrophy from '../../../assets/HomeTrophy.svg';
+import Bowl from '../../../assets/Bowl.svg';
+import HomePointBadge from '../../../assets/HomePointBadge.svg';
+import HomeShelf from '../../../assets/HomeShelf.svg';
+import HomeBook from '../../../assets/HomeBook.svg';
+
 
 import Calendar from 'components/Calendar';
 import Colors from 'utils/Colors';
@@ -23,16 +27,40 @@ import DailyTasks from 'components/DailyTasks';
 
 import { useDispatch } from 'react-redux';
 import { feedAvatar } from '../../../redux/slices/usersSlice'; // import the action
+import { Dimensions } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import type { StackNavigationProp } from '@react-navigation/stack';
+import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 
-import { BaseTabRoutes } from 'navigation/routeTypes';
-import { useNavigation } from '@react-navigation/native';
-import NavType from 'utils/NavType';
+import FullAlertModal from './fullAlertModal';
 
+type HomePageProps = {
+  navigation: StackNavigationProp<BaseNavigationList>;
+};
 
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
-const HomePage = () => {
+const HomePage = ({ navigation }: HomePageProps) => {
   const user = useAppSelector((state) => state.users.selectedUser);
   const currentLoginHist = useAppSelector((state) => state.loginhistory.history);
+  const dispatch = useDispatch();
+
+  const [modalVisible, setModalVisible] = React.useState(false);
+
+  
+  interface SnackProps {
+    snacks: number
+    uid: string
+    uhealth: number
+  }
+  const handleSnackPress = ({ snacks, uid, uhealth }: SnackProps) => {
+    if (snacks > 0 && uhealth < 5) {
+      dispatch(feedAvatar({ id: uid }));
+    } else {
+      setModalVisible(true);
+    }
+  };
 
   if (user === null) {
     return <Text>Loading...</Text>;
@@ -40,7 +68,6 @@ const HomePage = () => {
 
   const today = new Date();
   // today.setUTCHours(0, 0, 0, 0);
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
   let todayTasksCompletion = [false, false, false];
   if (currentLoginHist.length > 0) {
@@ -74,69 +101,79 @@ const HomePage = () => {
     taskCompletionStatuses.push([]);
   }
 
-  const navigation = useNavigation<NavType>();
-
+  function getPointsStyle(points: number) {
+    if (points < 100) {
+      return styles.smallPoints;
+    } else if (points < 1000) {
+      return styles.mediumPoints;
+    } else {
+      return styles.largePoints;
+    }
+  }
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container, justifyContent: 'flex-start' }}>
       <View style={{
         width: '100%',
         overflow: 'hidden',
-        aspectRatio: 1,
 
         alignItems: 'center',
         position: 'absolute',
-        bottom: '-10%',
-
+        top: screenHeight * 0.45,
       }}>
         <Image source={require('../../../assets/Ellipse 66.svg')}></Image>
-        <CircleBG></CircleBG>
+        <CircleBG width={screenWidth * 6} height={screenHeight * 1.1}></CircleBG>
       </View>
-      <View style={{
+
+      
+      <ScrollView style={{
         flex: 1,
         width: '100%',
-        margin: 20,
+        margin: screenHeight * 0.018,
       }}>
-        <View style={{ position: 'absolute', top: 120, right: 20 }}>
-          <Cat></Cat>
-        </View>
+        <View style={{ position: 'absolute', top: screenHeight * 0.78, right:screenWidth * 0.001 }}>
+          <HomePointBadge style={{ position: 'absolute', bottom: screenHeight * 0.55, right: screenWidth * 0.63 }} width={screenWidth * 0.32} height ={screenHeight * 0.32}></HomePointBadge>
 
-        <View style={{ gap: 5, marginLeft: 20 }}>
-          <Title></Title>
-          <Text>Ready to Recycle, {user?.username ?? 'now'}?</Text>
-          <HappyScale happiness={user?.avatarHealth} ></HappyScale>
-
-          <View style={{ gap: 10, marginTop: 10 }}>
-            <SnackButton snacks={user.snacks} uid={user.id} uhealth={user.avatarHealth}></SnackButton>
-            <Place number={1}></Place>
-            <View style={{ flexDirection: 'column', justifyContent: 'flex-start', width: 70, gap: 5 }}>
-              <View style={{ borderWidth: user.monthlyGoalPlasticAmount >= 1 ? 0 : 2, borderColor: Colors.primary.dark, borderRadius: 38, alignItems:'center', justifyContent:'center', borderStyle:'dashed' }}>
-                <CircularProgress
-                  value={(user.monthlyGoalPlasticAmount / user.monthlyGoalPlasticTotal) * 100}
-                  radius={35}
-
-                  circleBackgroundColor={'transparent'}
-                  progressValueColor={'transparent'}
-                  activeStrokeColor={Colors.primary.dark}
-                  inActiveStrokeColor={'transparent'}
-                />
-              </View>
-              <View style={{ position: 'absolute', alignItems: 'center', bottom: 38, left: 22 }}>
-                <Text style={{ fontSize: 20 }}>{user.monthlyGoalPlasticAmount}</Text>
-                <View style={{ height: 2, backgroundColor: 'black', width: '100%' }} />
-                <Text style={{ fontSize: 20 }}>{user.monthlyGoalPlasticTotal}</Text>
-              </View>
-              <Text style={{ fontSize: 10, flexWrap: 'wrap', textAlign: 'center' }}>{months[today.getMonth()]} monthly goal</Text>
-            </View>
+          <View style={styles.badgeContainer}>
+            <Text style={getPointsStyle(20)}>20 </Text>
+            <Text style={styles.badgeText}>POINTS</Text>
           </View>
+          {/* <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.545, right: -screenWidth * 0.04 }} onPress={() => navigation.navigate(BaseTabRoutes.EDUCATION, {})}>
+            <HomeBook width={screenWidth * 0.25} height ={screenHeight * 0.3}></HomeBook>
+          </TouchableOpacity> */}
+          <HomeShelf style={{ position: 'absolute', bottom: screenHeight * 0.37, right: -screenWidth * 0.14 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></HomeShelf>
+          <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.1, right: -screenWidth * 0.15 }} onPress={() => navigation.navigate(BaseTabRoutes.AVATAR_CUSTOMIZATION, {})}>
+            <Wardrobe width={screenWidth * 0.65} height ={screenHeight * 0.65}></Wardrobe>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.545, right: -screenWidth * 0.04 }} onPress={() => navigation.navigate(BaseTabRoutes.EDUCATION, {})}>
+            <HomeBook width={screenWidth * 0.25} height ={screenHeight * 0.3}></HomeBook>
+          </TouchableOpacity>
+          <Lamp style={{ position: 'absolute', bottom: screenHeight * 0.435, right: screenWidth * 0.22 }} width={screenWidth * 0.28} height ={screenHeight * 0.28}></Lamp>
+          <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.45, right: screenWidth * 0.017 }} onPress={() => navigation.navigate(BaseTabRoutes.LEADERBOARD, {})}>
+            <HomeTrophy width={screenWidth * 0.2} height ={screenHeight * 0.2}></HomeTrophy>
+          </TouchableOpacity>
+        </View>
+        
+        <View style={{ position: 'absolute', top: screenHeight * 0.25, left:screenWidth * 0.02 }}>
+          <HomeAvaShadow style={{ position: 'absolute', top: screenHeight * 0.09, right: screenWidth * 0.06 }} width={screenWidth * 0.5} height ={screenHeight * 0.45}></HomeAvaShadow>
+          <HomeShiba width={screenWidth * 0.45} height ={screenHeight * 0.45}></HomeShiba>
+          <TouchableOpacity style={{ position: 'absolute', top: screenHeight * 0.17, right: -screenWidth * 0.19 }} onPress={() => handleSnackPress({ snacks: user.snacks, uid: user.id, uhealth: user.avatarHealth })}>
+            <Bowl width={screenWidth * 0.33} height ={screenHeight * 0.33}></Bowl>
+          </TouchableOpacity>
         </View>
 
-        <View style={{ ...styles.scroll, marginLeft: 20, marginRight: 100, gap: 8 }}>
+
+        <View style={{ marginLeft: 20 }}>
+          <HappyScale happiness={user?.avatarHealth} ></HappyScale>
+        </View>
+
+        <View style={{ ...styles.scroll, marginLeft: 20, marginTop:screenHeight * 0.58 }}>
           <Calendar circlesArray={taskCompletionStatuses}></Calendar>
           <DailyTasks taskCompletionStatuses={todayTasksCompletion}></DailyTasks>
         </View>
-      </View>
-    </SafeAreaView >
+      </ScrollView>
+      <FullAlertModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
+    </SafeAreaView>
   );
 };
 
@@ -155,13 +192,13 @@ const HappyScale = ({ happiness }: HappyProps) => {
   if (happiness <= 0 ) happiness = 0;
   const empty = Math.max(0, 5 - happiness);
   return (
-    <View style={{}}>
-      <View style={{ width: 133.897, height: 31, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+    <View>
+      <View style={{ width: screenWidth * 0.38, height: screenHeight * 0.03, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
         {Array(Math.min(5, happiness)).fill(1).map(() => (
-          <Heart></Heart>
+          <Heart width={28} height={28}></Heart>
         ))}
         {Array(empty).fill(1).map(() => (
-          <EmptyHeart></EmptyHeart>
+          <EmptyHeart width={28} height={28}></EmptyHeart>
         ))}
       </View>
     </View>
@@ -225,19 +262,46 @@ const SnackButton = ({ snacks, uid, uhealth }: SnackProps) => {
 
 const styles = StyleSheet.create({
   scroll: {
-    // backgroundColor: 'gray',
     width: '100%',
-    position: 'absolute',
-    top: 380,
-    height: 300,
   },
-  // plusRect: {
-  //   marginTop: 15,
-  //   borderRadius: 6,
-  //   backgroundColor: '#6A3D7F',
-  //   width: 40,
-  //   height: 40,
-  // },
+  badgeContainer: {
+    flexDirection: 'row',
+    position: 'absolute', 
+    bottom: screenHeight * 0.695, 
+    right: screenWidth * 0.65,
+  },
+  badgeText: {
+    fontSize: screenHeight * 0.015,
+    fontStyle: 'normal',
+    fontWeight: '700',
+    lineHeight: 22,
+    letterSpacing: 0.1,
+    color: Colors.primary.dark,
+  },
+  smallPoints: {
+    fontSize: screenHeight * 0.015,
+    fontStyle: 'normal',
+    fontWeight: '700',
+    lineHeight: 22,
+    letterSpacing: 0.1,
+    color: Colors.primary.dark,
+  },
+  mediumPoints: {
+    fontSize: screenHeight * 0.013,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 22,
+    letterSpacing: 0.03,
+    color: Colors.primary.dark,
+  },
+  largePoints: {
+    fontSize: screenHeight * 0.011,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 22,
+    letterSpacing: 0.01,
+    color: Colors.primary.dark,
+  },
 });
 
 

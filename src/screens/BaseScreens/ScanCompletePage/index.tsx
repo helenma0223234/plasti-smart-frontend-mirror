@@ -8,8 +8,6 @@ import {
 import useAppDispatch from 'hooks/useAppDispatch';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
-import { useEffect } from 'react';
-// import { useFocusEffect } from '@react-navigation/native';
 import { cameraClosed } from 'redux/slices/cameraSlice';
 
 import CircleBG from '../../../assets/Ellipse 66.svg';
@@ -70,6 +68,7 @@ const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
           style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent', marginRight: 14 }]}
           onPress={() => {
             // selectButtonPressed();
+            navigation.navigate(BaseTabRoutes.EDUCATION, {});
           }}
         >
           <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>LEARN MORE</Text>
@@ -78,6 +77,7 @@ const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
           style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C' }]}
           onPress={() => {
             // reuseButtonPressed();
+            navigation.navigate(BaseTabRoutes.HOME, {});
           }}
         >
           <Text style={styles.bottomSheetSelectButtonText}>RETURN HOME</Text>

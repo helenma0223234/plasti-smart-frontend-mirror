@@ -24,6 +24,7 @@ import {
   UnknownPlasticPage,
   UnknownInfoPage,
   AvatarCustomizationPage,
+  SettingsPage,
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
@@ -55,13 +56,13 @@ export const HomeNavigator = () => {
   return (
     <BaseStack.Navigator initialRouteName={BaseTabRoutes.HOME}>
       <BaseStack.Screen
-        name={BaseTabRoutes.AVATAR_CUSTOMIZATION}
-        component={AvatarCustomizationPage}
+        name={BaseTabRoutes.HOME}
+        component={HomePage}
         options={{ header: () => null }}
       />
       <BaseStack.Screen
-        name={BaseTabRoutes.HOME}
-        component={HomePage}
+        name={BaseTabRoutes.AVATAR_CUSTOMIZATION}
+        component={AvatarCustomizationPage}
         options={{ header: () => null }}
       />
     </BaseStack.Navigator>
@@ -134,6 +135,18 @@ const LeaderboardNavigator = () => {
   );
 };
 
+export const SettingsNavigator = () => {
+  return (
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.SETTINGS}>
+      <BaseStack.Screen
+        name={BaseTabRoutes.SETTINGS}
+        component={SettingsPage}
+        options={{ header: () => null }}
+      />
+    </BaseStack.Navigator>
+  );
+};
+
 const ManualEntryNavigator = () => {
   return (
     <BaseStack.Navigator initialRouteName={BaseTabRoutes.MANUAL_ENTRY}>
@@ -167,27 +180,6 @@ const UnknownInfoNavigator = () => {
         options={{ header: () => null }}
       />
     </BaseStack.Navigator>
-  );
-};
-
-const ExtraTab = createBottomTabNavigator();
-
-const ExtraNavigator = () => {
-  return (
-    <ExtraTab.Navigator initialRouteName={BaseTabRoutes.HOME}>
-      <ExtraTab.Screen
-        name={BaseTabRoutes.UNKNOWN_PLASTIC}
-        component={UnknownPlasticNavigator}
-      />
-      <ExtraTab.Screen
-        name={BaseTabRoutes.MANUAL_ENTRY}
-        component={ManualEntryNavigator}
-      />
-      <ExtraTab.Screen
-        name={BaseTabRoutes.CAMERA}
-        component={CameraNavigator}
-      />
-    </ExtraTab.Navigator>
   );
 };
 
@@ -285,7 +277,7 @@ const BaseNavigation = () => {
           tabBarActiveTintColor: Colors.primary.dark,
           tabBarInactiveTintColor: Colors.neutral[2],
         }}
-        initialRouteName={BaseTabRoutes.AVATAR_CUSTOMIZATION}
+        initialRouteName={BaseTabRoutes.HOME}
       >
 
 
@@ -321,15 +313,6 @@ const BaseNavigation = () => {
           component={EmptyComponent}
           options={{
             tabBarLabel: () => null,
-            // tabBarIcon: (props) => (
-            //   <View style={{ ...FormatStyle.circle, width: 70, height: 70, backgroundColor: Colors.primary.dark, position: 'relative', bottom: 20 }}>
-            //     <AntDesign name="camera" color={Colors.secondary.white} size={40} />
-            //   </View>
-            // ),
-            // tabBarButton: () => {
-            //   // return <CustomModal refRBSheet={refRBSheet} onClose={onClose}>; // call your modal here directly.
-            //   return <CameraOptionsModal isVisible={isModalVisible} onClose={closeModal} navigation={navigation}/>;
-            // },
             tabBarIcon: (props) => (
               <View style={{ ...FormatStyle.circle, width: 70, height: 70, backgroundColor: Colors.primary.dark, position: 'relative', bottom: 20 }}>
                 <AntDesign name="camera" color={Colors.secondary.white} size={40} />
@@ -358,8 +341,8 @@ const BaseNavigation = () => {
           }}
         />
         <BaseTab.Screen
-          name={BaseTabRoutes.FRONT}
-          component={FrontNavigator}
+          name={BaseTabRoutes.SETTINGS}
+          component={SettingsNavigator}
           options={{
             tabBarLabel: (props) => {
               return (
@@ -370,6 +353,7 @@ const BaseNavigation = () => {
             ),
           }}
         />
+        
         <BaseTab.Screen
           name={BaseTabRoutes.SCAN_COMPLETE}
           component={ScanCompleteNavigator}
@@ -395,11 +379,6 @@ const BaseNavigation = () => {
           component={UnknownInfoNavigator}
           options={{ tabBarButton: () => null }}
         />
-        {/* <BaseStack.Screen
-        name={BaseTabRoutes.AVATAR_CUSTOMIZATION}
-        component={AvatarCustomizationPage}
-        options={{ tabBarButton: () => null }}
-        /> */}
 
       </BaseTab.Navigator>
       <TouchableWithoutFeedback onPress={closeModal}>

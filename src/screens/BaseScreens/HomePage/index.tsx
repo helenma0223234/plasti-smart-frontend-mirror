@@ -6,12 +6,6 @@ import useAppSelector from 'hooks/useAppSelector';
 import AppButton from '../../../components/AppButton';
 import FormatStyle from '../../../utils/FormatStyle';
 import CircleBG from '../../../assets/Ellipse 66.svg';
-import Title from 'components/Title';
-import { AntDesign } from '@expo/vector-icons';
-
-import Svg, { G, Circle } from 'react-native-svg';
-import Animated from 'react-native-reanimated';
-import CircularProgress from 'react-native-circular-progress-indicator';
 
 import Heart from '../../../assets/Heart.svg';
 import EmptyHeart from '../../../assets/EmptyHeart.svg';
@@ -22,7 +16,6 @@ import Wardrobe from '../../../assets/Wardrobe.svg';
 import Lamp from '../../../assets/Lamp.svg';
 import HomeTrophy from '../../../assets/HomeTrophy.svg';
 import Bowl from '../../../assets/Bowl.svg';
-import Bookshelf from '../../../assets/Bookshelf.svg';
 import HomePointBadge from '../../../assets/HomePointBadge.svg';
 import HomeShelf from '../../../assets/HomeShelf.svg';
 import HomeBook from '../../../assets/HomeBook.svg';
@@ -145,11 +138,16 @@ const HomePage = ({ navigation }: HomePageProps) => {
             <Text style={getPointsStyle(20)}>20 </Text>
             <Text style={styles.badgeText}>POINTS</Text>
           </View>
+          {/* <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.545, right: -screenWidth * 0.04 }} onPress={() => navigation.navigate(BaseTabRoutes.EDUCATION, {})}>
+            <HomeBook width={screenWidth * 0.25} height ={screenHeight * 0.3}></HomeBook>
+          </TouchableOpacity> */}
+          <HomeShelf style={{ position: 'absolute', bottom: screenHeight * 0.37, right: -screenWidth * 0.14 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></HomeShelf>
+          <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.1, right: -screenWidth * 0.15 }} onPress={() => navigation.navigate(BaseTabRoutes.AVATAR_CUSTOMIZATION, {})}>
+            <Wardrobe width={screenWidth * 0.65} height ={screenHeight * 0.65}></Wardrobe>
+          </TouchableOpacity>
           <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.545, right: -screenWidth * 0.04 }} onPress={() => navigation.navigate(BaseTabRoutes.EDUCATION, {})}>
             <HomeBook width={screenWidth * 0.25} height ={screenHeight * 0.3}></HomeBook>
           </TouchableOpacity>
-          <HomeShelf style={{ position: 'absolute', bottom: screenHeight * 0.37, right: -screenWidth * 0.14 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></HomeShelf>
-          <Wardrobe style={{ position: 'absolute', bottom: screenHeight * 0.1, right: -screenWidth * 0.15 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></Wardrobe>
           <Lamp style={{ position: 'absolute', bottom: screenHeight * 0.435, right: screenWidth * 0.22 }} width={screenWidth * 0.28} height ={screenHeight * 0.28}></Lamp>
           <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.45, right: screenWidth * 0.017 }} onPress={() => navigation.navigate(BaseTabRoutes.LEADERBOARD, {})}>
             <HomeTrophy width={screenWidth * 0.2} height ={screenHeight * 0.2}></HomeTrophy>

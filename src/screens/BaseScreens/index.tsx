@@ -12,6 +12,7 @@ import ProgressPage from './ProgressPage';
 import ManualEntryPage from './ManualEntryPage';
 import UnknownPlasticPage from './UnknownPlasticPage';
 import UnknownInfoPage from './UnknownInfoPage';
+import SettingsPage from './SettingsPage';
 
 export {
   FrontPage,
@@ -28,4 +29,5 @@ export {
   ManualEntryPage,
   UnknownPlasticPage,
   UnknownInfoPage,
+  SettingsPage,
 };

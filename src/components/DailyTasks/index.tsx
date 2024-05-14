@@ -36,7 +36,7 @@ interface TaskProps {
 const Task = ({ complete, title, color }: TaskProps) => {
   return (
     <View style={{ borderColor: Colors.primary.dark, borderWidth: 2, padding: 20, borderRadius: 15, width: screenWidth * 0.89, flexDirection: 'row', justifyContent: 'space-between' }}>
-      <Text style={{ ...TextStyles.regular }}>{title}</Text>
+      <Text style={{ ...TextStyles.regular, fontSize: screenHeight * 0.0225 }}>{title}</Text>
       <CompletedDot color={color} completed={complete}></CompletedDot>
     </View>
   );

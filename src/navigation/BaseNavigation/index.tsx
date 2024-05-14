@@ -60,13 +60,6 @@ export const HomeNavigator = () => {
         component={HomePage}
         options={{ header: () => null }}
       />
-    </BaseStack.Navigator>
-  );
-};
-
-export const AvatarCustomizationNavigator = () => {
-  return (
-    <BaseStack.Navigator initialRouteName={BaseTabRoutes.AVATAR_CUSTOMIZATION}>
       <BaseStack.Screen
         name={BaseTabRoutes.AVATAR_CUSTOMIZATION}
         component={AvatarCustomizationPage}
@@ -384,11 +377,6 @@ const BaseNavigation = () => {
         <BaseTab.Screen
           name={BaseTabRoutes.UNKNOWN_INFO}
           component={UnknownInfoNavigator}
-          options={{ tabBarButton: () => null }}
-        />
-        <BaseStack.Screen
-          name={BaseTabRoutes.AVATAR_CUSTOMIZATION}
-          component={AvatarCustomizationPage}
           options={{ tabBarButton: () => null }}
         />
 

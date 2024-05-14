@@ -234,9 +234,36 @@ const EducationPage = () => {
     7: user.Type7Collected,
   };
 
-  const maxType = Object.entries(collectedTypes).reduce((max, [type, value]) => {
+  const recycledTypes = {
+    1: user.Type1Recycled,
+    2: user.Type2Recycled,
+    3: user.Type3Recycled,
+    4: user.Type4Recycled,
+    5: user.Type5Recycled,
+    6: user.Type6Recycled,
+    7: user.Type7Recycled,
+  };
+  
+  const reusedTypes = {
+    1: user.Type1Reused,
+    2: user.Type2Reused,
+    3: user.Type3Reused,
+    4: user.Type4Reused,
+    5: user.Type5Reused,
+    6: user.Type6Reused,
+    7: user.Type7Reused,
+  };
+
+  const maxRecycledType = Object.entries(recycledTypes).reduce((max, [type, value]) => {
     return value > max.value ? { type: Number(type), value } : max;
-  }, { type: 1, value: user?.Type1Collected });
+  }, { type: 1, value: user?.Type1Recycled });
+
+  const maxReusedType = Object.entries(reusedTypes).reduce((max, [type, value]) => {
+    return value > max.value ? { type: Number(type), value } : max;
+  }, { type: 1, value: user?.Type1Reused });
+
+  const totalReused = Object.values(reusedTypes).reduce((a, b) => a + b, 0);
+  const totalRecycled = Object.values(recycledTypes).reduce((a, b) => a + b, 0);
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container }}>
@@ -377,8 +404,8 @@ const EducationPage = () => {
 
             <ProgressCard
                 title={'Top Plastic'}
-                number={maxType.type}
-                text={`You've recycled ${maxType.value} No.${maxType.type} plastics this month. Great work!`}
+                number={maxRecycledType.type}
+                text={`You've recycled ${maxRecycledType.value ? maxRecycledType.value : 0} No.${maxRecycledType.type} plastics this month. Great work!`}
                 cornerComponent={
                   <Trophy width={60} height={60} style={{ left: -6, top:6 }}></Trophy>
                 }
@@ -386,13 +413,12 @@ const EducationPage = () => {
               </ProgressCard>
               <ProgressCard
                 title={'Earth Conscious'}
-                text={`You've reused ${user?.monthlyGoalPlasticAmount} plastics this month! Keep going!`}
-                // number={user?.monthlyGoalPlasticType}
+                text={`You've reused ${totalReused} plastics this month! Keep going!`}
                 cornerComponent={
                   <View>
                     <Globe width={60} height={60}></Globe>
                     <View style={{ position: 'relative', bottom: 40, justifyContent: 'center', alignItems: 'center' }}>
-                      <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{user?.monthlyGoalPlasticAmount}</Text>
+                      <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalReused}</Text>
                     </View>
                   </View>
                 }>
@@ -405,7 +431,7 @@ const EducationPage = () => {
                   <View>
                     <RecycleSymbol height={70} width={70} style={{ left: -10, bottom: 5 }}></RecycleSymbol>
                     <View style={{ position: 'relative', left: -10, bottom: 50, justifyContent: 'center', alignItems: 'center' }}>
-                      <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{user?.monthlyGoalPlasticAmount}</Text>
+                      <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalRecycled}</Text>
                     </View>
                   </View>
                 }>
@@ -414,7 +440,7 @@ const EducationPage = () => {
 
               <ProgressCard
                 title={'Pal Points'}
-                text={'You’ve gained 250 points for your avatar this month. Your pal says thanks! '}
+                text={`You’ve gained ${user.monthlyPoints} points for your avatar this month. Your pal says thanks! `}
                 cornerComponent={<Cat height={100} width={100} style={{ left: -20 }}></Cat>}>
               </ProgressCard>
             </View>

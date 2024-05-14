@@ -3,8 +3,7 @@ import { SafeAreaView, Text, View, StyleSheet, Dimensions } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { updateUser } from '../../../redux/slices/usersSlice';
-
+import { updateUser, equipAvatar, setAvatarFirstTime } from '../../../redux/slices/usersSlice';
 import useAppSelector from '../../../hooks/useAppSelector';
 import useAppDispatch from '../../../hooks/useAppDispatch';
 import FormatStyle from '../../../utils/FormatStyle';
@@ -14,26 +13,31 @@ import Cat1 from '../../../assets/Cat1.svg';
 import Cat2 from '../../../assets/Cat2.svg';
 import GoRightButton from '../../../assets/GoRightButton.svg';
 import GoLeftButton from '../../../assets/GoLeftButton.svg';
-
-const { width: screenWidth } = Dimensions.get('window');
+import type { StackNavigationProp } from '@react-navigation/stack';
+import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
+import { useNavigation } from '@react-navigation/native';
+import NavType from 'utils/NavType';
+import { cameraOpened } from 'redux/slices/cameraSlice';
 
 const svgs = [Cat, Cat1, Cat2];
 
+const screenWidth = Dimensions.get('window').width;
+
+
 const MascotPage = () => {
+  const navigation = useNavigation<NavType>();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+
+  dispatch(cameraOpened())
+
   const { id, email } = user || { id: '', email: '' };
   const userData = useAppSelector((state) => state.users.selectedUser);
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef(null);
 
   const handleUpdateUser = () => {
-    const updatedUser = {
-      ...user,
-      avatar: activeIndex,
-    };
-  
-    dispatch(updateUser(updatedUser));
+    dispatch(setAvatarFirstTime({id: user.id, avatarID: activeIndex+1}));
   };
 
   const goPrev = () => {
@@ -80,15 +84,12 @@ const MascotPage = () => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
+          onPress={async () => {
+            handleUpdateUser();
+            navigation.navigate(BaseTabRoutes.HOME, {});
+          }}
         >
           <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.invertedButton]}
-        >
-          <Text style={styles.invertedButtonText}>
-            Customize later
-          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

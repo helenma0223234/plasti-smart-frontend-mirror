@@ -13,6 +13,7 @@ import ManualEntryPage from './ManualEntryPage';
 import UnknownPlasticPage from './UnknownPlasticPage';
 import UnknownInfoPage from './UnknownInfoPage';
 import SettingsPage from './SettingsPage';
+import MascotPage from './MascotPage';
 
 export {
   FrontPage,
@@ -30,4 +31,5 @@ export {
   UnknownPlasticPage,
   UnknownInfoPage,
   SettingsPage,
+  MascotPage
 };

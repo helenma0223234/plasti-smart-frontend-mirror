@@ -25,6 +25,7 @@ import {
   UnknownInfoPage,
   AvatarCustomizationPage,
   SettingsPage,
+  MascotPage
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
@@ -80,6 +81,18 @@ export const FrontNavigator = () => {
     </BaseStack.Navigator>
   );
 };
+
+export const MascotNavigator = () => {
+  return (
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.MASCOT}>
+      <BaseStack.Screen
+        name={BaseTabRoutes.MASCOT}
+        component={MascotPage}
+        options={{ header: () => null }}
+      />
+    </BaseStack.Navigator>
+  );
+}
 
 
 const ScanCompleteNavigator = () => {
@@ -187,6 +200,7 @@ const BaseNavigation = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
 
   const closeModal = () => {
     setModalVisible(false);
@@ -277,7 +291,7 @@ const BaseNavigation = () => {
           tabBarActiveTintColor: Colors.primary.dark,
           tabBarInactiveTintColor: Colors.neutral[2],
         }}
-        initialRouteName={BaseTabRoutes.HOME}
+        initialRouteName={user?.avatarSet ? BaseTabRoutes.HOME: BaseTabRoutes.MASCOT}
       >
 
 
@@ -377,6 +391,11 @@ const BaseNavigation = () => {
         <BaseTab.Screen
           name={BaseTabRoutes.UNKNOWN_INFO}
           component={UnknownInfoNavigator}
+          options={{ tabBarButton: () => null }}
+        />
+        <BaseTab.Screen
+          name={BaseTabRoutes.MASCOT}
+          component={MascotNavigator}
           options={{ tabBarButton: () => null }}
         />
 

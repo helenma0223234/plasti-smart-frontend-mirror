@@ -6,32 +6,6 @@ export enum UserScopes {
   Admin = 'ADMIN',
 }
 
-// changed to reflect backend
-// export interface IUser {
-//   id: string;
-//   email: string;
-//   username: string;
-//   name?: string;
-//   // pronoun?: string;
-//   role: UserScopes;
-//   // teamID?: number;
-//   lastLogin: Date;
-//   avatar: number;
-//   avatarHealth: number;
-//   snacks: number;
-//   monthlyTotalScans: number;
-//   Type1Collected: number;
-//   Type2Collected: number;
-//   Type3Collected: number;
-//   Type4Collected: number;
-//   Type5Collected: number;
-//   Type6Collected: number;
-//   Type7Collected: number;
-//   monthlyGoalPlasticType: number;
-//   monthlyGoalPlasticAmount: number; // amount so far
-//   monthlyGoalPlasticTotal: number; // goal of the month
-// }
-
 export interface IUser {
   id: string;
   email: string;
@@ -40,6 +14,7 @@ export interface IUser {
   role: UserScopes;
   lastLogin: Date;
   rank : number;
+  avatarSet: boolean;
   avatarID: number;
   avatarColor: number;
   avatarHealth: number;

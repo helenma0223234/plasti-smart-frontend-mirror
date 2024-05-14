@@ -7,15 +7,19 @@ import { UserScopes } from 'types/users';
 import { loadModel } from 'redux/slices/modelSlice';
 import { checkConnection } from 'redux/slices/connectionSlice';
 import { initCredentials, jwtSignIn } from 'redux/slices/authSlice';
-import { VerifyPage, MascotPage } from 'screens/AuthScreens';
+import { VerifyPage } from 'screens/AuthScreens';
+import {MascotPage} from 'screens/BaseScreens';
 import AuthNavigation from './AuthNavigation';
 import BaseNavigation from './BaseNavigation';
+import { useNavigation } from '@react-navigation/native';
+import NavType from 'utils/NavType';
 
 const RootNavigation = () => {
   const { isConnected } = useAppSelector((state) => state.connection);
   const { authenticated, user } = useAppSelector((state) => state.auth);
   const { history } = useAppSelector((state) => state.loginhistory);
   const role = user?.role;
+  // const navigation = useNavigation<NavType>();
 
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -42,12 +46,9 @@ const RootNavigation = () => {
     <NavigationContainer>
       {!authenticated ? (
         <AuthNavigation />
-        // <MascotPage />
       ) : role === UserScopes.Unverified ? (
         <VerifyPage />
-      ) : authenticated && history?.length <= 1 ? (
-        <MascotPage />
-      ) : (
+       ) : (
         <BaseNavigation />
       )}
     </NavigationContainer>

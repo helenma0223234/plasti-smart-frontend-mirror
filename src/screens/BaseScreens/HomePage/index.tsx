@@ -33,6 +33,7 @@ import type { StackNavigationProp } from '@react-navigation/stack';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 
 import FullAlertModal from './fullAlertModal';
+import { cameraClosed } from 'redux/slices/cameraSlice';
 
 type HomePageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;
@@ -46,18 +47,26 @@ const HomePage = ({ navigation }: HomePageProps) => {
   const currentLoginHist = useAppSelector((state) => state.loginhistory.history);
   const dispatch = useDispatch();
 
+  dispatch(cameraClosed())
+
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [modalMessage, setModalMessage] = React.useState('');
 
   
   interface SnackProps {
-    snacks: number
+    points: number
     uid: string
     uhealth: number
   }
-  const handleSnackPress = ({ snacks, uid, uhealth }: SnackProps) => {
-    if (snacks > 0 && uhealth < 5) {
+  const handleSnackPress = ({ points, uid, uhealth }: SnackProps) => {
+    if (points >= 5 && uhealth < 5) {
       dispatch(feedAvatar({ id: uid }));
-    } else {
+    } else if (points < 5) {
+      setModalMessage('You need at least 5 points to feed your pal!');
+      setModalVisible(true);
+    } 
+    else if (uhealth == 5) {
+      setModalMessage('Your pal is full! Come back later when it’s hungry again.');
       setModalVisible(true);
     }
   };
@@ -135,7 +144,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
           <HomePointBadge style={{ position: 'absolute', bottom: screenHeight * 0.55, right: screenWidth * 0.63 }} width={screenWidth * 0.32} height ={screenHeight * 0.32}></HomePointBadge>
 
           <View style={styles.badgeContainer}>
-            <Text style={getPointsStyle(20)}>20 </Text>
+            <Text style={getPointsStyle(20)}>{user?.points} </Text>
             <Text style={styles.badgeText}>POINTS</Text>
           </View>
           {/* <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.545, right: -screenWidth * 0.04 }} onPress={() => navigation.navigate(BaseTabRoutes.EDUCATION, {})}>
@@ -157,7 +166,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
         <View style={{ position: 'absolute', top: screenHeight * 0.25, left:screenWidth * 0.02 }}>
           <HomeAvaShadow style={{ position: 'absolute', top: screenHeight * 0.09, right: screenWidth * 0.06 }} width={screenWidth * 0.5} height ={screenHeight * 0.45}></HomeAvaShadow>
           <HomeShiba width={screenWidth * 0.45} height ={screenHeight * 0.45}></HomeShiba>
-          <TouchableOpacity style={{ position: 'absolute', top: screenHeight * 0.17, right: -screenWidth * 0.19 }} onPress={() => handleSnackPress({ snacks: user.snacks, uid: user.id, uhealth: user.avatarHealth })}>
+          <TouchableOpacity style={{ position: 'absolute', top: screenHeight * 0.17, right: -screenWidth * 0.19 }} onPress={() => handleSnackPress({ points: user.points, uid: user.id, uhealth: user.avatarHealth })}>
             <Bowl width={screenWidth * 0.33} height ={screenHeight * 0.33}></Bowl>
           </TouchableOpacity>
         </View>
@@ -172,7 +181,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
           <DailyTasks taskCompletionStatuses={todayTasksCompletion}></DailyTasks>
         </View>
       </ScrollView>
-      <FullAlertModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
+      <FullAlertModal modalVisible={modalVisible} setModalVisible={setModalVisible} modalMessage={modalMessage} />
     </SafeAreaView>
   );
 };

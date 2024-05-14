@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React from 'react';
+import React, { useState }  from 'react';
 import {  SafeAreaView, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
@@ -11,6 +11,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import useAppDispatch from 'hooks/useAppDispatch';
 import Colors from 'utils/Colors';
 import TextStyles from 'utils/TextStyles';
+import UnknownInfoModal from './unknownInfoModal';
 
 type UnknownPlasticPageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;
@@ -30,6 +31,7 @@ const CustomRadioButton: React.FC<CustomRadioButtonProps> = ({ selected, onPress
 const UnknownPlasticPage = ({ navigation }: UnknownPlasticPageProps) => {
   const dispatch = useAppDispatch();
   const [checked, setChecked] = React.useState('first');
+  const [unknownModalVisible, setUnknownModalVisible] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -41,7 +43,8 @@ const UnknownPlasticPage = ({ navigation }: UnknownPlasticPageProps) => {
   const selectButtonPressed = () => {
     // if (user)
     //   dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, plasticLetter: plasticTypes[plasticNum as keyof typeof plasticTypes], image: capturedPhoto }));
-    navigation.navigate(BaseTabRoutes.UNKNOWN_INFO, {});
+    // navigation.navigate(BaseTabRoutes.UNKNOWN_INFO, { checked });
+    setUnknownModalVisible(true);
   };
   
   return (
@@ -97,6 +100,12 @@ do you have?</Text>
           </TouchableOpacity>
         </View>
       </View>
+      <UnknownInfoModal
+        navigation={navigation}
+        plasticNumber={1} // replace with the actual plastic number
+        setThisModalVisible={setUnknownModalVisible}
+        thisModalVisible={unknownModalVisible}
+      />
     </SafeAreaView>
   );
 };

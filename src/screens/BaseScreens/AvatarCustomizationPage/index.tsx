@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Award from '../../../assets/award.svg'
 import CircleBG from '../../../assets/Ellipse 66.svg';
 import {AvatarAccessories, AvatarsOwned, AvatarCustomization, AvatarColors} from 'types/avatars';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import useAppDispatch from 'hooks/useAppDispatch';
 
 
 const screenHeight = Dimensions.get('window').height;

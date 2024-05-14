@@ -102,9 +102,6 @@ const HomePage = () => {
         </View>
 
         <View style={{ gap: 5, marginLeft: 20 }}>
-          {/* <TouchableOpacity onPress={() => navigation.navigate(BaseTabRoutes.AVATAR_CUSTOMIZATION, {})}>
-            <Text>Customize</Text>
-          </TouchableOpacity> */}
           <Title></Title>
           <Text>Ready to Recycle, {user?.username ?? 'now'}?</Text>
           <HappyScale happiness={user?.avatarHealth} ></HappyScale>

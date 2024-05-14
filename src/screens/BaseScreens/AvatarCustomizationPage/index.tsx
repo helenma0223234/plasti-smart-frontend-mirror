@@ -72,6 +72,8 @@ const AvatarCustomizationPage = () => {
     } else if (buyType === 2) {
       dispatch(buyAvatarAccessory({id: user.id, accessoryID: buyID}));
     }
+
+    setModalVisible(false);
   };
 
   const equipItem = (equipType: number, equipID: number) => {

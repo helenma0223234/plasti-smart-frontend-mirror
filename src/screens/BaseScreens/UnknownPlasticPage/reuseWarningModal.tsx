@@ -59,7 +59,6 @@ const ReuseWarningModal: React.FC<PlasticModalProps> = ({ secondNavigation, moda
             <TouchableOpacity
               style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
               onPress={() => setModalVisible(!modalVisible)}
-            // TODO: add nav to education page
             >
               <Text style={styles.bottomSheetSelectButtonText}>RECYCLE INSTEAD</Text>
             </TouchableOpacity>
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    marginTop: 24,
   },
   modalView: {
     margin: 40,
@@ -115,7 +114,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   modalText: {
-    marginTop: -12,
+    marginTop: -4,
     marginBottom: 15,
     textAlign: 'center',
     color: Colors.primary.dark,
@@ -130,7 +129,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     maxHeight:'30%',
-    marginTop:18,
+    marginTop:20,
   },
   svgTitle: {
     fontSize: 34,
@@ -144,7 +143,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:10,
+    marginTop:20,
   },
   selectButton: {
     justifyContent: 'center',

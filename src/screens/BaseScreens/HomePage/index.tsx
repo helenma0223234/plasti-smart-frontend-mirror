@@ -129,7 +129,9 @@ const HomePage = ({ navigation }: HomePageProps) => {
       <ScrollView style={{
         flex: 1,
         width: '100%',
-        margin: screenHeight * 0.018,
+        marginTop: screenHeight * 0.018,
+        marginLeft:screenHeight * 0.018,
+        marginRight:screenHeight * 0.018,
       }}>
         <View style={{ position: 'absolute', top: screenHeight * 0.78, right:screenWidth * 0.001 }}>
           <HomePointBadge style={{ position: 'absolute', bottom: screenHeight * 0.55, right: screenWidth * 0.63 }} width={screenWidth * 0.32} height ={screenHeight * 0.32}></HomePointBadge>
@@ -142,8 +144,8 @@ const HomePage = ({ navigation }: HomePageProps) => {
             <HomeBook width={screenWidth * 0.25} height ={screenHeight * 0.3}></HomeBook>
           </TouchableOpacity> */}
           <HomeShelf style={{ position: 'absolute', bottom: screenHeight * 0.37, right: -screenWidth * 0.14 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></HomeShelf>
-          <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.1, right: -screenWidth * 0.15 }} onPress={() => navigation.navigate(BaseTabRoutes.AVATAR_CUSTOMIZATION, {})}>
-            <Wardrobe width={screenWidth * 0.65} height ={screenHeight * 0.65}></Wardrobe>
+          <TouchableOpacity style={{ backgroundColor:'blue', position: 'absolute', bottom: screenHeight * 0.32, right: -screenWidth * 0.15, maxHeight: screenWidth * 0.45 }} onPress={() => navigation.navigate(BaseTabRoutes.AVATAR_CUSTOMIZATION, {})}>
+            <Wardrobe style={{ position: 'absolute', bottom: 1, right: 3, maxHeight: screenWidth * 0.45 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></Wardrobe>
           </TouchableOpacity>
           <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.545, right: -screenWidth * 0.04 }} onPress={() => navigation.navigate(BaseTabRoutes.EDUCATION, {})}>
             <HomeBook width={screenWidth * 0.25} height ={screenHeight * 0.3}></HomeBook>

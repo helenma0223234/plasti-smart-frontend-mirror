@@ -18,6 +18,7 @@ import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import { useNavigation } from '@react-navigation/native';
 import NavType from 'utils/NavType';
 import { cameraOpened } from 'redux/slices/cameraSlice';
+import { cameraClosed } from 'redux/slices/cameraSlice';
 
 const svgs = [Cat, Cat1, Cat2];
 
@@ -29,7 +30,7 @@ const MascotPage = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
 
-  dispatch(cameraOpened())
+  dispatch(cameraOpened());
 
   const { id, email } = user || { id: '', email: '' };
   const userData = useAppSelector((state) => state.users.selectedUser);
@@ -37,7 +38,8 @@ const MascotPage = () => {
   const carouselRef = useRef(null);
 
   const handleUpdateUser = () => {
-    dispatch(setAvatarFirstTime({id: user.id, avatarID: activeIndex+1}));
+    dispatch(cameraClosed());
+    dispatch(setAvatarFirstTime({ id: user.id, avatarID: activeIndex + 1 }));
   };
 
   const goPrev = () => {

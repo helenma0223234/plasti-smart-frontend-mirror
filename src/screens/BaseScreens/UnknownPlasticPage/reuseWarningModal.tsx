@@ -12,9 +12,7 @@ import Colors from 'utils/Colors';
 interface PlasticModalProps {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
-  selectedValue: string;
   plasticType: number;
-  secondNavigation: StackNavigationProp<BaseNavigationList>;
 }
 
 type WarningMessages = {
@@ -28,7 +26,7 @@ const warnings:WarningMessages = {
   7: 'Polymer 7 is not the safest to reuse.',
 };
 
-const ReuseWarningModal: React.FC<PlasticModalProps> = ({ secondNavigation, modalVisible, setModalVisible, selectedValue, plasticType }) => {
+const ReuseWarningModal: React.FC<PlasticModalProps> = ({ modalVisible, setModalVisible, plasticType }) => {
   // console.log(secondNavigation);
   // const navigation = useNavigation<StackNavigationProp<BaseNavigationList>>();
   return (

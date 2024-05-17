@@ -173,7 +173,7 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
             </TouchableOpacity>
           </View>
         </View>
-        <ReuseWarningModal secondNavigation={navigation} modalVisible={reuseModalVisible} setModalVisible={setReuseModalVisible} selectedValue={selectedValue} plasticType={plasticTypeNumbers[selectedValue]} />
+        <ReuseWarningModal modalVisible={reuseModalVisible} setModalVisible={setReuseModalVisible} plasticType={plasticTypeNumbers[selectedValue]} />
       </SafeAreaView>
     </Modal>
   );

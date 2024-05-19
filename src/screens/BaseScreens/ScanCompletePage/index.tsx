@@ -22,6 +22,8 @@ type ScanCompletePageProps = {
 };
 
 const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
+
+  // console.log(scanType);
   return (
     <View style={styles.container}>
 

@@ -1,9 +1,5 @@
 import React from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
-import { useNavigation } from '@react-navigation/native';
-
 
 import RedRecycleSymbol from '../../../assets/RedTriangleRecycle.svg';
 import CloseSVG from  '../../../assets/CloseModal.svg';

@@ -18,6 +18,7 @@ import { createScan } from 'redux/slices/usersSlice';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { useFocusEffect } from '@react-navigation/native';
+import { reusedRedux, recycledRedux } from 'redux/slices/scanSlice';
 
 // components
 import TextStyles from 'utils/TextStyles';
@@ -93,8 +94,10 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
     const carouselIndex = getCarouselIndex();
     setPlasticNum(carouselIndex + 1);
     if (carouselIndex < 5 &&  carouselIndex > 0 && carouselIndex != 2 ) {
-      if (user)
-        dispatch(createScan({ scannedBy: user.id, plasticNumber: carouselIndex + 1, plasticLetter: plasticTypes[plasticNum as keyof typeof plasticTypes], image: null }));
+      if (user) {
+        dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, plasticLetter: plasticTypes[plasticNum as keyof typeof plasticTypes], image: null, reused: true, recycled:false  }));
+      }
+      dispatch(reusedRedux);
       dispatch(cameraClosed());
       navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
     } else {
@@ -102,12 +105,14 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
     }
   };
 
-  // recyling button pressed
+  // recycling button pressed
   const selectButtonPressed = () => {
-    // const carouselIndex = getCarouselIndex();
-    setPlasticNum(getCarouselIndex() + 1);
-    if (user)
-      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, plasticLetter: plasticTypes[plasticNum as keyof typeof plasticTypes], image: null }));
+    const carouselIndex = getCarouselIndex();
+    setPlasticNum(carouselIndex + 1);
+    if (user) {
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, plasticLetter: plasticTypes[plasticNum as keyof typeof plasticTypes], image: null,  reused: false, recycled:true }));
+    }
+    dispatch(recycledRedux);
     dispatch(cameraClosed());
     navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
   };

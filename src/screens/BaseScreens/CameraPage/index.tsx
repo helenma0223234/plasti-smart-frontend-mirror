@@ -20,6 +20,7 @@ import * as tfjs from '@tensorflow/tfjs';
 import useAppSelector from '../../../hooks/useAppSelector';
 import useAppDispatch from 'hooks/useAppDispatch';
 import { cameraClosed, cameraOpened } from 'redux/slices/cameraSlice';
+import { reusedRedux, recycledRedux } from 'redux/slices/scanSlice';
 import { createScan } from 'redux/slices/usersSlice';
 import { RootState } from 'redux/store';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
@@ -210,7 +211,8 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       setIsAnimating(false);
       setReuseModalVisible(true);
     } else if (capturedPhoto && modelVerdict && user) {
-      //   dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, plasticLetter: plasticTypes[modelVerdict as keyof typeof plasticTypes], image: capturedPhoto }));
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, plasticLetter: plasticTypes[modelVerdict as keyof typeof plasticTypes], image: capturedPhoto, reused: true, recycled: false }));
+      dispatch(reusedRedux());
       setIsAnimating(false);
       setCapturedPhoto(null);
       dispatch(cameraClosed());
@@ -221,7 +223,8 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
 
   const selectButtonPressed = () => {
     if (capturedPhoto && modelVerdict && user) {
-      //   dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, plasticLetter: plasticTypes[modelVerdict as keyof typeof plasticTypes], image: capturedPhoto }));
+      dispatch(recycledRedux());
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, plasticLetter: plasticTypes[modelVerdict as keyof typeof plasticTypes], image: capturedPhoto, reused: false, recycled: true }));
     }
     setIsAnimating(false);
     setCapturedPhoto(null);

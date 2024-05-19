@@ -256,7 +256,7 @@ export const equipColor = createAsyncThunk(
 
 export const createScan = createAsyncThunk(
   'users/createScan',
-  async (req: { scannedBy: string, plasticNumber: number, plasticLetter: string, image: string | null }, { dispatch }) => {
+  async (req: { scannedBy: string, plasticNumber: number, plasticLetter: string, image: string | null, reused: boolean, recycled: boolean }, { dispatch }) => {
     dispatch(startUsersLoading());
     return axios
       .post(`${SERVER_URL}scan/`, req)

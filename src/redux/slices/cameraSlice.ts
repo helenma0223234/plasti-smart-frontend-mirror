@@ -5,7 +5,7 @@ export interface CameraState {
 }
 
 const initialState: CameraState = {
-    cameraOpen: false
+  cameraOpen: false,
 };
 
 export const cameraSlice = createSlice({
@@ -16,8 +16,8 @@ export const cameraSlice = createSlice({
       state.cameraOpen = true;
     },
     cameraClosed: (state) => {
-        state.cameraOpen = false;
-    }
+      state.cameraOpen = false;
+    },
   },
 });
 

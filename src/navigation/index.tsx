@@ -4,11 +4,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import useAppSelector from 'hooks/useAppSelector';
 import useAppDispatch from 'hooks/useAppDispatch';
 import { UserScopes } from 'types/users';
-import { loadModel } from 'redux/slices/modelSlice';
+// import { loadModel } from 'redux/slices/modelSlice';
 import { checkConnection } from 'redux/slices/connectionSlice';
 import { initCredentials, jwtSignIn } from 'redux/slices/authSlice';
 import { VerifyPage } from 'screens/AuthScreens';
-import {MascotPage} from 'screens/BaseScreens';
+import { MascotPage } from 'screens/BaseScreens';
 import AuthNavigation from './AuthNavigation';
 import BaseNavigation from './BaseNavigation';
 import { useNavigation } from '@react-navigation/native';
@@ -37,10 +37,10 @@ const RootNavigation = () => {
   }, [isConnected]);
 
   // Load the model when the app loads
-  useEffect(() => {
-    dispatch(loadModel());
-    console.log('loaded model');
-  }, []);
+  // useEffect(() => {
+  //   dispatch(loadModel());
+  //   console.log('loaded model');
+  // }, []);
 
   return (
     <NavigationContainer>
@@ -48,7 +48,7 @@ const RootNavigation = () => {
         <AuthNavigation />
       ) : role === UserScopes.Unverified ? (
         <VerifyPage />
-       ) : (
+      ) : (
         <BaseNavigation />
       )}
     </NavigationContainer>

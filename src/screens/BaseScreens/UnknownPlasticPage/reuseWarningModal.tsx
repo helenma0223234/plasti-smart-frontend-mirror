@@ -27,8 +27,6 @@ const warnings:WarningMessages = {
 };
 
 const ReuseWarningModal: React.FC<PlasticModalProps> = ({ modalVisible, setModalVisible, plasticType }) => {
-  // console.log(secondNavigation);
-  // const navigation = useNavigation<StackNavigationProp<BaseNavigationList>>();
   return (
     <Modal
       animationType="none"

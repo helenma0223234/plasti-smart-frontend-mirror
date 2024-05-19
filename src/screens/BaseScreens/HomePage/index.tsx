@@ -19,6 +19,7 @@ import Bowl from '../../../assets/Bowl.svg';
 import HomePointBadge from '../../../assets/HomePointBadge.svg';
 import HomeShelf from '../../../assets/HomeShelf.svg';
 import HomeBook from '../../../assets/HomeBook.svg';
+import HomeFullBowl from '../../../assets/HomeFullBowl.svg';
 
 
 import Calendar from 'components/Calendar';
@@ -47,7 +48,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
   const currentLoginHist = useAppSelector((state) => state.loginhistory.history);
   const dispatch = useDispatch();
 
-  dispatch(cameraClosed())
+  dispatch(cameraClosed());
 
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalMessage, setModalMessage] = React.useState('');
@@ -64,8 +65,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
     } else if (points < 5) {
       setModalMessage('You need at least 5 points to feed your pal!');
       setModalVisible(true);
-    } 
-    else if (uhealth == 5) {
+    } else if (uhealth == 5) {
       setModalMessage('Your pal is full! Come back later when it’s hungry again.');
       setModalVisible(true);
     }
@@ -169,7 +169,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
           <HomeAvaShadow style={{ position: 'absolute', top: screenHeight * 0.09, right: screenWidth * 0.06 }} width={screenWidth * 0.5} height ={screenHeight * 0.45}></HomeAvaShadow>
           <HomeShiba width={screenWidth * 0.45} height ={screenHeight * 0.45}></HomeShiba>
           <TouchableOpacity style={{ position: 'absolute', top: screenHeight * 0.17, right: -screenWidth * 0.19 }} onPress={() => handleSnackPress({ points: user.points, uid: user.id, uhealth: user.avatarHealth })}>
-            <Bowl width={screenWidth * 0.33} height ={screenHeight * 0.33}></Bowl>
+            {user.points > 0 ? <HomeFullBowl width={screenWidth * 0.25} height ={screenHeight * 0.28} />  : <Bowl width={screenWidth * 0.33} height ={screenHeight * 0.33} />}
           </TouchableOpacity>
         </View>
 

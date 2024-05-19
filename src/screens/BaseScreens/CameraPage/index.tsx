@@ -97,7 +97,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   
       let animation: Animated.CompositeAnimation | undefined;
       if (isAnimating) {
-        // console.log('I am reacting to isAnimating');
         animation = Animated.loop(
           Animated.sequence([
             Animated.timing(focusLineAnimation, {
@@ -247,6 +246,16 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
 
 
   /**************** Nav functions ****************/
+  const handleReusePress = () => {
+    // if (modelVerdict && user && capturedPhoto)
+    //   dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, plasticLetter: plasticTypes[modelVerdict as keyof typeof plasticTypes], image: capturedPhoto }));
+  
+    setIsAnimating(false);
+    setCapturedPhoto(null);
+    dispatch(cameraClosed());
+    bottomSheetRef.current?.close();
+    navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
+  };
   const selectButtonPressed = () => {
     const plasticNum = getCarouselIndex() + 1;
     if (user)
@@ -392,16 +401,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
           <TouchableOpacity
             style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
             disabled={isModelRunning}
-            onPress={() => {
-              // if (modelVerdict && user && capturedPhoto)
-              //   dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, plasticLetter: plasticTypes[modelVerdict as keyof typeof plasticTypes], image: capturedPhoto }));
-
-              setIsAnimating(false);
-              setCapturedPhoto(null);
-              dispatch(cameraClosed());
-              bottomSheetRef.current?.close();
-              navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});       
-            }}
+            onPress={handleReusePress}
           >
             <Text style={styles.bottomSheetSelectButtonText}>I'M REUSING</Text>
           </TouchableOpacity>

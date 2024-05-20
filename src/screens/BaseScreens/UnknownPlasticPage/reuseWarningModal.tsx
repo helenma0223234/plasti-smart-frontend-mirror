@@ -55,17 +55,6 @@ const ReuseWarningModal: React.FC<PlasticModalProps> = ({ modalVisible, setModal
               <Text style={styles.bottomSheetSelectButtonText}>RECYCLE INSTEAD</Text>
             </TouchableOpacity>
 
-            {/* <TouchableOpacity
-              style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
-              onPress={() => {
-                // secondNavigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
-                setModalVisible(!modalVisible);
-                // secondNavigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
-                navigation.navigate(BaseTabRoutes.HOME, {});
-              }}
-            >
-              <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>LEARN MORE</Text>
-            </TouchableOpacity> */}
           </View>
         </View>
       </View>
@@ -80,7 +69,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   modalView: {
-    margin: 40,
+    margin: 45,
     backgroundColor: '#DAE5D7',
     borderRadius: 20,
     padding: 34,
@@ -93,7 +82,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    maxHeight: '50%',
+    maxHeight: '44%',
   },
   closeButton: {
     position: 'absolute',

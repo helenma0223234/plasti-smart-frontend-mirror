@@ -146,12 +146,9 @@ const HomePage = ({ navigation }: HomePageProps) => {
           <HomePointBadge style={{ position: 'absolute', bottom: screenHeight * 0.55, right: screenWidth * 0.63 }} width={screenWidth * 0.32} height ={screenHeight * 0.32}></HomePointBadge>
 
           <View style={styles.badgeContainer}>
-            <Text style={getPointsStyle(20)}>{user?.points} </Text>
+            <Text style={getPointsStyle(user?.points)}>{user?.points} </Text>
             <Text style={styles.badgeText}>POINTS</Text>
           </View>
-          {/* <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.545, right: -screenWidth * 0.04 }} onPress={() => navigation.navigate(BaseTabRoutes.EDUCATION, {})}>
-            <HomeBook width={screenWidth * 0.25} height ={screenHeight * 0.3}></HomeBook>
-          </TouchableOpacity> */}
           <HomeShelf style={{ position: 'absolute', bottom: screenHeight * 0.37, right: -screenWidth * 0.14 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></HomeShelf>
           <TouchableOpacity style={{ backgroundColor:'blue', position: 'absolute', bottom: screenHeight * 0.32, right: -screenWidth * 0.15, maxHeight: screenWidth * 0.45 }} onPress={() => navigation.navigate(BaseTabRoutes.AVATAR_CUSTOMIZATION, {})}>
             <Wardrobe style={{ position: 'absolute', bottom: 1, right: 3, maxHeight: screenWidth * 0.45 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></Wardrobe>
@@ -279,10 +276,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute', 
     bottom: screenHeight * 0.695, 
-    right: screenWidth * 0.65,
+    right: screenWidth * 0.645,
   },
   badgeText: {
-    fontSize: screenHeight * 0.015,
+    fontSize: screenHeight * 0.014,
     fontStyle: 'normal',
     fontWeight: '700',
     lineHeight: 22,
@@ -290,7 +287,7 @@ const styles = StyleSheet.create({
     color: Colors.primary.dark,
   },
   smallPoints: {
-    fontSize: screenHeight * 0.015,
+    fontSize: screenHeight * 0.014,
     fontStyle: 'normal',
     fontWeight: '700',
     lineHeight: 22,
@@ -306,7 +303,7 @@ const styles = StyleSheet.create({
     color: Colors.primary.dark,
   },
   largePoints: {
-    fontSize: screenHeight * 0.011,
+    fontSize: screenHeight * 0.012,
     fontStyle: 'normal',
     fontWeight: '600',
     lineHeight: 22,

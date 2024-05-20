@@ -112,7 +112,7 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
     if (user) {
       dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, plasticLetter: plasticTypes[plasticNum as keyof typeof plasticTypes], image: null,  reused: false, recycled:true }));
     }
-    dispatch(recycledRedux);
+    dispatch(recycledRedux());
     dispatch(cameraClosed());
     navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
   };

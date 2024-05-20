@@ -5,10 +5,11 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import useAppDispatch from 'hooks/useAppDispatch';
+
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
-import { cameraClosed } from 'redux/slices/cameraSlice';
+
+import useAppSelector from '../../../hooks/useAppSelector';
 
 import CircleBG from '../../../assets/Ellipse 66.svg';
 import Confetti from '../../../assets/confetti.svg';
@@ -22,8 +23,9 @@ type ScanCompletePageProps = {
 };
 
 const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
-
-  // console.log(scanType);
+  // const user = useAppSelector((state) => state.users.selectedUser);
+  const recycled = useAppSelector((state) => state.scan.recycled);
+  // console.log(user);
   return (
     <View style={styles.container}>
 
@@ -57,9 +59,11 @@ const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
 
       <View style={styles.textContainer}>
         <Text style={styles.congratsText}>
-          {"Congratulations Luke! You've just earned "}
-          <Text style={styles.boldText}>10</Text>
-          {' points for recycling'}
+          {'Congratulations! You\'ve just earned '}
+          <Text style={styles.boldText}>
+            {recycled ? '10' : '20'}
+          </Text>
+          {recycled ? ' points for recycling' : ' points for reusing'}
         </Text>
       </View>
       <View style={styles.svgContainer}>

@@ -114,7 +114,6 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
   };
   
   const message = plasticMessages[selectedValue];
-  console.log(navigation);
   return (
     <Modal
       animationType="slide"

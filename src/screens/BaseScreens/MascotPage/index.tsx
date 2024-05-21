@@ -18,11 +18,25 @@ import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import { useNavigation } from '@react-navigation/native';
 import NavType from 'utils/NavType';
 import { cameraOpened } from 'redux/slices/cameraSlice';
-
-const svgs = [Cat, Cat1, Cat2];
+import Avatar from '../../../components/Avatar';
 
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+const catContainerHeight = screenHeight*0.3;
 
+type carouselItem = {
+  avatarID: number;
+};
+type renderItem = {
+  item: carouselItem;
+  index: number;
+};
+
+const carouselData: Array<carouselItem> = Array.from({ length: 3 }, (_, i) => ({avatarID: i + 1}));
+
+const svgs = [<Avatar avatarID={1} color={1} accessory={-1} size={screenWidth*0.5} shadow={false}></Avatar>, 
+<Avatar avatarID={2} color={1} accessory={-1} size={screenWidth*0.5} shadow={false}></Avatar>,
+<Avatar avatarID={3} color={1} accessory={-1} size={screenWidth*0.5} shadow={false}></Avatar>];
 
 const MascotPage = () => {
   const navigation = useNavigation<NavType>();
@@ -40,6 +54,23 @@ const MascotPage = () => {
     dispatch(setAvatarFirstTime({id: user.id, avatarID: activeIndex+1}));
   };
 
+  let _carousel: Carousel<carouselItem> | null = null;
+
+  const _renderItem = ({ item, index }: renderItem) => {
+    return (
+      <View style={{alignSelf: 'center', justifyContent: 'center', alignItems: 'center', maxWidth:screenWidth*0.4}}>
+        <Avatar avatarID={item.avatarID} color={1} accessory={-1} size={screenWidth*0.4} shadow={true}></Avatar>
+      </View>
+    );
+  };
+
+  const getCarouselIndex = (): number => {
+    if (_carousel) {
+      return _carousel.currentIndex;
+    }
+    return -1;
+  };
+
   const goPrev = () => {
     carouselRef.current.snapToPrev();
   };
@@ -48,36 +79,32 @@ const MascotPage = () => {
     carouselRef.current.snapToNext();
   };
 
-  const renderItem = ({ item, index }) => {
-    const SvgComponent = item;
-    return (
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <SvgComponent style={{ transform: [{ scale: index === activeIndex ? 1 : 0.7 }] }} />
-      </View>
-    );
-  };
 
   return (
-    <SafeAreaView style={[FormatStyle.topContainer, { justifyContent: 'center' }]}>
-      <View style={{ justifyContent: 'space-around', alignItems: 'center' }}>
-        <Text style={[TextStyles.subTitle, { marginTop: -500, textAlign: 'center' }]}>Choose your mascot</Text>
+    <SafeAreaView style={[FormatStyle.topContainer, { justifyContent: 'space-around' }]}>
+      <View style={{ justifyContent: 'space-around', alignItems: 'center', flexDirection:'column' }}>
+        <View style={{width:screenWidth*0.85, minHeight: screenHeight*0.15}}>
+          <Text style={[TextStyles.subTitle, { textAlign: 'center', fontSize: screenHeight*0.0375, fontFamily: 'Inter_600SemiBold' }]}>Choose your mascot</Text>
+          <Text style={[TextStyles.regular, {textAlign:'center', fontSize:screenHeight*0.0225, fontFamily: 'Inter_500Medium', marginTop: 10}]}>
+            This will be your adventure pal! Don’t worry, you can always make changes later</Text>
+        </View>
         <View style={styles.catContainer}>
           <Carousel
             ref={carouselRef}
             layout={'default'}
-            data={svgs}
+            data={carouselData}
             sliderWidth={screenWidth}
-            itemWidth={180}
-            renderItem={renderItem}
+            itemWidth={screenWidth*0.5}
+            renderItem={_renderItem}
             onSnapToItem={index => setActiveIndex(index)}
             enableSnap={true}
             enableMomentum={true}
           />
-          <TouchableOpacity style={{ position: 'absolute', right: 280, bottom: 204, zIndex:1 }} onPress={goPrev}>
-            <GoLeftButton  width={40} height={40}/>
+          <TouchableOpacity style={{ position: 'absolute', left: screenWidth*0.19, bottom: catContainerHeight*0.4, zIndex:1 }} onPress={goPrev}>
+            <GoLeftButton  width={screenWidth*0.1} height={screenWidth*0.1}/>
           </TouchableOpacity>
-          <TouchableOpacity style={{ position: 'absolute', right: 78, bottom: 206, zIndex:1 }} onPress={goNext}>
-            <GoRightButton  width={40} height={40}/>
+          <TouchableOpacity style={{ position: 'absolute', right: screenWidth*0.19, bottom: catContainerHeight*0.4, zIndex:1 }} onPress={goNext}>
+            <GoRightButton  width={screenWidth*0.1} height={screenWidth*0.1}/>
           </TouchableOpacity>
         </View>
       </View>
@@ -98,10 +125,12 @@ const MascotPage = () => {
 
 const styles = StyleSheet.create({
   catContainer: {
-    position: 'absolute',
-    bottom: -300,
-    zIndex: 0,
-    minHeight:300,
+    maxHeight:catContainerHeight,
+    marginTop: screenHeight*0.05,
+    paddingTop: catContainerHeight*0.175,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    alignContent: 'center',
   },
   subtitle: {
     textAlign: 'center',
@@ -112,8 +141,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: '80%',
-    marginBottom: '-70%',
     width: '100%',
     alignSelf: 'center',
   },

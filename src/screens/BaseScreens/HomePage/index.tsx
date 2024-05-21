@@ -19,6 +19,7 @@ import Bowl from '../../../assets/Bowl.svg';
 import HomePointBadge from '../../../assets/HomePointBadge.svg';
 import HomeShelf from '../../../assets/HomeShelf.svg';
 import HomeBook from '../../../assets/HomeBook.svg';
+import HomeFullBowl from '../../../assets/HomeFullBowl.svg';
 
 
 import Calendar from 'components/Calendar';
@@ -47,7 +48,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
   const currentLoginHist = useAppSelector((state) => state.loginhistory.history);
   const dispatch = useDispatch();
 
-  dispatch(cameraClosed())
+  dispatch(cameraClosed());
 
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalMessage, setModalMessage] = React.useState('');
@@ -64,8 +65,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
     } else if (points < 5) {
       setModalMessage('You need at least 5 points to feed your pal!');
       setModalVisible(true);
-    } 
-    else if (uhealth == 5) {
+    } else if (uhealth == 5) {
       setModalMessage('Your pal is full! Come back later when it’s hungry again.');
       setModalVisible(true);
     }
@@ -138,21 +138,20 @@ const HomePage = ({ navigation }: HomePageProps) => {
       <ScrollView style={{
         flex: 1,
         width: '100%',
-        margin: screenHeight * 0.018,
+        marginTop: screenHeight * 0.018,
+        marginLeft:screenHeight * 0.018,
+        marginRight:screenHeight * 0.018,
       }}>
         <View style={{ position: 'absolute', top: screenHeight * 0.78, right:screenWidth * 0.001 }}>
           <HomePointBadge style={{ position: 'absolute', bottom: screenHeight * 0.55, right: screenWidth * 0.63 }} width={screenWidth * 0.32} height ={screenHeight * 0.32}></HomePointBadge>
 
           <View style={styles.badgeContainer}>
-            <Text style={getPointsStyle(20)}>{user?.points} </Text>
+            <Text style={getPointsStyle(user?.points)}>{user?.points} </Text>
             <Text style={styles.badgeText}>POINTS</Text>
           </View>
-          {/* <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.545, right: -screenWidth * 0.04 }} onPress={() => navigation.navigate(BaseTabRoutes.EDUCATION, {})}>
-            <HomeBook width={screenWidth * 0.25} height ={screenHeight * 0.3}></HomeBook>
-          </TouchableOpacity> */}
           <HomeShelf style={{ position: 'absolute', bottom: screenHeight * 0.37, right: -screenWidth * 0.14 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></HomeShelf>
-          <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.1, right: -screenWidth * 0.15 }} onPress={() => navigation.navigate(BaseTabRoutes.AVATAR_CUSTOMIZATION, {})}>
-            <Wardrobe width={screenWidth * 0.65} height ={screenHeight * 0.65}></Wardrobe>
+          <TouchableOpacity style={{ backgroundColor:'blue', position: 'absolute', bottom: screenHeight * 0.32, right: -screenWidth * 0.15, maxHeight: screenWidth * 0.45 }} onPress={() => navigation.navigate(BaseTabRoutes.AVATAR_CUSTOMIZATION, {})}>
+            <Wardrobe style={{ position: 'absolute', bottom: 1, right: 3, maxHeight: screenWidth * 0.45 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></Wardrobe>
           </TouchableOpacity>
           <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.545, right: -screenWidth * 0.04 }} onPress={() => navigation.navigate(BaseTabRoutes.EDUCATION, {})}>
             <HomeBook width={screenWidth * 0.25} height ={screenHeight * 0.3}></HomeBook>
@@ -167,7 +166,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
           <HomeAvaShadow style={{ position: 'absolute', top: screenHeight * 0.09, right: screenWidth * 0.06 }} width={screenWidth * 0.5} height ={screenHeight * 0.45}></HomeAvaShadow>
           <HomeShiba width={screenWidth * 0.45} height ={screenHeight * 0.45}></HomeShiba>
           <TouchableOpacity style={{ position: 'absolute', top: screenHeight * 0.17, right: -screenWidth * 0.19 }} onPress={() => handleSnackPress({ points: user.points, uid: user.id, uhealth: user.avatarHealth })}>
-            <Bowl width={screenWidth * 0.33} height ={screenHeight * 0.33}></Bowl>
+            {user.points > 0 ? <HomeFullBowl width={screenWidth * 0.25} height ={screenHeight * 0.28} />  : <Bowl width={screenWidth * 0.33} height ={screenHeight * 0.33} />}
           </TouchableOpacity>
         </View>
 
@@ -277,10 +276,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute', 
     bottom: screenHeight * 0.695, 
-    right: screenWidth * 0.65,
+    right: screenWidth * 0.645,
   },
   badgeText: {
-    fontSize: screenHeight * 0.015,
+    fontSize: screenHeight * 0.014,
     fontStyle: 'normal',
     fontWeight: '700',
     lineHeight: 22,
@@ -288,7 +287,7 @@ const styles = StyleSheet.create({
     color: Colors.primary.dark,
   },
   smallPoints: {
-    fontSize: screenHeight * 0.015,
+    fontSize: screenHeight * 0.014,
     fontStyle: 'normal',
     fontWeight: '700',
     lineHeight: 22,
@@ -304,7 +303,7 @@ const styles = StyleSheet.create({
     color: Colors.primary.dark,
   },
   largePoints: {
-    fontSize: screenHeight * 0.011,
+    fontSize: screenHeight * 0.012,
     fontStyle: 'normal',
     fontWeight: '600',
     lineHeight: 22,

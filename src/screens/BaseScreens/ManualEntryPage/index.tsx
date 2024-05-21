@@ -18,10 +18,12 @@ import { createScan } from 'redux/slices/usersSlice';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { useFocusEffect } from '@react-navigation/native';
+import { reusedRedux, recycledRedux } from 'redux/slices/scanSlice';
 
 // components
 import TextStyles from 'utils/TextStyles';
 import Carousel from 'react-native-snap-carousel';
+import ReuseWarningModal from '../UnknownPlasticPage/reuseWarningModal';
 
 type ManualEntryPageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;
@@ -37,6 +39,9 @@ type carouselItem = {
 
 const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
   const dispatch = useAppDispatch();
+  const [reuseModalVisible, setReuseModalVisible] = React.useState(false);
+  const [plasticNum, setPlasticNum] = React.useState(0);
+
   // use user slice user instead of auth slice user?
   const user = useAppSelector((state) => state.users.selectedUser);
   const plasticTypes = {
@@ -85,10 +90,29 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
   /**************** Done Carousel ****************/
 
   /**************** Nav functions ****************/
+  const reuseButtonPressed = () => {
+    const carouselIndex = getCarouselIndex();
+    setPlasticNum(carouselIndex + 1);
+    if (carouselIndex < 5 &&  carouselIndex > 0 && carouselIndex != 2 ) {
+      if (user) {
+        dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, plasticLetter: plasticTypes[plasticNum as keyof typeof plasticTypes], image: null, reused: true, recycled:false  }));
+      }
+      dispatch(reusedRedux);
+      dispatch(cameraClosed());
+      navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
+    } else {
+      setReuseModalVisible(true);
+    }
+  };
+
+  // recycling button pressed
   const selectButtonPressed = () => {
-    const plasticNum = getCarouselIndex() + 1;
-    if (user)
-      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, plasticLetter: plasticTypes[plasticNum as keyof typeof plasticTypes], image: null }));
+    const carouselIndex = getCarouselIndex();
+    setPlasticNum(carouselIndex + 1);
+    if (user) {
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, plasticLetter: plasticTypes[plasticNum as keyof typeof plasticTypes], image: null,  reused: false, recycled:true }));
+    }
+    dispatch(recycledRedux());
     dispatch(cameraClosed());
     navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
   };
@@ -137,7 +161,7 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
           <TouchableOpacity
             style={[manualEntryStyles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
             onPress={() => {
-              selectButtonPressed();
+              reuseButtonPressed();
             }}
           >
             <Text style={manualEntryStyles.bottomSheetSelectButtonText}>I'M REUSING</Text>
@@ -154,6 +178,7 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
           </TouchableOpacity>
         </View>
       </View>
+      <ReuseWarningModal modalVisible={reuseModalVisible} setModalVisible={setReuseModalVisible} plasticType={plasticNum} />
     </View>
   );
 };

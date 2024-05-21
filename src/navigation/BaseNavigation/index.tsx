@@ -22,15 +22,13 @@ import {
   ProgressPage,
   ManualEntryPage,
   UnknownPlasticPage,
-  UnknownInfoPage,
   AvatarCustomizationPage,
   SettingsPage,
-  MascotPage
+  MascotPage,
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
 import useAppDispatch from 'hooks/useAppDispatch';
-import { loadModel } from 'redux/slices/modelSlice';
 import { useEffect, useState } from 'react';
 import FormatStyle from 'utils/FormatStyle';
 import CameraOptionsModal from './CameraOptionsModal';
@@ -92,7 +90,7 @@ export const MascotNavigator = () => {
       />
     </BaseStack.Navigator>
   );
-}
+};
 
 
 const ScanCompleteNavigator = () => {
@@ -184,18 +182,6 @@ const UnknownPlasticNavigator = () => {
   );
 };
 
-const UnknownInfoNavigator = () => {
-  return (
-    <BaseStack.Navigator initialRouteName={BaseTabRoutes.UNKNOWN_INFO}>
-      <BaseStack.Screen
-        name={BaseTabRoutes.UNKNOWN_INFO}
-        component={UnknownInfoPage}
-        options={{ header: () => null }}
-      />
-    </BaseStack.Navigator>
-  );
-};
-
 const BaseNavigation = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
@@ -216,7 +202,6 @@ const BaseNavigation = () => {
     //   .catch(error => {
     //     console.error(error);
     //   });
-    // dispatch(loadModel());
     // schedulePushNotification()
     //   .catch(error => {
     //     console.error(error);
@@ -291,7 +276,7 @@ const BaseNavigation = () => {
           tabBarActiveTintColor: Colors.primary.dark,
           tabBarInactiveTintColor: Colors.neutral[2],
         }}
-        initialRouteName={user?.avatarSet ? BaseTabRoutes.HOME: BaseTabRoutes.MASCOT}
+        initialRouteName={user?.avatarSet ? BaseTabRoutes.HOME : BaseTabRoutes.MASCOT}
       >
 
 
@@ -386,11 +371,6 @@ const BaseNavigation = () => {
         <BaseTab.Screen
           name={BaseTabRoutes.CAMERA}
           component={CameraNavigator}
-          options={{ tabBarButton: () => null }}
-        />
-        <BaseTab.Screen
-          name={BaseTabRoutes.UNKNOWN_INFO}
-          component={UnknownInfoNavigator}
           options={{ tabBarButton: () => null }}
         />
         <BaseTab.Screen

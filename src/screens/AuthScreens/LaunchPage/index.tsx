@@ -4,29 +4,36 @@ import {
   View,
   Text,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import NavType from '../../../utils/NavType';
 import { AuthStackRoutes } from '../../../navigation/routeTypes';
-import Cat from '../../../assets/Cat.svg';
+import LaunchShiba from '../../../assets/LaunchShiba.svg';
 
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const FrontPage = () => {
   const navigation = useNavigation<NavType>();
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* <View style={styles.catContainer}>
+        <LaunchShiba width={400} />
+      </View> */}
       <View style={styles.innerContainer}>
+        <View style={styles.catContainer}>
+          <LaunchShiba width={screenWidth * 0.8} />
+        </View>
         <View style={styles.header}>
-          <View style={styles.catContainer}>
-            <Cat width={400} />
-          </View>
-          <Text style={styles.logo}>PlastiCycle</Text>
+          
+          <Text style={styles.logo}>PlastiSmart</Text>
           <Text style={styles.subtitle}>
-          The free, fun, and effective way to learn, recycle, and compete with
-          friends
+          The fun and sustainable way to learn about plastic polymers: earn points, 
+collect prizes and change the world!
           </Text>
         </View>
         <View style={styles.buttonContainer}>
@@ -55,13 +62,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: 'white',
     backgroundColor: '#FBFBF4',
   },
   innerContainer: {
-    borderWidth: 10,
-    borderTopWidth: '120%',
+    borderWidth: screenWidth * 0.05,
+    borderTopWidth: screenHeight * 0.2,
     borderColor:'#FBFBF4',
+    // backgroundColor:'blue',
   },
   header: {
     alignItems: 'center',
@@ -69,21 +76,25 @@ const styles = StyleSheet.create({
   },
   logo: {
     fontSize: 70,
-    textAlign: 'center', // Ensure logo text is centered
+    textAlign: 'center',
     color: '#1B453C',
-    marginTop: 20,
-    marginBottom: -20,
+    marginTop: 10,
+    marginBottom: -60,
+    zIndex:0,
   },
   catContainer: {
     position: 'absolute',
-    bottom: 30,
-    zIndex: 0, // This will place the Cat behind the text
+    bottom: screenHeight * 0.36,
+    right:screenWidth * 0.04,
+    zIndex: 0, // place the avatar in front the text
   },
   subtitle: {
     textAlign: 'center',
-    marginTop: 30, // Adjust spacing if needed
+    marginTop: 60,
     color: '#1B453C',
     fontSize: 18,
+    lineHeight: 22,
+    letterSpacing: 0.1,
   },
   buttonContainer: {
     alignItems: 'center',
@@ -97,13 +108,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
     backgroundColor: '#1B453C',
-    borderRadius: 5,
-    marginTop: 10,
+    borderRadius: 10,
+    marginTop: 16,
     minWidth: '90%',
     maxWidth: '90%',
-    minHeight: '10%',
+    minHeight: 50,
     maxHeight: 50,
   },
   invertedButton: {

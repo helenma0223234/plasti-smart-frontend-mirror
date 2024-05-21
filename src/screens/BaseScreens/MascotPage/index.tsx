@@ -43,7 +43,7 @@ const MascotPage = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
 
-  dispatch(cameraOpened())
+  dispatch(cameraOpened());
 
   const { id, email } = user || { id: '', email: '' };
   const userData = useAppSelector((state) => state.users.selectedUser);
@@ -78,7 +78,6 @@ const MascotPage = () => {
   const goNext = () => {
     carouselRef.current.snapToNext();
   };
-
 
   return (
     <SafeAreaView style={[FormatStyle.topContainer, { justifyContent: 'space-around' }]}>

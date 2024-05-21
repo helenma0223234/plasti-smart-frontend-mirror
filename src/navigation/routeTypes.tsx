@@ -30,7 +30,6 @@ export enum BaseTabRoutes {
   MANUAL_ENTRY = 'ManualEntry',
   UNKNOWN_PLASTIC = 'UnknownPlastic',
   CAMERA_MODAL = 'CameraModal',
-  UNKNOWN_INFO = 'UnknownInfo',
   SETTINGS = 'Settings',
   MASCOT = 'Mascot',
 }
@@ -50,7 +49,6 @@ export type BaseNavigationList = {
   [BaseTabRoutes.MANUAL_ENTRY]: Record<string, unknown>;
   [BaseTabRoutes.UNKNOWN_PLASTIC]: Record<string, unknown>;
   [BaseTabRoutes.CAMERA_MODAL]: Record<string, unknown>;
-  [BaseTabRoutes.UNKNOWN_INFO]: Record<string, unknown>;
   [BaseTabRoutes.SETTINGS]: Record<string, unknown>;
   [BaseTabRoutes.MASCOT]: Record<string, unknown>;
 };

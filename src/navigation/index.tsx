@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import useAppSelector from 'hooks/useAppSelector';
 import useAppDispatch from 'hooks/useAppDispatch';
 import { UserScopes } from 'types/users';
-// import { loadModel } from 'redux/slices/modelSlice';
 import { checkConnection } from 'redux/slices/connectionSlice';
 import { initCredentials, jwtSignIn } from 'redux/slices/authSlice';
 import { VerifyPage } from 'screens/AuthScreens';

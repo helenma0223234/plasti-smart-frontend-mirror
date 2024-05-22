@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { AntDesign, Entypo, Feather } from '@expo/vector-icons';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Dimensions, SafeAreaView } from 'react-native';
+import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
+import type { StackNavigationProp } from '@react-navigation/stack';
+
+import Colors from 'utils/Colors';
 
 const visibleeye = () => ( 
   <Entypo name="eye" size={20} color='rgba(27, 69, 60, 1)' style={styles.eye} /> 
@@ -25,13 +29,16 @@ const eyenotvisible3 = () => (
   <Feather name="eye-off" size={20} color='rgba(27, 69, 60, 1)' style={styles.eye} />
 );
 
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
+type PasswordSettingsPageProps = {
+  navigation: StackNavigationProp<BaseNavigationList>;
+};
 
-
-
-const PasswordSettings = ({ navigation }) => {
-  const [passwordVisible, setPasswordVisible] = useState(0);
-  const [passwordVisible2, setPasswordVisible2] = useState(null);
+const PasswordSettingsPage = ({ navigation }: PasswordSettingsPageProps) => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [passwordVisible2, setPasswordVisible2] = useState(false);
   const [passwordVisible3, setPasswordVisible3] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -48,91 +55,73 @@ const PasswordSettings = ({ navigation }) => {
 
   
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.arrowBorder} onPress={() => { navigation.goBack(); }}>
-        <AntDesign name="arrowleft" size={24} color="rgba(27, 69, 60, 1)" style={{ alignSelf: 'center' }} />
-      </TouchableOpacity>
-
-      <Text style={{ fontSize: 30, marginBottom: 30, color: 'rgba(27, 69, 60, 1)', fontWeight:'bold' }}>Password Settings</Text>
-
-      <View style={styles.inputContainer}>
-        <Text style={{ color: 'rgba(27, 69, 60, 1)', fontSize: 18, fontWeight:'bold' }}>Current password</Text>
-        <TextInput
-          placeholder='eg. ".........." '
-          style={styles.inputDesign}
-          required
-          secureTextEntry={!passwordVisible}
-        />
-        <TouchableOpacity onPress={togglePasswordVisibility}>
-          {passwordVisible ? visibleeye() : eyenotvisible()}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.overall}>
+        <TouchableOpacity style={styles.arrowBorder} onPress={() => { navigation.goBack(); }}>
+          <AntDesign name="arrowleft" size={screenHeight * 0.03} color={Colors.primary.dark}  style={{ alignSelf:'center' }}/>
         </TouchableOpacity>
-      </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={{ color: 'rgba(27, 69, 60, 1)', fontSize: 18, fontWeight:'bold' }}>Update password</Text>
-        <TextInput
-          placeholder='eg. ".........." '
-          style={styles.inputDesign}
-          required
-          secureTextEntry={!passwordVisible2}
-        />
-        <TouchableOpacity onPress={togglePasswordVisibility2}>
-          {passwordVisible2 ? visibleeye2() : eyenotvisible2()}
+        <Text style={styles.header}>Password Settings</Text>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.updateTextField}>Current password</Text>
+          <TextInput
+            style={styles.inputDesign}
+            secureTextEntry={!passwordVisible}
+          />
+          <TouchableOpacity onPress={togglePasswordVisibility}>
+            {passwordVisible ? visibleeye() : eyenotvisible()}
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.updateTextField}>Update password</Text>
+          <TextInput
+            style={styles.inputDesign}
+            secureTextEntry={!passwordVisible2}
+          />
+          <TouchableOpacity onPress={togglePasswordVisibility2}>
+            {passwordVisible2 ? visibleeye2() : eyenotvisible2()}
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.updateTextField}>Confirm password</Text>
+          <TextInput
+            style={styles.inputDesign}
+            secureTextEntry={!passwordVisible3}
+          />
+          <TouchableOpacity onPress={togglePasswordVisibility3}>
+            {passwordVisible3 ? visibleeye3() : eyenotvisible3()}
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.passwordButton}>
+          <Text style={{ color: '#FBFBF4', fontSize: screenHeight * 0.018, fontWeight: 'bold' }}>CHANGE PASSWORD</Text>
         </TouchableOpacity>
+
+
       </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={{ color: 'rgba(27, 69, 60, 1)', fontSize: 18, fontWeight:'bold' }}>Confirm password</Text>
-        <TextInput
-          placeholder='eg. ".........." '
-          style={styles.inputDesign}
-          required
-          secureTextEntry={!passwordVisible3}
-        />
-        <TouchableOpacity onPress={togglePasswordVisibility3}>
-          {passwordVisible3 ? visibleeye3() : eyenotvisible3()}
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity style={styles.passwordButton}>
-        <Text style={{ color: 'rgba(218, 229, 215, 1)', fontSize: 15, fontWeight: 'bold' }}>CHANGE PASSWORD</Text>
-      </TouchableOpacity>
-
-
-
-
-
-    </View>
+    </SafeAreaView>
   );
 };
-
-export default PasswordSettings;
-
-
-
-
-
-
-
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    boxSizing: 'border-box',
-    paddingLeft: 20,
-    paddingRight: 20, 
-    paddingTop: 30,
+    backgroundColor: '#FBFBF4',
+  },
+  overall:{
+    margin:screenWidth * 0.05,
   },
   arrowBorder:{
-   
     borderColor: 'rgba(27, 69, 60, 1)',
     borderWidth: 1,
     borderStyle: 'solid',
-    height: 40,
-    width: 40,
+    height: screenHeight * 0.05,
+    width: screenHeight * 0.05,
     borderRadius: 100,
-    marginBottom: 20,
+    marginBottom: screenHeight * 0.02,
     justifyContent: 'center',
   },
   inputContainer:{
@@ -144,35 +133,51 @@ const styles = StyleSheet.create({
   },
   inputDesign:{
     width: '100%',
-    borderColor: 'rgba(27, 69, 60, 1)',
+    borderColor: Colors.primary.dark,
     borderWidth: 1,
     borderStyle: 'solid',
-   
-    borderRadius: 10,
-    padding: 12,
-    marginTop: 5,
-    color: 'rgba(27, 69, 60, 1)',
-    fontSize: 16,
+    borderRadius: 8,
+    padding: screenHeight * 0.018,
+    marginTop: screenHeight * 0.004,
+    color: Colors.primary.dark,
+    fontSize: screenHeight * 0.018,
+  },
+  header:{
+    fontSize: 30,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 'normal',
+    letterSpacing: -0.3,
+    color:Colors.primary.dark,
+    marginBottom: screenHeight * 0.03,
   },
   eye:{
-    color: 'rgba(27, 69, 60, 1)',
+    color: Colors.primary.dark,
     position: 'relative',
-    left: '85%',
-    bottom: '180%',
-    height: 20,
-    width: 20,
+    left: screenWidth * 0.79,
+    bottom: screenHeight * 0.04,
+    height: screenHeight * 0.02,
+    width: screenHeight * 0.02,
   },
   passwordButton:{
     width: '100%',
-    height: 50,
+    height: screenHeight * 0.06,
     borderRadius: 10,
     backgroundColor: 'rgba(27, 69, 60, 1)',
     display:'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 50,
+    marginTop: screenHeight * 0.06,
+  },
+  updateTextField:{
+    color: Colors.primary.dark,
+    fontSize: screenHeight * 0.020,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    lineHeight: 36,
+    letterSpacing: 0.2,
   },
 });
 
-export default PasswordSettings;
+export default PasswordSettingsPage;

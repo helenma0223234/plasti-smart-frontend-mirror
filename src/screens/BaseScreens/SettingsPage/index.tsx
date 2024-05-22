@@ -5,13 +5,19 @@ import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
 import { logout } from '../../../redux/slices/authSlice';
+import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
+import type { StackNavigationProp } from '@react-navigation/stack';
 
 import Colors from 'utils/Colors';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-const SettingsPage = () => {
+type SettingsPageProps = {
+  navigation: StackNavigationProp<BaseNavigationList>;
+};
+
+const SettingsPage = ({ navigation } : SettingsPageProps) => {
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const dispatch = useAppDispatch();
   
@@ -38,8 +44,7 @@ const SettingsPage = () => {
 
         <View>
           <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(173, 192, 171, 1)' }}>
-            {/* <TouchableOpacity style={styles.alignButtons} onPress={()=>navigation.navigate('Profile_Settings')}> */}
-            <TouchableOpacity style={styles.alignButtons} >
+            <TouchableOpacity style={styles.alignButtons} onPress={()=>navigation.navigate(BaseTabRoutes.PROFILE_SETTINGS, {})}>
               <Text style={{ color: Colors.primary.dark, fontSize: screenHeight * 0.020, fontWeight: 'bold' }}>Profile</Text>
               <MaterialIcons name="chevron-right" size={screenHeight * 0.028} color={Colors.primary.dark} />
             </TouchableOpacity>
@@ -47,8 +52,7 @@ const SettingsPage = () => {
 
 
           <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(173, 192, 171, 1)' }}>
-            {/* <TouchableOpacity style={styles.alignButtons} onPress={()=>navigation.navigate('Password_Settings')}> */}
-            <TouchableOpacity style={styles.alignButtons}>
+            <TouchableOpacity style={styles.alignButtons} onPress={()=>navigation.navigate(BaseTabRoutes.PASSWORD_SETTINGS, {})}>
               <Text style={{ color: Colors.primary.dark, fontSize: screenHeight * 0.020, fontWeight: 'bold' }}>Password</Text>
               <MaterialIcons name="chevron-right" size={screenHeight * 0.028} color={Colors.primary.dark} />
             </TouchableOpacity>
@@ -57,8 +61,7 @@ const SettingsPage = () => {
 
 
           <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(173, 192, 171, 1)' }}>
-            {/* <TouchableOpacity style={styles.alignButtons} onPress={()=>navigation.navigate('Notifications_Settings')}> */}
-            <TouchableOpacity style={styles.alignButtons}>
+            <TouchableOpacity style={styles.alignButtons} onPress={()=>navigation.navigate(BaseTabRoutes.NOTIFICATIONS_SETTINGS, {})}>
               <Text style={{ color: Colors.primary.dark, fontSize: screenHeight * 0.020, fontWeight: 'bold' }}>Notifications</Text>
               <MaterialIcons name="chevron-right" size={screenHeight * 0.028} color={Colors.primary.dark} />
             </TouchableOpacity>
@@ -100,7 +103,7 @@ const SettingsPage = () => {
                 resizeMode="contain"
                 style={styles.closeImage}
               />
-              <Text style={{ color: Colors.primary.dark, fontWeight: 'bold', fontSize: 20, textAlign: 'center' }}>We're sorry to see you go! Are you sure you want to delete your account? </Text>
+              <Text style={{ color: Colors.primary.dark, fontWeight: 'bold', fontSize: 20, textAlign: 'center', marginBottom: 10 }}>We're sorry to see you go! Are you sure you want to delete your account? </Text>
               
               <TouchableOpacity onPress={toggleOverlay} style={{ marginTop: 15, backgroundColor: Colors.primary.dark, paddingTop:12, paddingBottom: 12, paddingLeft: 25, paddingRight: 25, borderRadius: 10, width:screenWidth * 0.5, alignItems:'center', justifyContent:'center'  }}>
                 <Text style={{ color: 'rgba(255, 255, 255, 1)', fontSize: 14, fontWeight: 'bold' }}>KEEP ACCOUNT</Text>
@@ -189,7 +192,8 @@ const styles = StyleSheet.create({
     width: 148,
     height: 148,
     borderRadius: 100,
-    marginBottom: 10,
+    marginBottom: 14,
+    marginTop:-24,
   },
 });
 

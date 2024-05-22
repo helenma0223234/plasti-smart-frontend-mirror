@@ -22,9 +22,11 @@ import {
   ProgressPage,
   ManualEntryPage,
   UnknownPlasticPage,
-  UnknownInfoPage,
   AvatarCustomizationPage,
   SettingsPage,
+  ProfileSettingsPage,
+  PasswordSettingsPage,
+  NotificationsSettingsPage,
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
@@ -143,6 +145,21 @@ export const SettingsNavigator = () => {
         component={SettingsPage}
         options={{ header: () => null }}
       />
+      <BaseStack.Screen
+        name={BaseTabRoutes.PROFILE_SETTINGS}
+        component={ProfileSettingsPage}
+        options={{ header: () => null }}
+      />
+      <BaseStack.Screen
+        name={BaseTabRoutes.PASSWORD_SETTINGS}
+        component={PasswordSettingsPage}
+        options={{ header: () => null }}
+      />
+      <BaseStack.Screen
+        name={BaseTabRoutes.NOTIFICATIONS_SETTINGS}
+        component={NotificationsSettingsPage}
+        options={{ header: () => null }}
+      />
     </BaseStack.Navigator>
   );
 };
@@ -165,18 +182,6 @@ const UnknownPlasticNavigator = () => {
       <BaseStack.Screen
         name={BaseTabRoutes.UNKNOWN_PLASTIC}
         component={UnknownPlasticPage}
-        options={{ header: () => null }}
-      />
-    </BaseStack.Navigator>
-  );
-};
-
-const UnknownInfoNavigator = () => {
-  return (
-    <BaseStack.Navigator initialRouteName={BaseTabRoutes.UNKNOWN_INFO}>
-      <BaseStack.Screen
-        name={BaseTabRoutes.UNKNOWN_INFO}
-        component={UnknownInfoPage}
         options={{ header: () => null }}
       />
     </BaseStack.Navigator>
@@ -372,11 +377,6 @@ const BaseNavigation = () => {
         <BaseTab.Screen
           name={BaseTabRoutes.CAMERA}
           component={CameraNavigator}
-          options={{ tabBarButton: () => null }}
-        />
-        <BaseTab.Screen
-          name={BaseTabRoutes.UNKNOWN_INFO}
-          component={UnknownInfoNavigator}
           options={{ tabBarButton: () => null }}
         />
 

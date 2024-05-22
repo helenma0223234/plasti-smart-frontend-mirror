@@ -13,6 +13,9 @@ import ManualEntryPage from './ManualEntryPage';
 import UnknownPlasticPage from './UnknownPlasticPage';
 import UnknownInfoPage from './UnknownInfoPage';
 import SettingsPage from './SettingsPage';
+import ProfileSettingsPage from './SettingsPage/profileSettings';
+import PasswordSettingsPage from './SettingsPage/passwordSettings';
+import NotificationsSettingsPage from './SettingsPage/notificationsSettings';
 
 export {
   FrontPage,
@@ -30,4 +33,7 @@ export {
   UnknownPlasticPage,
   UnknownInfoPage,
   SettingsPage,
+  ProfileSettingsPage,
+  PasswordSettingsPage,
+  NotificationsSettingsPage,
 };

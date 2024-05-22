@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import React, { useState }  from 'react';
-import {  SafeAreaView, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import {  SafeAreaView, StyleSheet, View, TouchableOpacity, Text, Dimensions } from 'react-native';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,6 +20,10 @@ type CustomRadioButtonProps = {
   selected: boolean;
   onPress: () => void;
 };
+
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
+
 
 const CustomRadioButton: React.FC<CustomRadioButtonProps> = ({ selected, onPress }) => (
   <TouchableOpacity style={{ height: 33, width: 33, borderRadius: 16.5, borderWidth: 2, borderColor: Colors.primary.dark, alignItems: 'center', justifyContent: 'center', marginTop: -2 }} onPress={onPress}>
@@ -58,7 +62,7 @@ const UnknownPlasticPage = ({ navigation }: UnknownPlasticPageProps) => {
               navigation.navigate(BaseTabRoutes.HOME, {});
             }}
           >
-            <Ionicons name="arrow-back-outline" size={36} color={Colors.primary.dark}/>
+            <Ionicons name="arrow-back-outline" size={screenHeight * 0.03} color={Colors.primary.dark}/>
           </TouchableOpacity>
         </View>
       </View>
@@ -121,8 +125,8 @@ const styles = StyleSheet.create({
     left: '4%',
     borderColor: '#1B453C',
     borderWidth: 1,
-    width: 60,
-    height: 60,
+    width: screenHeight * 0.06,
+    height: screenHeight * 0.06,
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',

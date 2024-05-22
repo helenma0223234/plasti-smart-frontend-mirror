@@ -22,6 +22,8 @@ import {
   EducationPage,
   UnknownInfoPage,
   SettingsPage,
+  ProfileSettingsPage,
+  PasswordSettingsPage,
 } from './BaseScreens';
 
 export {
@@ -45,4 +47,6 @@ export {
   EducationPage,
   UnknownInfoPage,
   SettingsPage,
+  ProfileSettingsPage,
+  PasswordSettingsPage,
 };

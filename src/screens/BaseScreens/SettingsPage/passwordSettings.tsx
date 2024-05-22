@@ -13,14 +13,12 @@ const eyenotvisible = () => (
   <Feather name="eye-off" size={20} color='rgba(27, 69, 60, 1)' style={styles.eye} />
 );
 
-
 const visibleeye2 = () => ( 
   <Entypo name="eye" size={20} color='rgba(27, 69, 60, 1)' style={styles.eye} /> 
 );
 const eyenotvisible2 = () => (
   <Feather name="eye-off" size={20} color='rgba(27, 69, 60, 1)' style={styles.eye} />
 );
-
 
 const visibleeye3 = () => ( 
   <Entypo name="eye" size={20} color='rgba(27, 69, 60, 1)' style={styles.eye} /> 

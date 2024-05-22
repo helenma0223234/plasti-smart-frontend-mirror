@@ -134,6 +134,24 @@ export const feedAvatar = createAsyncThunk(
   },
 );
 
+export const readInfoCard = createAsyncThunk(
+  'login_history/readInfoCard',
+  async (req: { id: string }, { dispatch }) => {
+    dispatch(startUsersLoading());
+    return axios
+      .post(`${SERVER_URL}login_history/${req.id}/readInfoCard`)
+      .finally(() => dispatch(stopUsersLoading()))
+      .then((response) => {
+        dispatch(updateFirstLoginHistory(response.data.loginHistory));
+        return response.data.user;
+      })
+      .catch((error) => {
+        console.error('Error when updating green goal', error);
+        return false;
+      });
+  },
+);
+
 export const setAvatarFirstTime = createAsyncThunk(
   'users/setAvatarFirstTime',
   async (req: { id: string, avatarID: number }, { dispatch }) => {
@@ -304,6 +322,9 @@ export const usersSlice = createSlice({
       alert('Deleted user with id ' + user.id);
     });
     builder.addCase(feedAvatar.fulfilled, (state, action) => {
+      state.selectedUser = action.payload as IUser;
+    });
+    builder.addCase(readInfoCard.fulfilled, (state, action) => {
       state.selectedUser = action.payload as IUser;
     });
     builder.addCase(setAvatarFirstTime.fulfilled, (state, action) => {

@@ -233,41 +233,6 @@ const Place = ({ number }: PlaceProps) => {
   );
 };
 
-
-interface SnackProps {
-  snacks: number
-  uid: string
-  uhealth: number
-}
-
-const SnackButton = ({ snacks, uid, uhealth }: SnackProps) => {
-  const dispatch = useDispatch();
-  const handlePress = () => {
-    if (snacks > 0 && uhealth < 5) {
-      dispatch(feedAvatar({ id: uid }));
-    } else {
-      alert('Can not feed Plasti sorry~');
-    }
-  };
-
-  return (
-    <TouchableOpacity onPress={handlePress} style={{ height: 70, width: 70, paddingTop: 0, justifyContent: 'flex-end', alignItems: 'center' }}>
-      <View style={{
-        ...FormatStyle.circle, marginTop: 0, backgroundColor: Colors.secondary.light,
-        width: 30, height: 30, position: 'absolute', top: -10, right: 0, borderColor: 'transparent', zIndex: 1,
-      }}>
-        <Text>{snacks}</Text>
-      </View>
-
-      <View style={{ ...FormatStyle.circle, marginTop: 0, backgroundColor: Colors.primary.dark, width: 70, height: 70 }}>
-        <Snack></Snack>
-
-      </View>
-
-    </TouchableOpacity>
-  );
-};
-
 const styles = StyleSheet.create({
   scroll: {
     width: '100%',

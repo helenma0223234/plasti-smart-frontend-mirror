@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, SafeAreaView, View, Text, StyleSheet, Modal, Pressable, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent, StyleProp } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
-import { logout } from '../../../redux/slices/authSlice';
+import useAppSelector from 'hooks/useAppSelector';
 import FormatStyle from '../../../utils/FormatStyle';
 import TextStyles from 'utils/TextStyles';
 import { useNavigation } from '@react-navigation/native';
@@ -9,10 +9,10 @@ import NavType from 'utils/NavType';
 import { BaseTabRoutes } from 'navigation/routeTypes';
 import Colors from 'utils/Colors';
 import { Dimensions } from 'react-native';
+import {readInfoCard} from 'redux/slices/usersSlice';
 
 import Cat from '../../../assets/Cat.svg';
 import Trophy from '../../../assets/Trophy.svg';
-import useAppSelector from 'hooks/useAppSelector';
 import PlasticSymbol from 'components/RecycleSymbol';
 import Globe from '../../../assets/Globe.svg';
 import RecycleSymbol from '../../../assets/Recycle.svg';
@@ -512,6 +512,11 @@ interface PolymerCardProps {
 }
 
 const PolymerCard = ({ number, setModalVisible, setModalPlasticType }: PolymerCardProps) => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.users.selectedUser);
+  const loginHistoryArray = useAppSelector((state) => state.loginhistory.history);
+  const loginHistoryToday = loginHistoryArray[0];
+
   return (
     <View style={{ ...styles.card, borderRadius: 20, width: polymerCardWidth, 
       maxHeight: polymerCardHeight, padding: 20, flexDirection: 'column', backgroundColor: info[number - 1].color }}>
@@ -552,6 +557,9 @@ const PolymerCard = ({ number, setModalVisible, setModalPlasticType }: PolymerCa
           <TouchableOpacity onPress={() => {
             setModalVisible(true); 
             setModalPlasticType(number);
+            if (!loginHistoryToday.greenGoal){
+              dispatch(readInfoCard({id: user.id}))
+            }
           }}>
             <Text style={{ ...styles.PolymerCardText, textDecorationLine:'underline', marginTop: 10 }}>Tap to explore</Text>
           </TouchableOpacity>

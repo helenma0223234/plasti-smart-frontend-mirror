@@ -22,14 +22,13 @@ import {
   ProgressPage,
   ManualEntryPage,
   UnknownPlasticPage,
-  UnknownInfoPage,
   AvatarCustomizationPage,
   SettingsPage,
+  MascotPage,
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
 import useAppDispatch from 'hooks/useAppDispatch';
-import { loadModel } from 'redux/slices/modelSlice';
 import { useEffect, useState } from 'react';
 import FormatStyle from 'utils/FormatStyle';
 import CameraOptionsModal from './CameraOptionsModal';
@@ -75,6 +74,18 @@ export const FrontNavigator = () => {
       <BaseStack.Screen
         name={BaseTabRoutes.FRONT}
         component={FrontPage}
+        options={{ header: () => null }}
+      />
+    </BaseStack.Navigator>
+  );
+};
+
+export const MascotNavigator = () => {
+  return (
+    <BaseStack.Navigator initialRouteName={BaseTabRoutes.MASCOT}>
+      <BaseStack.Screen
+        name={BaseTabRoutes.MASCOT}
+        component={MascotPage}
         options={{ header: () => null }}
       />
     </BaseStack.Navigator>
@@ -171,22 +182,11 @@ const UnknownPlasticNavigator = () => {
   );
 };
 
-const UnknownInfoNavigator = () => {
-  return (
-    <BaseStack.Navigator initialRouteName={BaseTabRoutes.UNKNOWN_INFO}>
-      <BaseStack.Screen
-        name={BaseTabRoutes.UNKNOWN_INFO}
-        component={UnknownInfoPage}
-        options={{ header: () => null }}
-      />
-    </BaseStack.Navigator>
-  );
-};
-
 const BaseNavigation = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
 
   const closeModal = () => {
     setModalVisible(false);
@@ -202,7 +202,6 @@ const BaseNavigation = () => {
     //   .catch(error => {
     //     console.error(error);
     //   });
-    // dispatch(loadModel());
     // schedulePushNotification()
     //   .catch(error => {
     //     console.error(error);
@@ -277,7 +276,7 @@ const BaseNavigation = () => {
           tabBarActiveTintColor: Colors.primary.dark,
           tabBarInactiveTintColor: Colors.neutral[2],
         }}
-        initialRouteName={BaseTabRoutes.HOME}
+        initialRouteName={user?.avatarSet ? BaseTabRoutes.HOME : BaseTabRoutes.MASCOT}
       >
 
 
@@ -375,8 +374,8 @@ const BaseNavigation = () => {
           options={{ tabBarButton: () => null }}
         />
         <BaseTab.Screen
-          name={BaseTabRoutes.UNKNOWN_INFO}
-          component={UnknownInfoNavigator}
+          name={BaseTabRoutes.MASCOT}
+          component={MascotNavigator}
           options={{ tabBarButton: () => null }}
         />
 

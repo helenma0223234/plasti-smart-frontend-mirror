@@ -11,8 +11,8 @@ import EducationPage from './EducationPage';
 import ProgressPage from './ProgressPage';
 import ManualEntryPage from './ManualEntryPage';
 import UnknownPlasticPage from './UnknownPlasticPage';
-import UnknownInfoPage from './UnknownInfoPage';
 import SettingsPage from './SettingsPage';
+import MascotPage from './MascotPage';
 
 export {
   FrontPage,
@@ -28,6 +28,6 @@ export {
   ProgressPage,
   ManualEntryPage,
   UnknownPlasticPage,
-  UnknownInfoPage,
   SettingsPage,
+  MascotPage,
 };

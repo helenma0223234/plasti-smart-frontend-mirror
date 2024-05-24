@@ -1,5 +1,4 @@
 import React from 'react';
-import FormatStyle from 'utils/FormatStyle';
 import TextStyles from 'utils/TextStyles';
 import Colors from 'utils/Colors';
 import { Text, View } from 'react-native';
@@ -14,7 +13,7 @@ interface DailyTasksProps {
 }
 
 const DailyTasks = ({ taskCompletionStatuses = [] }: DailyTasksProps) => {
-  const taskTitles = ['Feed your plasty', 'Recycle a plastic', 'Over 50% happiness'];
+  const taskTitles = ['Feed your pal', 'Recycle a plastic', 'Review 1 Flashcard'];
   const dotColors = [Colors.secondary.red, Colors.secondary.yellow, Colors.primary.dark];
   return (
     <View>

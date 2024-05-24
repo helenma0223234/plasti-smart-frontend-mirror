@@ -50,7 +50,7 @@ export const initCredentials = createAsyncThunk(
 
 export const signUp = createAsyncThunk(
   'auth/signup',
-  async (credentials: { email: string, password: string, username: string }, { dispatch }) => {
+  async (credentials: { email: string, password: string, username: string, name: string }, { dispatch }) => {
     dispatch(startAuthLoading());
     return axios
       .post(`${SERVER_URL}auth/signup`, credentials)
@@ -61,8 +61,8 @@ export const signUp = createAsyncThunk(
         //////////// NOTE:
         ///currently we don't sign users in automatically after signup
         ////////////
-        // dispatch(setCredentials(response.data.token));
-        // dispatch(setLoginHistory(response.data.history));
+        dispatch(setCredentials(response.data.token));
+        dispatch(setLoginHistory(response.data.history));
 
         return response.data;
       })

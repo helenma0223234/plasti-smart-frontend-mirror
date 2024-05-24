@@ -11,9 +11,14 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+
+// redux
 import useAppSelector from '../../../hooks/useAppSelector';
 import useAppDispatch from 'hooks/useAppDispatch';
 import { cameraClosed, cameraOpened } from 'redux/slices/cameraSlice';
+import { reusedRedux, recycledRedux } from 'redux/slices/scanSlice';
+import { createScan } from 'redux/slices/usersSlice';
+
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { useFocusEffect } from '@react-navigation/native';
@@ -63,7 +68,7 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
   // use user slice user instead of auth slice user?
   const user = useAppSelector((state) => state.users.selectedUser);
   const [reuseModalVisible, setReuseModalVisible] = React.useState(false);
-  console.log(plasticNumber);
+
   type PlasticTypeKey = 'first' | 'second' | 'third' | 'fourth' | 'fifth' | 'sixth' | 'seventh' | 'eighth';
   const selectedValue: PlasticTypeKey = 'first' as PlasticTypeKey;
   
@@ -71,9 +76,10 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
 
   /**************** Nav functions ****************/
   const recycleButtonPressed = () => {
-    // if (user) {
-    //   // redux
-    // }
+    if (user) {
+      dispatch(recycledRedux());
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticTypeNumbers[selectedValue], plasticLetter: plasticTypes[selectedValue as keyof typeof plasticTypes], image: null, reused: false, recycled: true }));
+    }
     dispatch(cameraClosed());
     setThisModalVisible(false);
     navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
@@ -83,6 +89,9 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
     const validValues = ['first', 'third', 'sixth', 'seventh'];
     if (validValues.includes(selectedValue)) {
       setReuseModalVisible(true);
+    } else if (user) {
+      dispatch(reusedRedux());
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticTypeNumbers[selectedValue], plasticLetter: plasticTypes[selectedValue as keyof typeof plasticTypes], image: null, reused: true, recycled: false }));
     }
   };
   useFocusEffect(
@@ -104,9 +113,7 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
     default: 'This polymer is not recycled. Check labels to confirm.',
   };
   
-  // const message = plasticMessages[selectedValue] || plasticMessages.default;
   const message = plasticMessages[selectedValue];
-  console.log(navigation);
   return (
     <Modal
       animationType="slide"
@@ -173,7 +180,7 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
             </TouchableOpacity>
           </View>
         </View>
-        <ReuseWarningModal secondNavigation={navigation} modalVisible={reuseModalVisible} setModalVisible={setReuseModalVisible} selectedValue={selectedValue} plasticType={plasticTypeNumbers[selectedValue]} />
+        <ReuseWarningModal modalVisible={reuseModalVisible} setModalVisible={setReuseModalVisible} plasticType={plasticTypeNumbers[selectedValue]} />
       </SafeAreaView>
     </Modal>
   );

@@ -9,8 +9,12 @@ import { Ionicons } from '@expo/vector-icons';
 import Award from '../../../assets/award.svg'
 import CircleBG from '../../../assets/Ellipse 66.svg';
 import {AvatarAccessories, AvatarsOwned, AvatarCustomization, AvatarColors} from 'types/avatars';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import useAppDispatch from 'hooks/useAppDispatch';
+import useAppSelector from 'hooks/useAppSelector';
+import { buyAvatar, buyAvatarColor, buyAvatarAccessory, equipAccessory, equipAvatar, equipColor } from 'redux/slices/usersSlice';
+import FullAlertModal from '../HomePage/fullAlertModal';
 
+import { IUser } from 'types/users';
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
@@ -22,6 +26,9 @@ const modalHeight = screenHeight * 0.3;
 const modalWidth = screenWidth * 0.8;
 
 const AvatarCustomizationPage = () => {
+  const user = useAppSelector((state) => state.users.selectedUser);
+  const dispatch = useAppDispatch();
+  
   const navigation = useNavigation<NavType>();
   const [selectedButton, setSelectedButton] = useState(1);
   const buttonLabels = ['Color', 'Avatar', 'Accessories'];
@@ -30,48 +37,23 @@ const AvatarCustomizationPage = () => {
   const [modalBuyType, setModalBuyType] = useState(1);
   const [modalBuyID, setModalBuyID] = useState(1);
 
-  //TODO: update these once redux is setup for user
-  const userPoints = 20;
-  const avatarID = 1;
-  const color = 1;
-  const accessory = 1;
-    
-  const defaultAvatarAccessories: AvatarAccessories[] = [
-    { id: 1, unlocked: false, cost: 100},
-    { id: 2, unlocked: false, cost: 100},
-    { id: 3, unlocked: false, cost: 100},
-    { id: 4, unlocked: false, cost: 100},
-    { id: 5, unlocked: false, cost: 100},
-    { id: 6, unlocked: false, cost: 100},
-    { id: 7, unlocked: false, cost: 100},
-    { id: 8, unlocked: false, cost: 100},
-    { id: 9, unlocked: false, cost: 100},
-  ];
+  const [alertModalVisible, setAlertModalVisible] = React.useState(false);
+  const [alertModalMessage, setAlertModalMessage] = React.useState('');
 
-  const defaultAvatarColors: AvatarColors[] = [
-    { id: 1, unlocked: true, cost: 0},
-    { id: 2, unlocked: false, cost: 150},
-    { id: 3, unlocked: false, cost: 150},
-  ];
+  const userPoints = user.points;
+  const avatarID = user.avatarID;
+  const color = user.avatarColor;
+  const accessory = user.avatarAccessoryEquipped;
 
-  const defaultAvatarsOwned: AvatarsOwned[] = [
-    { id: 1, unlocked: true, cost: 0, colors: defaultAvatarColors},
-    { id: 2, unlocked: false, cost: 200, colors: defaultAvatarColors},
-    { id: 3, unlocked: false, cost: 200, colors: defaultAvatarColors},
-  ];
-
-  const defaultAvatarCustomization: AvatarCustomization = {
-    AvatarsOwned: defaultAvatarsOwned,
-    AvatarAccessories: defaultAvatarAccessories
-  };
+  const avatarCustomization = user.avatarCustomization;
 
   const getCost = (buyType: number, buyID: number): number => {
     if (buyType === 0) {
-      return defaultAvatarCustomization.AvatarsOwned[avatarID-1].colors[buyID-1].cost;
+      return avatarCustomization.AvatarsOwned[user.avatarID-1].colors[buyID-1].cost;
     } else if (buyType === 1) {
-      return defaultAvatarCustomization.AvatarsOwned[buyID-1].cost;
+      return avatarCustomization.AvatarsOwned[buyID-1].cost;
     } else if (buyType === 2) {
-      return defaultAvatarCustomization.AvatarAccessories[buyID-1].cost;
+      return avatarCustomization.AvatarAccessories[buyID-1].cost;
     }
     return -1;
   };
@@ -83,8 +65,28 @@ const AvatarCustomizationPage = () => {
       return;
     }
 
-    // TODO: make purchase via app dispatch once redux is setup
+    if (buyType === 0){
+      dispatch(buyAvatarColor({id: user.id, colorID: buyID}));
+    } else if (buyType === 1) {
+      dispatch(buyAvatar({id: user.id, avatarID: buyID}));
+    } else if (buyType === 2) {
+      dispatch(buyAvatarAccessory({id: user.id, accessoryID: buyID}));
+    }
 
+    setModalVisible(false);
+  };
+
+  const equipItem = (equipType: number, equipID: number) => {
+    // TODO: make equip via app dispatch once redux is setup
+    // TOOD: call this in onPress for grid items that are unlocked
+    if (equipType === 0) {
+      dispatch(equipColor({id: user.id, colorID: equipID}));
+    } else if (equipType === 1) {
+      dispatch(equipAvatar({id: user.id, avatarID: equipID}));
+    } else if (equipType === 2) {
+      dispatch(equipAccessory({id: user.id, accessoryID: equipID}));
+    }
+    return;
   };
 
 
@@ -102,9 +104,9 @@ const AvatarCustomizationPage = () => {
             <Ionicons name="close-circle-outline" size={screenHeight*0.03}  color={Colors.primary.dark}></Ionicons>
           </TouchableOpacity>
 
-          {modalBuyType === 0 && <Avatar avatarID={avatarID} color={modalBuyID} size={modalHeight*0.5} shadow={true} accessory={-1}></Avatar>}
+          {modalBuyType === 0 && <Avatar avatarID={user.avatarID} color={modalBuyID} size={modalHeight*0.5} shadow={true} accessory={-1}></Avatar>}
           {modalBuyType === 1 && <Avatar avatarID={modalBuyID} color={1} size={modalHeight*0.5} shadow={true} accessory={-1}></Avatar>}
-          {modalBuyType === 2 && <Avatar avatarID={avatarID} color={color} size={modalHeight*0.5} shadow={true} accessory={modalBuyID}></Avatar>}
+          {modalBuyType === 2 && <Avatar avatarID={user.avatarID} color={user.avatarColor} size={modalHeight*0.5} shadow={true} accessory={modalBuyID}></Avatar>}
 
           <TouchableOpacity style={styles.modalBuyButton} onPress={() => {buyItem(modalBuyType, modalBuyID);}}>
             <Text style={styles.modalBuyButtonText}>Buy for {getCost(modalBuyType, modalBuyID)} points</Text>
@@ -133,7 +135,7 @@ const AvatarCustomizationPage = () => {
         <CircleBG style={styles.circleBG} width={screenHeight * 0.75} height={screenHeight * 0.75} />
         <View style={styles.rectangle}>
           
-          <Avatar avatarID={avatarID} color={color} size={screenHeight * 0.225} accessory={accessory}
+          <Avatar avatarID={user.avatarID} color={user.avatarColor} size={screenHeight * 0.225} accessory={user.avatarAccessoryEquipped}
             style={{bottom: screenHeight * 0.15}} shadow={true}
           />
 
@@ -159,23 +161,27 @@ const AvatarCustomizationPage = () => {
 
           <View style={styles.grid}>
 
-            {selectedButton === 0 && defaultAvatarCustomization.AvatarsOwned[avatarID-1].colors.map((color, index) => (
+            {selectedButton === 0 && avatarCustomization.AvatarsOwned[user.avatarID-1].colors.map((color, index) => (
               <GridItem unlocked={color.unlocked} cost={color.cost} setModalVisible={setModalVisible} 
-                setModalBuyType={setModalBuyType} setModalBuyID={setModalBuyID} buyType={0} buyID={color.id} component={ () =>
-                <Avatar avatarID={avatarID} color={color.id} size={gridItemWidth* 0.95} accessory={-1} shadow={true}></Avatar>
+                setModalBuyType={setModalBuyType} setModalBuyID={setModalBuyID} buyType={0} buyID={color.id} 
+                equipItem={equipItem} user={user}
+                component={ () =>
+                <Avatar avatarID={user.avatarID} color={color.id} size={gridItemWidth* 0.95} accessory={-1} shadow={true}></Avatar>
               }></GridItem>
             ))}
 
-            {selectedButton === 1 && defaultAvatarCustomization.AvatarsOwned.map((avatar, index) => (
+            {selectedButton === 1 && avatarCustomization.AvatarsOwned.map((avatar, index) => (
               <GridItem unlocked={avatar.unlocked} cost={avatar.cost} setModalVisible={setModalVisible} 
-                setModalBuyType={setModalBuyType} setModalBuyID={setModalBuyID} buyType={1} buyID={avatar.id} component={ () =>
+                setModalBuyType={setModalBuyType} setModalBuyID={setModalBuyID} buyType={1} buyID={avatar.id} 
+                equipItem={equipItem} user={user} component={ () =>
                 <Avatar avatarID={avatar.id} color={1} size={gridItemWidth* 0.95} accessory={-1} shadow={true}></Avatar>
               }></GridItem>
             ))}
 
-            {selectedButton === 2 && defaultAvatarCustomization.AvatarAccessories.map((accessory, index) => (
+            {selectedButton === 2 && avatarCustomization.AvatarAccessories.map((accessory, index) => (
               <GridItem unlocked={accessory.unlocked} cost={accessory.cost} setModalVisible={setModalVisible} 
-              setModalBuyType={setModalBuyType} setModalBuyID={setModalBuyID} buyType={2} buyID={accessory.id}></GridItem>
+              setModalBuyType={setModalBuyType} setModalBuyID={setModalBuyID} buyType={2} buyID={accessory.id}
+              equipItem={equipItem} user={user}></GridItem>
             ))}
           
           </View>
@@ -185,11 +191,6 @@ const AvatarCustomizationPage = () => {
   );
 };
 
-const equipItem = (buyType: number, buyID: number) => {
-  // TODO: make equip via app dispatch once redux is setup
-  // TOOD: call this in onPress for grid items that are unlocked
-  return;
-};
 
 interface GridItemProps {
   unlocked: boolean;
@@ -200,13 +201,16 @@ interface GridItemProps {
   setModalVisible: (visible: boolean) => void;
   setModalBuyType: (buyType: number) => void;
   setModalBuyID: (buyID: number) => void;
+  user: IUser | null;
+  equipItem?: (equipType: number, equipID: number) => void;
 }
 
-const GridItem = ({unlocked, cost, component, buyType, buyID, setModalVisible, setModalBuyType, setModalBuyID} : GridItemProps) => {
+const GridItem: React.FC<GridItemProps>= ({unlocked, cost, component, buyType, buyID, setModalVisible, setModalBuyType, setModalBuyID, user, equipItem} : GridItemProps) => {  
+  
   return (
     unlocked ?
       <TouchableOpacity style={styles.gridItemBox} 
-        onPress={() => {equipItem(buyType, buyID);}} >
+        onPress={() => {equipItem && equipItem(buyType, buyID);}} >
         {component && component()}
       </TouchableOpacity> 
     : 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, SafeAreaView, View, Text, StyleSheet, Modal, Pressable, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent, StyleProp } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
-import { logout } from '../../../redux/slices/authSlice';
+import useAppSelector from 'hooks/useAppSelector';
 import FormatStyle from '../../../utils/FormatStyle';
 import TextStyles from 'utils/TextStyles';
 import { useNavigation } from '@react-navigation/native';
@@ -9,10 +9,10 @@ import NavType from 'utils/NavType';
 import { BaseTabRoutes } from 'navigation/routeTypes';
 import Colors from 'utils/Colors';
 import { Dimensions } from 'react-native';
+import {readInfoCard} from 'redux/slices/usersSlice';
 
 import Cat from '../../../assets/Cat.svg';
 import Trophy from '../../../assets/Trophy.svg';
-import useAppSelector from 'hooks/useAppSelector';
 import PlasticSymbol from 'components/RecycleSymbol';
 import Globe from '../../../assets/Globe.svg';
 import RecycleSymbol from '../../../assets/Recycle.svg';
@@ -73,17 +73,17 @@ const info = [
     foundIn: [
       { title: 'Ovenable film', SvgComponent: MicrowaveFilm },
       { title: 'Water bottle', SvgComponent: WaterBottle },
-      { title: 'Packing envelope', SvgComponent: PackingEnvelope }
+      { title: 'Packing envelope', SvgComponent: PackingEnvelope },
     ],
     modalFoundIn: [
       { title: 'Ovenable film', SvgComponent: OvenableFilmGreen },
       { title: 'Water bottle', SvgComponent: WaterBottleGreen },
-      { title: 'Packing envelope', SvgComponent: PackingEnvelopeGreen }
+      { title: 'Packing envelope', SvgComponent: PackingEnvelopeGreen },
     ],
     reusedToMake: [
       { title: 'Fibers', SvgComponent: FibersGreen },
       { title: 'Packaging\nMaterials', SvgComponent: PackingEnvelopeGreen },
-    ]
+    ],
   },
   {
     title: 'High-Density Polyethylene',
@@ -93,17 +93,17 @@ const info = [
     foundIn: [
       { title: 'Milk jars', SvgComponent: MilkJars },
       { title: 'Cereal bags', SvgComponent: CerealBag },
-      { title: 'Shampoo bottles', SvgComponent: Shampoo }
+      { title: 'Shampoo bottles', SvgComponent: Shampoo },
     ],
     modalFoundIn: [
       { title: 'Milk jars', SvgComponent: MilkJarsGreen },
       { title: 'Cereal bags', SvgComponent: CerealBagGreen },
-      { title: 'Shampoo bottles', SvgComponent: ShampooGreen }
+      { title: 'Shampoo bottles', SvgComponent: ShampooGreen },
     ],
     reusedToMake: [
       { title: 'Plastic bins', SvgComponent: NoLandfillGreen },
       { title: 'Agricultural pipes', SvgComponent: PipesGreen },
-    ]
+    ],
   },
   {
     title: 'Polyvinyl Chloride',
@@ -113,13 +113,13 @@ const info = [
     foundIn: [
       { title: 'Pipes', SvgComponent: Pipes },
       { title: 'Floor panels', SvgComponent: FloorPanels },
-      { title: 'Medical\napplications', SvgComponent: MedicalApp }
+      { title: 'Medical\napplications', SvgComponent: MedicalApp },
     ],
     modalFoundIn: [
       { title: 'Pipes', SvgComponent: PipesGreen },
       { title: 'Floor panels', SvgComponent: FloorPanelsGreen },
-      { title: 'Medical\napplications', SvgComponent: FluidBagGreen }
-    ]
+      { title: 'Medical\napplications', SvgComponent: FluidBagGreen },
+    ],
   },
   {
     title: 'Low-Density Polyethylene',
@@ -129,18 +129,18 @@ const info = [
     foundIn: [
       { title: 'Thin, pliable\nbags', SvgComponent: PillableBag },
       { title: 'Squeeze bottles', SvgComponent: SqueezeBottles },
-      { title: 'Flexible\npackaging', SvgComponent: PackingEnvelope }
+      { title: 'Flexible\npackaging', SvgComponent: PackingEnvelope },
     ],
     modalFoundIn: [
       { title: 'Thin, pliable\nbags', SvgComponent: PillableBagGreen },
       { title: 'Squeeze bottles', SvgComponent: SqueezeBottlesGreen },
-      { title: 'Flexible\npackaging', SvgComponent: PackingEnvelopeGreen }
+      { title: 'Flexible\npackaging', SvgComponent: PackingEnvelopeGreen },
     ],
     reusedToMake: [
       { title: 'Garbage bags', SvgComponent: NoLandfillGreen },
       { title: 'Trash bins', SvgComponent: PillableBagGreen },
-      { title: 'Packaging Materials', SvgComponent: PackingEnvelopeGreen},
-    ]
+      { title: 'Packaging Materials', SvgComponent: PackingEnvelopeGreen },
+    ],
   },
   {
     title: 'Polypropylene',
@@ -150,18 +150,18 @@ const info = [
     foundIn: [
       { title: 'Microwave-safe food containers', SvgComponent: FoodContainers },
       { title: 'Bottle caps', SvgComponent: BottleCaps },
-      { title: 'Plastic furniture', SvgComponent: PlasticFurniture }
+      { title: 'Plastic furniture', SvgComponent: PlasticFurniture },
     ],
     modalFoundIn: [
       { title: 'Microwave-safe food containers', SvgComponent: FoodContainersGreen },
       { title: 'Bottle caps', SvgComponent: BottleCapsGreen },
-      { title: 'Plastic furniture', SvgComponent: PlasticFurnitureGreen }
+      { title: 'Plastic furniture', SvgComponent: PlasticFurnitureGreen },
     ],
     reusedToMake: [
       { title: 'Gardening Tools', SvgComponent: GardeningToolsGreen },
       { title: 'Trash bins', SvgComponent: NoLandfillGreen },
       { title: 'Autoparts', SvgComponent: AutopartsGreen },
-    ]
+    ],
   },
   {
     title: 'Polystyrene',
@@ -171,13 +171,13 @@ const info = [
     foundIn: [
       { title: 'Beverage containers', SvgComponent: BeverageContainer },
       { title: 'Styrofoam', SvgComponent: Styrofoam },
-      { title: 'Synthetic rubber tires', SvgComponent: CarTires }
+      { title: 'Synthetic rubber tires', SvgComponent: CarTires },
     ],
     modalFoundIn: [
       { title: 'Beverage containers', SvgComponent: BeverageContainerGreen },
       { title: 'Styrofoam', SvgComponent: StyrofoamGreen },
-      { title: 'Synthetic rubber tires', SvgComponent: AutopartsGreen }
-    ]
+      { title: 'Synthetic rubber tires', SvgComponent: AutopartsGreen },
+    ],
   },
   {
     title: 'Miscellaneous/Other',
@@ -186,11 +186,11 @@ const info = [
     info: 'This polymer is considered an *umbrella* category for *mixed* plastics. There are two distinct polymers, however, that fall under Polymer 7: *Polylactic acid* (PLA; this is a sustainable bioplastic!), and *Polycarbonate (PC)*. Explore more inside this card.',
     foundIn: [
       { title: 'Cold\nbeverage cups', SvgComponent: ColdBeverageCup },
-      { title: 'Alternatives\nto PS coating', SvgComponent: Union }
+      { title: 'Alternatives\nto PS coating', SvgComponent: Union },
     ],
     modalFoundIn: [
       { title: 'Cold\nbeverage cups', SvgComponent: ColdBeverageCupGreen },
-      { title: 'Alternatives\nto PS coating', SvgComponent: UnionGreen}
+      { title: 'Alternatives\nto PS coating', SvgComponent: UnionGreen },
     ],
   },
 ];
@@ -210,7 +210,6 @@ const EducationPage = () => {
   const [currCard, setCurrCard] = useState(1);
   const [currCardPlastic, setCurrCardPlastic] = useState(1);
 
-  const dispatch = useAppDispatch();
   const navigation = useNavigation<NavType>();
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     setCurrCardPlastic(Math.floor(((event.nativeEvent.contentOffset.x)) / modalCardWidth));
@@ -234,130 +233,157 @@ const EducationPage = () => {
     7: user.Type7Collected,
   };
 
-  const maxType = Object.entries(collectedTypes).reduce((max, [type, value]) => {
+  const recycledTypes = {
+    1: user.Type1Recycled,
+    2: user.Type2Recycled,
+    3: user.Type3Recycled,
+    4: user.Type4Recycled,
+    5: user.Type5Recycled,
+    6: user.Type6Recycled,
+    7: user.Type7Recycled,
+  };
+  
+  const reusedTypes = {
+    1: user.Type1Reused,
+    2: user.Type2Reused,
+    3: user.Type3Reused,
+    4: user.Type4Reused,
+    5: user.Type5Reused,
+    6: user.Type6Reused,
+    7: user.Type7Reused,
+  };
+
+  const maxRecycledType = Object.entries(recycledTypes).reduce((max, [type, value]) => {
     return value > max.value ? { type: Number(type), value } : max;
-  }, { type: 1, value: user?.Type1Collected });
+  }, { type: 1, value: user?.Type1Recycled });
+
+  const maxReusedType = Object.entries(reusedTypes).reduce((max, [type, value]) => {
+    return value > max.value ? { type: Number(type), value } : max;
+  }, { type: 1, value: user?.Type1Reused });
+
+  const totalReused = Object.values(reusedTypes).reduce((a, b) => a + b, 0);
+  const totalRecycled = Object.values(recycledTypes).reduce((a, b) => a + b, 0);
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container }}>
       <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          style={{ flex: 1, alignSelf: 'center' }}
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        style={{ flex: 1, alignSelf: 'center' }}
       >
-          <View style={styles.modalOuterContainer}>
-              <View style={styles.modalInnerContainer}>
-              <View style={{
-                          width: screenHeight * 0.075,
-                          height: screenHeight * 0.075,
-                          borderTopLeftRadius: 20,
-                          borderBottomRightRadius: 20,
-                          backgroundColor: info[modalPlasticType - 1].color,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          zIndex: 2
-                      }}>
-                          <PlasticSymbol color={Colors.secondary.white}
-                                        width={screenHeight * 0.06}
-                                        height={screenHeight * 0.06}
-                                        number={modalPlasticType}
-                                        top={15}
-                                        left={23} />
-                      </View>
-                  <View style={{ flex: 1 }}>
+        <View style={styles.modalOuterContainer}>
+          <View style={styles.modalInnerContainer}>
+            <View style={{
+              width: screenHeight * 0.075,
+              height: screenHeight * 0.075,
+              borderTopLeftRadius: 20,
+              borderBottomRightRadius: 20,
+              backgroundColor: info[modalPlasticType - 1].color,
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              zIndex: 2,
+            }}>
+              <PlasticSymbol color={Colors.secondary.white}
+                width={screenHeight * 0.06}
+                height={screenHeight * 0.06}
+                number={modalPlasticType}
+                top={15}
+                left={23} />
+            </View>
+            <View style={{ flex: 1 }}>
                       
 
-                      <View style={{ zIndex: 1 }}>
-                          <TouchableOpacity onPress={() => setModalVisible(false)}
-                                            style={{ position: 'absolute', right: 0, top: 0, zIndex: 1 }}>
-                              <ModalExit width={35} height={35} />
-                          </TouchableOpacity>
-                      </View>
-
-                      <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: -30, marginTop: -20 }}>
-                          <Polymer style={{ position: 'relative', maxHeight: polymerCardHeight * 0.25 }} />
-                      </View>
-
-                      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                          <Text style={{ ...styles.PolymerCardTitle, color: Colors.primary.dark }}>
-                              {info[modalPlasticType - 1].title}
-                          </Text>
-                      </View>
-
-                      <View style={{
-                          alignItems: 'center',
-                          marginTop: modalCardHeight * 0.02,
-                          width: '100%',
-                          alignSelf: 'center',
-                          maxHeight: modalCardHeight * 0.6,
-                          justifyContent: 'space-evenly',
-                      }}>
-                          <View style={{
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              minHeight: modalCardHeight * 0.2,
-                          }}>
-                              <TextBolded text={info[modalPlasticType - 1].modalInfo}
-                                          regularStyles={styles.ModalText}
-                                          boldStyles={styles.ModalTextBold} />
-                          </View>
-
-                          <Text style={{
-                              ...TextStyles.small,
-                              fontFamily: 'Inter_600SemiBold',
-                              fontSize: modalCardHeight * 0.027,
-                              marginTop: modalCardHeight * 0.0075,
-                              color: Colors.primary.dark
-                          }}>Found in:</Text>
-                          <View style={styles.ExampleObjectsContainer}>
-                              {info[modalPlasticType - 1].modalFoundIn.map((item) => (
-                                  <ExampleObjects title={item.title}
-                                                  SvgComponent={item.SvgComponent}
-                                                  textColor={Colors.primary.dark} />
-                              ))}
-                          </View>
-
-                          {info[modalPlasticType - 1].reusedToMake && (
-                              <View style={{ alignItems: 'center', alignSelf: 'center', marginTop: modalCardHeight * 0.03 }}>
-                                  <Text style={{
-                                      ...TextStyles.small,
-                                      fontFamily: 'Inter_600SemiBold',
-                                      fontSize: modalCardHeight * 0.0255
-                                  }}>Reused in:</Text>
-                                  <View style={styles.ExampleObjectsContainer}>
-                                      {info[modalPlasticType - 1].reusedToMake?.map((item) => (
-                                          <ExampleObjects title={item.title}
-                                                          SvgComponent={item.SvgComponent}
-                                                          textColor={Colors.primary.dark} />
-                                      ))}
-                                  </View>
-                              </View>
-                          )}
-
-                      </View>
-
-                      <View style={{
-                          alignItems: 'center',
-                          alignSelf: 'center',
-                          justifyContent: 'flex-end',
-                          flex: 1,
-                          minHeight: modalCardHeight * 0.03,
-                      }}>
-                          <TouchableOpacity onPress={() => { }}>
-                              <Text style={{
-                                  ...styles.ModalTextBold,
-                                  textDecorationLine: 'underline',
-                                  fontSize: modalCardHeight * 0.02
-                              }}>Still Curious? Learn More Here!</Text>
-                          </TouchableOpacity>
-                      </View>
-                  </View>
+              <View style={{ zIndex: 1 }}>
+                <TouchableOpacity onPress={() => setModalVisible(false)}
+                  style={{ position: 'absolute', right: 0, top: 0, zIndex: 1 }}>
+                  <ModalExit width={35} height={35} />
+                </TouchableOpacity>
               </View>
+
+              <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: -30, marginTop: -20 }}>
+                <Polymer style={{ position: 'relative', maxHeight: polymerCardHeight * 0.25 }} />
+              </View>
+
+              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ ...styles.PolymerCardTitle, color: Colors.primary.dark }}>
+                  {info[modalPlasticType - 1].title}
+                </Text>
+              </View>
+
+              <View style={{
+                alignItems: 'center',
+                marginTop: modalCardHeight * 0.02,
+                width: '100%',
+                alignSelf: 'center',
+                maxHeight: modalCardHeight * 0.6,
+                justifyContent: 'space-evenly',
+              }}>
+                <View style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: modalCardHeight * 0.2,
+                }}>
+                  <TextBolded text={info[modalPlasticType - 1].modalInfo}
+                    regularStyles={styles.ModalText}
+                    boldStyles={styles.ModalTextBold} />
+                </View>
+
+                <Text style={{
+                  ...TextStyles.small,
+                  fontFamily: 'Inter_600SemiBold',
+                  fontSize: modalCardHeight * 0.027,
+                  marginTop: modalCardHeight * 0.0075,
+                  color: Colors.primary.dark,
+                }}>Found in:</Text>
+                <View style={styles.ExampleObjectsContainer}>
+                  {info[modalPlasticType - 1].modalFoundIn.map((item) => (
+                    <ExampleObjects title={item.title}
+                      SvgComponent={item.SvgComponent}
+                      textColor={Colors.primary.dark} />
+                  ))}
+                </View>
+
+                {info[modalPlasticType - 1].reusedToMake && (
+                  <View style={{ alignItems: 'center', alignSelf: 'center', marginTop: modalCardHeight * 0.03 }}>
+                    <Text style={{
+                      ...TextStyles.small,
+                      fontFamily: 'Inter_600SemiBold',
+                      fontSize: modalCardHeight * 0.0255,
+                    }}>Reused in:</Text>
+                    <View style={styles.ExampleObjectsContainer}>
+                      {info[modalPlasticType - 1].reusedToMake?.map((item) => (
+                        <ExampleObjects title={item.title}
+                          SvgComponent={item.SvgComponent}
+                          textColor={Colors.primary.dark} />
+                      ))}
+                    </View>
+                  </View>
+                )}
+
+              </View>
+
+              <View style={{
+                alignItems: 'center',
+                alignSelf: 'center',
+                justifyContent: 'flex-end',
+                flex: 1,
+                minHeight: modalCardHeight * 0.03,
+              }}>
+                <TouchableOpacity onPress={() => { }}>
+                  <Text style={{
+                    ...styles.ModalTextBold,
+                    textDecorationLine: 'underline',
+                    fontSize: modalCardHeight * 0.02,
+                  }}>Still Curious? Learn More Here!</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
+        </View>
       </Modal>
 
 
@@ -375,10 +401,10 @@ const EducationPage = () => {
             
             <View style={{ gap: 10, flexDirection: 'row' }}>
 
-            <ProgressCard
+              <ProgressCard
                 title={'Top Plastic'}
-                number={maxType.type}
-                text={`You've recycled ${maxType.value} No.${maxType.type} plastics this month. Great work!`}
+                number={maxRecycledType.type}
+                text={`You've recycled ${maxRecycledType.value ? maxRecycledType.value : 0} No.${maxRecycledType.type} plastics this month. Great work!`}
                 cornerComponent={
                   <Trophy width={60} height={60} style={{ left: -6, top:6 }}></Trophy>
                 }
@@ -386,13 +412,12 @@ const EducationPage = () => {
               </ProgressCard>
               <ProgressCard
                 title={'Earth Conscious'}
-                text={`You've reused ${user?.monthlyGoalPlasticAmount} plastics this month! Keep going!`}
-                // number={user?.monthlyGoalPlasticType}
+                text={`You've reused ${totalReused} plastics this month! Keep going!`}
                 cornerComponent={
                   <View>
                     <Globe width={60} height={60}></Globe>
                     <View style={{ position: 'relative', bottom: 40, justifyContent: 'center', alignItems: 'center' }}>
-                      <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{user?.monthlyGoalPlasticAmount}</Text>
+                      <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalReused}</Text>
                     </View>
                   </View>
                 }>
@@ -405,7 +430,7 @@ const EducationPage = () => {
                   <View>
                     <RecycleSymbol height={70} width={70} style={{ left: -10, bottom: 5 }}></RecycleSymbol>
                     <View style={{ position: 'relative', left: -10, bottom: 50, justifyContent: 'center', alignItems: 'center' }}>
-                      <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{user?.monthlyGoalPlasticAmount}</Text>
+                      <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalRecycled}</Text>
                     </View>
                   </View>
                 }>
@@ -414,7 +439,7 @@ const EducationPage = () => {
 
               <ProgressCard
                 title={'Pal Points'}
-                text={'You’ve gained 250 points for your avatar this month. Your pal says thanks! '}
+                text={`You’ve gained ${user.monthlyPoints} points for your avatar this month. Your pal says thanks! `}
                 cornerComponent={<Cat height={100} width={100} style={{ left: -20 }}></Cat>}>
               </ProgressCard>
             </View>
@@ -442,7 +467,7 @@ const EducationPage = () => {
 
         </View>
 
-        <View style={{height: screenHeight * 0.001}}>
+        <View style={{ height: screenHeight * 0.001 }}>
 
         </View>
       </ScrollView>
@@ -486,10 +511,15 @@ interface PolymerCardProps {
   setModalPlasticType: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const PolymerCard = ({number, setModalVisible, setModalPlasticType }: PolymerCardProps) => {
+const PolymerCard = ({ number, setModalVisible, setModalPlasticType }: PolymerCardProps) => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.users.selectedUser);
+  const loginHistoryArray = useAppSelector((state) => state.loginhistory.history);
+  const loginHistoryToday = loginHistoryArray[0];
+
   return (
     <View style={{ ...styles.card, borderRadius: 20, width: polymerCardWidth, 
-  maxHeight: polymerCardHeight, padding: 20, flexDirection: 'column', backgroundColor: info[number-1].color,}}>
+      maxHeight: polymerCardHeight, padding: 20, flexDirection: 'column', backgroundColor: info[number - 1].color }}>
 
       <View style={{
         width: 60, height: 60,
@@ -504,32 +534,35 @@ const PolymerCard = ({number, setModalVisible, setModalPlasticType }: PolymerCar
 
       </View>
       
-      <View style={{justifyContent: 'center', left: 40}}>
-          <Text style={styles.PolymerCardTitle}>{info[number-1].title}</Text>
+      <View style={{ justifyContent: 'center', left: 40 }}>
+        <Text style={styles.PolymerCardTitle}>{info[number - 1].title}</Text>
       </View>
 
       
 
-      <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 20,  maxWidth: '85%', alignSelf: 'center', maxHeight: polymerCardHeight * 0.6}}>
+      <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 20,  maxWidth: '85%', alignSelf: 'center', maxHeight: polymerCardHeight * 0.6 }}>
 
-        <View style={{alignItems: 'center', justifyContent: 'center', minHeight: polymerCardHeight * 0.25, marginBottom: 5, marginTop: 5 }}>
-          <TextBolded text={info[number-1].info} boldStyles={styles.PolymerCardTextBold} regularStyles={styles.PolymerCardText}></TextBolded>
+        <View style={{ alignItems: 'center', justifyContent: 'center', minHeight: polymerCardHeight * 0.25, marginBottom: 5, marginTop: 5 }}>
+          <TextBolded text={info[number - 1].info} boldStyles={styles.PolymerCardTextBold} regularStyles={styles.PolymerCardText}></TextBolded>
         </View>
 
-        <Text style={{ fontFamily: 'Inter_600SemiBold', fontSize: 18, marginTop: 10, color:'white'}}>Found in:</Text>
-        <View style = {{...styles.ExampleObjectsContainer}}>
-          {info[number-1].foundIn.map((item) => {
-            return <ExampleObjects title={item.title} SvgComponent={item.SvgComponent} textColor={'white'}></ExampleObjects>
+        <Text style={{ fontFamily: 'Inter_600SemiBold', fontSize: 18, marginTop: 10, color:'white' }}>Found in:</Text>
+        <View style = {{ ...styles.ExampleObjectsContainer }}>
+          {info[number - 1].foundIn.map((item) => {
+            return <ExampleObjects title={item.title} SvgComponent={item.SvgComponent} textColor={'white'}></ExampleObjects>;
           })}
         </View>
         
-        <View style={{ flex: 1, alignItems: 'flex-end', marginTop: 15}}>
-        <TouchableOpacity onPress={() => {
-          setModalVisible(true); 
-          setModalPlasticType(number);
-          }}>
-          <Text style={{...styles.PolymerCardText, textDecorationLine:'underline', marginTop: 10}}>Tap to explore</Text>
-        </TouchableOpacity>
+        <View style={{ flex: 1, alignItems: 'flex-end', marginTop: 15 }}>
+          <TouchableOpacity onPress={() => {
+            setModalVisible(true); 
+            setModalPlasticType(number);
+            if (!loginHistoryToday.greenGoal){
+              dispatch(readInfoCard({id: user.id}));
+            }}}
+            >
+            <Text style={{ ...styles.PolymerCardText, textDecorationLine:'underline', marginTop: 10 }}>Tap to explore</Text>
+          </TouchableOpacity>
         </View>
 
 
@@ -548,7 +581,7 @@ const TextBolded = ({ text, boldStyles, regularStyles } : TextBoldedProps) => {
   // Split text by asterisks, treat odd-indexed entries as bold
   const parts = text.split('*');
   return (
-    <Text style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
+    <Text style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center' }}>
       {parts.map((part, index) => {
         // Apply bold style to odd parts (between the asterisks)
         const textStyle = index % 2 === 1 ? boldStyles : regularStyles;
@@ -564,13 +597,13 @@ interface ExampleObjectProps {
   textColor : string;
 }
 
-const ExampleObjects = ({title, SvgComponent, textColor}: ExampleObjectProps) => {
+const ExampleObjects = ({ title, SvgComponent, textColor }: ExampleObjectProps) => {
   return (
     <View style={styles.ExampleObject}>
       <View style={styles.ExampleObjectTextContainer}>
-        <Text style={{...styles.PolymerCardText, fontSize:screenWidth * 0.035, color: textColor}}>{title}</Text>
+        <Text style={{ ...styles.PolymerCardText, fontSize:screenWidth * 0.035, color: textColor }}>{title}</Text>
       </View>
-        <SvgComponent width={60} height={60} />
+      <SvgComponent width={60} height={60} />
     </View>
   );
 };
@@ -578,7 +611,7 @@ const ExampleObjects = ({title, SvgComponent, textColor}: ExampleObjectProps) =>
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#F4F3E7",
+    backgroundColor: '#F4F3E7',
     borderRadius: 10,
   },
   PolymerCardTitle: {
@@ -587,14 +620,14 @@ const styles = StyleSheet.create({
     fontSize: 19,
     marginTop: -5,
     textAlign: 'left',
-    color: 'white'
+    color: 'white',
   },
   PolymerCardText: {
     ...TextStyles.small,
     fontFamily: 'Inter_400Regular',
     fontSize: screenWidth * 0.04,
     textAlign: 'center',
-    color: 'white'
+    color: 'white',
     
   },
   PolymerCardTextBold: {
@@ -603,14 +636,14 @@ const styles = StyleSheet.create({
     fontSize: screenWidth * 0.04,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: 'white'
+    color: 'white',
   },
   ModalText: {
     ...TextStyles.small,
     fontFamily: 'Inter_400Regular',
     fontSize: screenWidth * 0.0375,
     textAlign: 'center',
-    color: Colors.primary.dark
+    color: Colors.primary.dark,
     
   },
   ModalTextBold: {
@@ -619,7 +652,7 @@ const styles = StyleSheet.create({
     fontSize: screenWidth * 0.0375,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: Colors.primary.dark
+    color: Colors.primary.dark,
   },
   ExampleObjectsContainer: {
     flexDirection: 'row',
@@ -645,13 +678,13 @@ const styles = StyleSheet.create({
     marginBottom: screenHeight * 0.075,
   },
   modalInnerContainer: {
-      borderRadius: 20,
-      width: modalCardWidth,
-      maxHeight: modalCardHeight,
-      padding: 20,
-      flexDirection: 'column',
-      backgroundColor: Colors.secondary.normal,
-      flex: 1,
+    borderRadius: 20,
+    width: modalCardWidth,
+    maxHeight: modalCardHeight,
+    padding: 20,
+    flexDirection: 'column',
+    backgroundColor: Colors.secondary.normal,
+    flex: 1,
   },
 });
 

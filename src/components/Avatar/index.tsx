@@ -18,9 +18,10 @@ interface AvatarProps {
   accessory: number;
   style?: any;
   shadow: boolean;
+  mirror?: boolean;
 }
 
-const Avatar = ({ avatarID, color , size, accessory, style, shadow}: AvatarProps) => {
+const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: AvatarProps) => {
   let AvatarSVG;
 
   switch (avatarID) {
@@ -48,8 +49,8 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow}: AvatarProps
   }
 
   return (
-    <View style={[style, shadow && styles.shadow]}>
-      <AvatarSVG width={size} height={size} />
+    <View style={[style, shadow && styles.shadow, mirror ? {transform: [{ scaleX: -1 }] } : {}]}>
+      <AvatarSVG width={size} height={size}/>
     </View>
   );
 };

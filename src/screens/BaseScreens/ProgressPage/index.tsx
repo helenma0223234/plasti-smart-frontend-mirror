@@ -9,51 +9,57 @@ import { Svg, Circle } from 'react-native-svg';
 
 import { Ionicons } from '@expo/vector-icons';
 import Colors from 'utils/Colors';
+import useAppSelector from 'hooks/useAppSelector';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-const data: PieChartData[] = [
-  { name: 'PET (Pol. 1)', population: 5, color: '#CC554E' },
-  { name: 'HDPE (Pol. 2)', population: 3, color: '#50776F' },
-  { name: 'PVC (Pol. 3)', population: 2, color: '#CD775C' },
-  { name: 'LDPE (Pol. 4)', population: 3, color: '#586E97' },
-  { name: 'PP (Pol. 5)', population: 8, color: '#DBA26D' },
-  { name: 'PS (Pol. 6)', population: 4, color: '#5E5672' },
-  { name: 'Other (Pol. 7)', population: 1, color: '#676761' },
-];
+
 
 const ProgressReport = () => {
+    const user = useAppSelector((state) => state.users.selectedUser);
     const [selectedIndex, setSelectedIndex] = useState(1);
     const navigation = useNavigation<NavType>();
 
     const buttonLabels = ['Reused', 'All', 'Recycled'];
-
+    const data: PieChartData[] = [
+      { name: 'PET (Pol. 1)', population: user.Type1Recycled, color: '#CC554E' },
+      { name: 'HDPE (Pol. 2)', population: user.Type2Recycled, color: '#50776F' },
+      { name: 'PVC (Pol. 3)', population: user.Type3Recycled, color: '#CD775C' },
+      { name: 'LDPE (Pol. 4)', population: user.Type4Recycled, color: '#586E97' },
+      { name: 'PP (Pol. 5)', population: user.Type5Recycled, color: '#DBA26D' },
+      { name: 'PS (Pol. 6)', population: user.Type6Recycled, color: '#5E5672' },
+      { name: 'Other (Pol. 7)', population: user.Type7Recycled, color: '#676761' },
+    ];
     const getPopulationData = (): PieChartData[] => {
         if (selectedIndex === 0) {
             return [
-                { name: 'PET (Pol. 1)', population: 0, color: '#CC554E' },
-                { name: 'HDPE (Pol. 2)', population: 3, color: '#50776F' },
-                { name: 'PVC (Pol. 3)', population: 2, color: '#CD775C' },
-                { name: 'LDPE (Pol. 4)', population: 3, color: '#586E97' },
-                { name: 'PP (Pol. 5)', population: 8, color: '#DBA26D' },
-                { name: 'PS (Pol. 6)', population: 4, color: '#5E5672' },
-                { name: 'Other (Pol. 7)', population: 1, color: '#676761' },
+                { name: 'PET (Pol. 1)', population: user.Type1Reused, color: '#CC554E' },
+                { name: 'HDPE (Pol. 2)', population:  user.Type2Reused, color: '#50776F' },
+                { name: 'PVC (Pol. 3)', population:  user.Type3Reused, color: '#CD775C' },
+                { name: 'LDPE (Pol. 4)', population:  user.Type4Reused, color: '#586E97' },
+                { name: 'PP (Pol. 5)', population:  user.Type5Reused, color: '#DBA26D' },
+                { name: 'PS (Pol. 6)', population:  user.Type6Reused, color: '#5E5672' },
+                { name: 'Other (Pol. 7)', population:  user.Type7Reused, color: '#676761' },
             ];
         } else if (selectedIndex === 1) {
             return [
-                { name: 'PET (Pol. 1)', population: 5 + 0, color: '#CC554E' },
-                { name: 'HDPE (Pol. 2)', population: 3 + 3, color: '#50776F' },
-                { name: 'PVC (Pol. 3)', population: 2 + 2, color: '#CD775C' },
-                { name: 'LDPE (Pol. 4)', population: 3 + 3, color: '#586E97' },
-                { name: 'PP (Pol. 5)', population: 8 + 8, color: '#DBA26D' },
-                { name: 'PS (Pol. 6)', population: 4 + 4, color: '#5E5672' },
-                { name: 'Other (Pol. 7)', population: 1 + 1, color: '#676761' },
+                { name: 'PET (Pol. 1)', population: user.Type1Reused + user.Type1Recycled, color: '#CC554E' },
+                { name: 'HDPE (Pol. 2)', population: user.Type2Reused + user.Type2Recycled, color: '#50776F' },
+                { name: 'PVC (Pol. 3)', population: user.Type3Reused + user.Type3Recycled, color: '#CD775C' },
+                { name: 'LDPE (Pol. 4)', population: user.Type4Reused + user.Type4Recycled, color: '#586E97' },
+                { name: 'PP (Pol. 5)', population: user.Type5Reused + user.Type5Recycled, color: '#DBA26D' },
+                { name: 'PS (Pol. 6)', population: user.Type6Reused + user.Type6Recycled, color: '#5E5672' },
+                { name: 'Other (Pol. 7)', population: user.Type7Reused + user.Type7Recycled, color: '#676761' },
             ];
         } else {
             return data;
         }
     };
+
+    const isChartEmpty = ():Boolean => {
+        return getPopulationData().every((item) => item.population === 0);
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -91,7 +97,25 @@ const ProgressReport = () => {
           </View>
 
           <View style={styles.chartContainer}>
-              <DoughnutChart data={getPopulationData()} size={screenWidth * 0.9} />
+              {!isChartEmpty() ? 
+                <DoughnutChart data={getPopulationData()} size={screenWidth * 0.9} /> 
+              : 
+              <View style={{alignContent: 'center', justifyContent: 'center', alignSelf: 'center', minHeight: screenHeight * 0.4}}>
+                <Text style={{textAlign: 'center',
+                              fontSize: screenHeight * 0.0325,
+                              fontFamily: 'Inter_500Medium',
+                              marginBottom: 10,
+                              color: Colors.primary.dark,}}>
+                  No data to display
+                </Text>
+                <Text style={{textAlign: 'center',
+                              fontSize: screenHeight * 0.03,
+                              fontFamily: 'Inter_500Medium',
+                              marginBottom: 10,
+                              color: Colors.primary.dark,}}>
+                  Start Recycling!
+                </Text>
+              </View>}
           </View>
 
           <View style={styles.legendContainer}>

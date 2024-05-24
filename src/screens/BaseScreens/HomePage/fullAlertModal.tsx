@@ -9,9 +9,10 @@ import Colors from 'utils/Colors';
 interface PlasticModalProps {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
+  modalMessage: string;
 }
 
-const FullAlertModal: React.FC<PlasticModalProps> = ({ modalVisible, setModalVisible }) => (
+const FullAlertModal: React.FC<PlasticModalProps> = ({ modalVisible, setModalVisible, modalMessage }) => (
   <Modal
     animationType="slide"
     transparent={true}
@@ -31,7 +32,7 @@ const FullAlertModal: React.FC<PlasticModalProps> = ({ modalVisible, setModalVis
         <View style={styles.svgContainer}>
           <ShibaHead height={100} width={100}></ShibaHead>
         </View>
-        <Text style={styles.modalText}>Your pal is full! Come back later when it’s hungry again.</Text>        
+        <Text style={styles.modalText}>{modalMessage}</Text>        
       </View>
     </View>
   </Modal>

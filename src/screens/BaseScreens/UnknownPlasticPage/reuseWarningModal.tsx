@@ -1,9 +1,5 @@
 import React from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
-import { useNavigation } from '@react-navigation/native';
-
 
 import RedRecycleSymbol from '../../../assets/RedTriangleRecycle.svg';
 import CloseSVG from  '../../../assets/CloseModal.svg';
@@ -12,9 +8,7 @@ import Colors from 'utils/Colors';
 interface PlasticModalProps {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
-  selectedValue: string;
   plasticType: number;
-  secondNavigation: StackNavigationProp<BaseNavigationList>;
 }
 
 type WarningMessages = {
@@ -28,9 +22,7 @@ const warnings:WarningMessages = {
   7: 'Polymer 7 is not the safest to reuse.',
 };
 
-const ReuseWarningModal: React.FC<PlasticModalProps> = ({ secondNavigation, modalVisible, setModalVisible, selectedValue, plasticType }) => {
-  // console.log(secondNavigation);
-  // const navigation = useNavigation<StackNavigationProp<BaseNavigationList>>();
+const ReuseWarningModal: React.FC<PlasticModalProps> = ({ modalVisible, setModalVisible, plasticType }) => {
   return (
     <Modal
       animationType="none"
@@ -63,17 +55,6 @@ const ReuseWarningModal: React.FC<PlasticModalProps> = ({ secondNavigation, moda
               <Text style={styles.bottomSheetSelectButtonText}>RECYCLE INSTEAD</Text>
             </TouchableOpacity>
 
-            {/* <TouchableOpacity
-              style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
-              onPress={() => {
-                // secondNavigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
-                setModalVisible(!modalVisible);
-                // secondNavigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
-                navigation.navigate(BaseTabRoutes.HOME, {});
-              }}
-            >
-              <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>LEARN MORE</Text>
-            </TouchableOpacity> */}
           </View>
         </View>
       </View>
@@ -88,7 +69,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   modalView: {
-    margin: 40,
+    margin: 45,
     backgroundColor: '#DAE5D7',
     borderRadius: 20,
     padding: 34,
@@ -101,7 +82,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    maxHeight: '50%',
+    maxHeight: '44%',
   },
   closeButton: {
     position: 'absolute',

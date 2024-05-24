@@ -32,7 +32,7 @@ const SignUpPage = () => {
     else if (!password) alert('Please enter a password!');
     else if (!username) alert('Please confirm your password!');
     else {
-      dispatch(signUp({ email, password, username }));
+      dispatch(signUp({ email, password, username, name }));
     }
   };
 
@@ -88,7 +88,7 @@ const SignUpPage = () => {
               disabled={!email || !password || !name || !username}
             />
             <Text style={TextStyles.small}>Already have an account? <Text style={{ textDecorationLine: 'underline' }}
-              onPress={() => navigation.navigate(AuthStackRoutes.SIGNIN)}>Sign in!</Text></Text>
+              onPress={() => navigation.navigate(AuthStackRoutes.SIGNIN, {})}>Sign in!</Text></Text>
           </View>
         </View>
       </SafeAreaView>

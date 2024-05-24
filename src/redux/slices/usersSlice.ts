@@ -3,6 +3,7 @@ import { SERVER_URL } from 'utils/constants.js';
 import axios from 'axios';
 import { UserScopes, IUser } from 'types/users.jsx';
 import { updateFirstLoginHistory } from './loginhistorySlice';
+import { AvatarCustomization } from '../../types/avatars';
 
 export interface UserState {
   loading: boolean
@@ -52,27 +53,37 @@ export const getUser = createAsyncThunk(
 export const updateUser = createAsyncThunk(
   'users/updateUser',
   async (req: { 
-    id: string, 
-    name?: string, 
-    email?: string, 
-    username?: string, 
-    pronoun?: string, 
-    avatar?: number, 
-    teamID?: string, 
-    lastLogin?: string, 
-    avatarHealth?: number, 
-    monthlyTotalScans?: number, 
-    snacks?: number,
-    Type1Collected?: number, 
-    Type2Collected?: number, 
-    Type3Collected?: number, 
-    Type4Collected?: number, 
-    Type5Collected?: number, 
-    Type6Collected?: number, 
-    Type7Collected?: number,
-    monthlyGoalPlasticType?: number, 
-    monthlyGoalPlasticAmount?: number, 
-    monthlyGoalPlasticTotal?: number
+    id?: string;
+    email?: string;
+    username?: string;
+    name?: string;
+    role?: UserScopes;
+    lastLogin?: Date;
+    rank?: number;
+    avatarSet?: boolean;
+    avatarID?: number;
+    avatarColor?: number;
+    avatarHealth?: number;
+    avatarAccessoryEquipped?: number;
+    avatarCustomization?: AvatarCustomization;
+    points?: number;
+    monthlyPoints?: number;
+    monthlyTotalReused?: number;
+    monthlyTotalRecycled?: number;
+    Type1Recycled?: number;
+    Type2Recycled?: number;
+    Type3Recycled?: number;
+    Type4Recycled?: number;
+    Type5Recycled?: number;
+    Type6Recycled?: number;
+    Type7Recycled?: number;
+    Type1Reused?: number;
+    Type2Reused?: number;
+    Type3Reused?: number;
+    Type4Reused?: number;
+    Type5Reused?: number;
+    Type6Reused?: number;
+    Type7Reused?: number;
   }, { dispatch }) => {
     dispatch(startUsersLoading());
     return axios
@@ -123,9 +134,148 @@ export const feedAvatar = createAsyncThunk(
   },
 );
 
+export const readInfoCard = createAsyncThunk(
+  'login_history/readInfoCard',
+  async (req: { id: string }, { dispatch }) => {
+    dispatch(startUsersLoading());
+    return axios
+      .post(`${SERVER_URL}login_history/${req.id}/readInfoCard`)
+      .finally(() => dispatch(stopUsersLoading()))
+      .then((response) => {
+        dispatch(updateFirstLoginHistory(response.data.loginHistory));
+        return response.data.user;
+      })
+      .catch((error) => {
+        console.error('Error when updating green goal', error);
+        return false;
+      });
+  },
+);
+
+export const setAvatarFirstTime = createAsyncThunk(
+  'users/setAvatarFirstTime',
+  async (req: { id: string, avatarID: number }, { dispatch }) => {
+    dispatch(startUsersLoading());
+    return axios
+      .post(`${SERVER_URL}users/${req.id}/setAvatarFirstTime`, req)
+      .finally(() => dispatch(stopUsersLoading()))
+      .then((response) => {
+        console.log("response data", response.data)
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('Error when setting avatar', error);
+        return false;
+      });
+  },
+);
+
+export const buyAvatar = createAsyncThunk(
+  'users/buyAvatar',
+  async (req: { id: string, avatarID: number }, { dispatch }) => {
+    dispatch(startUsersLoading());
+    return axios
+      .post(`${SERVER_URL}users/${req.id}/buyAvatar`, req)
+      .finally(() => dispatch(stopUsersLoading()))
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('Error when buying avatar', error);
+        return false;
+      });
+  },
+);
+
+export const equipAvatar = createAsyncThunk(
+  'users/equipAvatar',
+  async (req: { id: string, avatarID: number }, { dispatch }) => {
+    dispatch(startUsersLoading());
+    return axios
+      .post(`${SERVER_URL}users/${req.id}/equipAvatar`, req)
+      .finally(() => dispatch(stopUsersLoading()))
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('Error when equiping avatar', error);
+        return false;
+      });
+  },
+);
+
+export const buyAvatarAccessory = createAsyncThunk(
+  'users/buyAvatarAccessory',
+  async (req: { id: string, accessoryID: number }, { dispatch }) => {
+    dispatch(startUsersLoading());
+    return axios
+      .post(`${SERVER_URL}users/${req.id}/buyAvatarAccessory`, req)
+      .finally(() => dispatch(stopUsersLoading()))
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('Error when buying avatar accessory', error);
+        return false;
+      });
+  },
+);
+
+export const equipAccessory = createAsyncThunk(
+  'users/equipAccessory',
+  async (req: { id: string, accessoryID: number }, { dispatch }) => {
+    dispatch(startUsersLoading());
+    return axios
+      .post(`${SERVER_URL}users/${req.id}/equipAccessory`, req)
+      .finally(() => dispatch(stopUsersLoading()))
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('Error when equiping avatar accessory', error);
+        return false;
+      });
+  },
+);
+
+export const buyAvatarColor = createAsyncThunk(
+  'users/buyAvatarColor',
+  async (req: { id: string, colorID: number }, { dispatch }) => {
+    dispatch(startUsersLoading());
+    return axios
+      .post(`${SERVER_URL}users/${req.id}/buyAvatarColor`, req)
+      .finally(() => dispatch(stopUsersLoading()))
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('Error when buying avatar color', error);
+        return false;
+      });
+  },
+);
+
+export const equipColor = createAsyncThunk(
+  'users/equipColor',
+  async (req: { id: string, colorID: number }, { dispatch }) => {
+    dispatch(startUsersLoading());
+    return axios
+      .post(`${SERVER_URL}users/${req.id}/equipColor`, req)
+      .finally(() => dispatch(stopUsersLoading()))
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('Error when equiping avatar color', error);
+        return false;
+      });
+  },
+);
+
+
 export const createScan = createAsyncThunk(
   'users/createScan',
-  async (req: { scannedBy: string, plasticNumber: number, plasticLetter: string, image: string | null }, { dispatch }) => {
+  async (req: { scannedBy: string, plasticNumber: number, plasticLetter: string, image: string | null, reused: boolean, recycled: boolean }, { dispatch }) => {
     dispatch(startUsersLoading());
     return axios
       .post(`${SERVER_URL}scan/`, req)
@@ -173,6 +323,30 @@ export const usersSlice = createSlice({
       alert('Deleted user with id ' + user.id);
     });
     builder.addCase(feedAvatar.fulfilled, (state, action) => {
+      state.selectedUser = action.payload as IUser;
+    });
+    builder.addCase(readInfoCard.fulfilled, (state, action) => {
+      state.selectedUser = action.payload as IUser;
+    });
+    builder.addCase(setAvatarFirstTime.fulfilled, (state, action) => {
+      state.selectedUser = action.payload as IUser;
+    });
+    builder.addCase(buyAvatar.fulfilled, (state, action) => {
+      state.selectedUser = action.payload as IUser;
+    });
+    builder.addCase(equipAvatar.fulfilled, (state, action) => {
+      state.selectedUser = action.payload as IUser;
+    });
+    builder.addCase(buyAvatarAccessory.fulfilled, (state, action) => {
+      state.selectedUser = action.payload as IUser;
+    });
+    builder.addCase(equipAccessory.fulfilled, (state, action) => {
+      state.selectedUser = action.payload as IUser;
+    });
+    builder.addCase(buyAvatarColor.fulfilled, (state, action) => {
+      state.selectedUser = action.payload as IUser;
+    });
+    builder.addCase(equipColor.fulfilled, (state, action) => {
       state.selectedUser = action.payload as IUser;
     });
     builder.addCase(createScan.fulfilled, (state, action) => {

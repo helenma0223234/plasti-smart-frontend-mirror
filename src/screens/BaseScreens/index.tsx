@@ -11,11 +11,11 @@ import EducationPage from './EducationPage';
 import ProgressPage from './ProgressPage';
 import ManualEntryPage from './ManualEntryPage';
 import UnknownPlasticPage from './UnknownPlasticPage';
-import UnknownInfoPage from './UnknownInfoPage';
 import SettingsPage from './SettingsPage';
 import ProfileSettingsPage from './SettingsPage/profileSettings';
 import PasswordSettingsPage from './SettingsPage/passwordSettings';
 import NotificationsSettingsPage from './SettingsPage/notificationsSettings';
+import MascotPage from './MascotPage';
 
 export {
   FrontPage,
@@ -31,9 +31,9 @@ export {
   ProgressPage,
   ManualEntryPage,
   UnknownPlasticPage,
-  UnknownInfoPage,
   SettingsPage,
   ProfileSettingsPage,
   PasswordSettingsPage,
   NotificationsSettingsPage,
+  MascotPage,
 };

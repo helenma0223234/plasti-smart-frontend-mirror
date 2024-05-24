@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   Animated,
   ActivityIndicator,
-  Image,
 } from 'react-native';
 import FormatStyle from '../../../utils/FormatStyle';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,34 +20,40 @@ import * as tfjs from '@tensorflow/tfjs';
 import useAppSelector from '../../../hooks/useAppSelector';
 import useAppDispatch from 'hooks/useAppDispatch';
 import { cameraClosed, cameraOpened } from 'redux/slices/cameraSlice';
+import { reusedRedux, recycledRedux } from 'redux/slices/scanSlice';
 import { createScan } from 'redux/slices/usersSlice';
 import { RootState } from 'redux/store';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { PinchGestureHandler } from 'react-native-gesture-handler';
 import { PinchGestureHandlerGestureEvent } from 'react-native-gesture-handler';
+import { REPLICATE_URL, REPLICATE_VERSION, REPLICATE_API_TOKEN } from '../../../utils/constants';
 
 // components
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Carousel from 'react-native-snap-carousel';
+import ReuseWarningModal from '../UnknownPlasticPage/reuseWarningModal';
+
+const plasticTypes = {
+  1: 'Polyethylene Terephthalate',
+  2: 'High-Density Polyethylene',
+  3: 'Polyvinyl Chloride',
+  4: 'Low-Density Polyethylene',
+  5: 'Polypropylene',
+  6: 'Polystyrene',
+  7: 'Miscellaneous/Other',
+  8: 'Unknown',
+};
 
 // line animation source: https://medium.com/@vivekjoy/creating-a-barcode-scanner-using-expo-barcode-scanner-in-a-react-native-cli-project-2d36a235ab41
 
 type CameraPageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;
 };
-type carouselItem = {
-  plasticNumber: number;
-};
-type renderItem = {
-  item: carouselItem;
-  index: number;
-};
 
 const CameraPage = ({ navigation }: CameraPageProps) => {
   const [type, setType] = useState<CameraType>(CameraType.back);
   const [permissions, requestPermission] = Camera.useCameraPermissions();
-
   const [animationLineHeight, setAnimationLineHeight] = useState<number>(0);
   const [focusLineAnimation, setFocusLineAnimation] = useState<Animated.Value>(
     new Animated.Value(0),
@@ -57,27 +62,15 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
   const cameraRef = useRef<Camera | null>(null);
 
-  const [modelVerdict, setModelVerdict] = useState<number | null>(null);
-  const [isModelRunning, setIsModelRunning] = useState(false);
-  const model = useAppSelector((state: RootState) => state.model.model);
+  const [modelVerdict, setModelVerdict] = useState<number>(0);
   const dispatch = useAppDispatch();
   
   // use user slice user instead of auth slice user?
   const user = useAppSelector((state) => state.users.selectedUser);
-  
-  const plasticTypes = {
-    1: 'PET',
-    2: 'HDPE',
-    3: 'PVC',
-    4: 'LDPE',
-    5: 'PP',
-    6: 'PS',
-    7: 'Other',
-    8: 'Unknown',
-  };
 
   const [isAnimating, setIsAnimating] = useState(true);
   const [zoom, setZoom] = useState(0);
+  const [reuseModalVisible, setReuseModalVisible] = React.useState(false);
 
   // bottom sheet
   const bottomSheetRef = useRef(null);
@@ -97,7 +90,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   
       let animation: Animated.CompositeAnimation | undefined;
       if (isAnimating) {
-        // console.log('I am reacting to isAnimating');
         animation = Animated.loop(
           Animated.sequence([
             Animated.timing(focusLineAnimation, {
@@ -119,48 +111,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       return () => animation && animation.stop();
     }, [navigation, isAnimating]),
   );
-
-  useEffect(() => {
-    const classifyImage = async () => {
-      // for development purpose
-      if (capturedPhoto) {
-        setModelVerdict(4);
-        bottomSheetRef.current?.open();
-      }
-      //////////////// bypass this current model that isn't working
-      // if (capturedPhoto && model && !isModelRunning) {
-      //   setIsModelRunning(true);
-      //   try {
-      //     // Load image
-      //     const response = await fetch(capturedPhoto);
-      //     const imageDataArrayBuffer = await response.arrayBuffer();
-      //     const imageTensor = tf.decodeJpeg(new Uint8Array(imageDataArrayBuffer), 3);
-
-      //     // Preprocess image
-      //     const resizedImage = tfjs.image.resizeBilinear(imageTensor, [200, 200]);
-      //     const batchedImage = resizedImage.expandDims(0);
-
-      //     // Classify image
-      //     const prediction = await model.predict(batchedImage);
-      //     if (prediction instanceof tfjs.Tensor) {
-      //       const predictionArray = prediction.dataSync();
-      //       const predictionValues = Array.from(predictionArray);
-      //       // finding the index w/ maximum value (class with the highest probability)
-      //       const predictedIndex = predictionValues.indexOf(Math.max(...predictionValues));
-      //       setModelVerdict(predictedIndex + 1);
-      //       bottomSheetRef.current?.open();
-      //       setIsModelRunning(false);
-      //     } else {
-      //       console.error('Error classifying image: prediction is not a tensor');
-      //     }
-      //   } catch (error) {
-      //     console.error('Error classifying image:', error);
-      //   }
-      // }
-    };
-
-    classifyImage();
-  }, [capturedPhoto]);
 
   if (!permissions) {
     return (
@@ -186,11 +136,48 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   const takePicture = async () => {
     if (cameraRef.current) {
       try {
-        const photo = await cameraRef.current.takePictureAsync();
-        setCapturedPhoto(photo.uri); // Store the photo URI in state
+        const options = { base64: true };
+        const photo = await cameraRef.current.takePictureAsync(options);
+        // for test
+        setModelVerdict(1);
+        bottomSheetRef.current?.open();
+
+        // if (photo.base64) {
+        //   setCapturedPhoto(photo.base64);
+
+        //   // for test
+        //   setModelVerdict(1);
+
+        //   // // API call
+        //   // const response = await fetch(`${REPLICATE_URL}`, {
+        //   //   method: 'POST',
+        //   //   headers: {
+        //   //     'Authorization': `Bearer ${REPLICATE_API_TOKEN}`,
+        //   //     'Content-Type': 'application/json',
+        //   //   },
+        //   //   body: JSON.stringify({
+        //   //     version: `${REPLICATE_VERSION}`,
+        //   //     input: {
+        //   //       image: photo.base64,
+        //   //     },
+        //   //   }),
+        //   // });
+
+        //   if (!response.ok) {
+        //     throw new Error(`HTTP error! status: ${response.status}`);
+        //   }
+        //   const data = await response.json();
+        //   console.log(response);
+        //   if (data.type) {
+        //     setModelVerdict(data.type);
+        //     bottomSheetRef.current?.open();
+        //   }
+        // } else {
+        //   console.error('Failed to capture photo');
+        // }
       } catch (error) {
         console.error('Error taking picture:', error);
-        alert('Failed to take picture. Please try again.'); // Optionally alert the user
+        alert('Failed to take picture. Please try again.'); // alert the user
       }
     }
   };
@@ -214,48 +201,35 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
 
   const carouselSVG =
     '<svg width="141" height="129" viewBox="0 0 141 129" fill="none" xmlns="http://www.w3.org/2000/svg">\n<g id="pol 3">\n<g id="Vector" filter="url(#filter0_i_2375_19914)">\n<path d="M49.6918 39.8521L20.441 91.0468C19.4998 92.9125 19.0182 94.9763 19.0364 97.0661C19.0545 99.1559 19.5718 101.211 20.5451 103.06C21.5185 104.909 22.9196 106.498 24.6317 107.695C26.3437 108.892 28.317 109.662 30.3868 109.941L37.8571 110.065" stroke="#1B453C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>\n</g>\n<g id="Vector_2" filter="url(#filter1_i_2375_19914)">\n<path d="M64.4138 109.916H123.347C125.433 109.808 127.464 109.203 129.268 108.15C131.073 107.097 132.6 105.627 133.722 103.864C134.843 102.1 135.527 100.094 135.716 98.0118C135.904 95.9299 135.593 93.833 134.806 91.8962L131.205 85.3437M54.8273 57.4953L50.0341 39.5938L32.1445 44.3902" stroke="#1B453C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>\n</g>\n<g id="Vector_3" filter="url(#filter2_i_2375_19914)">\n<path d="M118.567 62.1172L89.0999 11.0466C87.9632 9.29334 86.424 7.83758 84.6106 6.80075C82.7973 5.76392 80.7625 5.17609 78.6759 5.08632C76.5894 4.99654 74.5116 5.40742 72.616 6.28467C70.7205 7.16191 69.062 8.48009 67.7791 10.1292L63.9092 16.5245" stroke="#1B453C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>\n</g>\n<g id="Vector_4" filter="url(#filter3_i_2375_19914)">\n<path d="M77.5104 96.8086L64.4141 109.914L77.5104 123.019" stroke="#1B453C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>\n</g>\n<g id="Vector_5" filter="url(#filter4_i_2375_19914)">\n<path d="M101.688 57.2974L119.536 62.2492L124.484 44.3895" stroke="#1B453C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>\n</g>\n</g>\n<defs>\n<filter id="filter0_i_2375_19914" x="14.0371" y="34.8516" width="40.6543" height="82.2148" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">\n<feFlood flood-opacity="0" result="BackgroundImageFix"/>\n<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>\n<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\n<feOffset dy="2"/>\n<feGaussianBlur stdDeviation="3"/>\n<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>\n<feColorMatrix type="matrix" values="0 0 0 0 0.886275 0 0 0 0 0.898039 0 0 0 0 0.901961 0 0 0 1 0"/>\n<feBlend mode="normal" in2="shape" result="effect1_innerShadow_2375_19914"/>\n</filter>\n<filter id="filter1_i_2375_19914" x="27.1436" y="34.5938" width="113.626" height="82.3203" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">\n<feFlood flood-opacity="0" result="BackgroundImageFix"/>\n<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>\n<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\n<feOffset dy="2"/>\n<feGaussianBlur stdDeviation="3"/>\n<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>\n<feColorMatrix type="matrix" values="0 0 0 0 0.886275 0 0 0 0 0.898039 0 0 0 0 0.901961 0 0 0 1 0"/>\n<feBlend mode="normal" in2="shape" result="effect1_innerShadow_2375_19914"/>\n</filter>\n<filter id="filter2_i_2375_19914" x="58.9082" y="0.0742188" width="64.6592" height="69.043" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">\n<feFlood flood-opacity="0" result="BackgroundImageFix"/>\n<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>\n<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\n<feOffset dy="2"/>\n<feGaussianBlur stdDeviation="3"/>\n<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>\n<feColorMatrix type="matrix" values="0 0 0 0 0.886275 0 0 0 0 0.898039 0 0 0 0 0.901961 0 0 0 1 0"/>\n<feBlend mode="normal" in2="shape" result="effect1_innerShadow_2375_19914"/>\n</filter>\n<filter id="filter3_i_2375_19914" x="59.4141" y="91.8086" width="23.0967" height="38.2109" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">\n<feFlood flood-opacity="0" result="BackgroundImageFix"/>\n<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>\n<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\n<feOffset dy="2"/>\n<feGaussianBlur stdDeviation="3"/>\n<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>\n<feColorMatrix type="matrix" values="0 0 0 0 0.886275 0 0 0 0 0.898039 0 0 0 0 0.901961 0 0 0 1 0"/>\n<feBlend mode="normal" in2="shape" result="effect1_innerShadow_2375_19914"/>\n</filter>\n<filter id="filter4_i_2375_19914" x="96.6885" y="39.3867" width="32.7959" height="29.8633" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">\n<feFlood flood-opacity="0" result="BackgroundImageFix"/>\n<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>\n<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\n<feOffset dy="2"/>\n<feGaussianBlur stdDeviation="3"/>\n<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>\n<feColorMatrix type="matrix" values="0 0 0 0 0.886275 0 0 0 0 0.898039 0 0 0 0 0.901961 0 0 0 1 0"/>\n<feBlend mode="normal" in2="shape" result="effect1_innerShadow_2375_19914"/>\n</filter>\n</defs>\n</svg>\n';
-
-  const _carousel: Carousel<carouselItem> | null = null;
-
-  const _renderItem = ({ item, index }: renderItem) => {
-    return (
-      <View style={manualEntryStyles.slide}>
-        <SvgXml
-          style={manualEntryStyles.svg}
-          xml={carouselSVG}
-          width="105%"
-          height="105%"
-        />
-        <Text style={manualEntryStyles.title}>{item.plasticNumber}</Text>
-      </View>
-    );
-  };
-
-  const carouselItems: Array<carouselItem> = Array.from(
-    { length: 7 },
-    (_, i) => ({ plasticNumber: i + 1 }),
-  );
-
-  const getCarouselIndex = (): number => {
-    if (_carousel) {
-      return _carousel.currentIndex;
-    }
-    return -1;
-  };
-
+  
   /**************** Done Carousel ****************/
 
 
   /**************** Nav functions ****************/
-  const selectButtonPressed = () => {
-    const plasticNum = getCarouselIndex() + 1;
-    if (user)
-      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, plasticLetter: plasticTypes[plasticNum as keyof typeof plasticTypes], image: capturedPhoto }));
+  const handleReusePress = () => {  
+    if (modelVerdict == 1 || modelVerdict == 3 || modelVerdict >= 6) {  
+      setIsAnimating(false);
+      setReuseModalVisible(true);
+    } else if (capturedPhoto && modelVerdict && user) {
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, plasticLetter: plasticTypes[modelVerdict as keyof typeof plasticTypes], image: capturedPhoto, reused: true, recycled: false }));
+      dispatch(reusedRedux());
+      setIsAnimating(false);
+      setCapturedPhoto(null);
+      dispatch(cameraClosed());
+      bottomSheetRef.current?.close();
+      navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
+    }
+  };
 
-    setModelVerdict(plasticNum);
+  const selectButtonPressed = () => {
+    if (capturedPhoto && modelVerdict && user) {
+      dispatch(recycledRedux());
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, plasticLetter: plasticTypes[modelVerdict as keyof typeof plasticTypes], image: capturedPhoto, reused: false, recycled: true }));
+    }
     setIsAnimating(false);
     setCapturedPhoto(null);
     dispatch(cameraClosed());
+    bottomSheetRef.current?.close();
     navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
   };
 
@@ -272,14 +246,14 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       <PinchGestureHandler
         onGestureEvent={onPinchGestureEvent}
       >
-        <Camera style={styles.camera} type={type} ref={cameraRef} zoom={zoom}>
+        <Camera style={styles.camera} type={type} ref={cameraRef} flashMode={Camera.Constants.FlashMode.auto} 
+          autoFocus={Camera.Constants.AutoFocus.on} zoom={zoom}>
           <View style={styles.overlay}>
             <View style={styles.topContainer}>
               <View style={styles.backButtonContainer}>
                 <TouchableOpacity
                   style={styles.backButton}
                   onPress={() => goToFrontPage()}
-                  disabled={isModelRunning} 
                 >
                   <Ionicons name="arrow-back-outline" size={36} color="white" />
                 </TouchableOpacity>
@@ -329,7 +303,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
               <View style={styles.flipButtonContainer}>
                 <TouchableOpacity
                   style={styles.flipButton}
-                  disabled={isModelRunning}
                   onPress={toggleCameraType}
                 >
                   <Ionicons
@@ -342,7 +315,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
               <View style={styles.captureButtonContainer}>
                 <TouchableOpacity
                   style={styles.captureButton}
-                  disabled={isModelRunning}
                   onPress={takePicture}
                 ></TouchableOpacity>
               </View>
@@ -350,7 +322,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
           </View>
         </Camera>
       </PinchGestureHandler>
-
       <RBSheet
         ref={bottomSheetRef}
         height={350}
@@ -386,43 +357,30 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
             <Text style={[styles.bottomSheetTitle]}>{modelVerdict}</Text>
           </View>
           <Text style={{ fontSize: 16, color: '#1B453C', marginBottom: 20 }}>
-            {`Polymer ${modelVerdict}: HDPE`}
+            {plasticTypes[modelVerdict as keyof typeof plasticTypes]}
           </Text>
           
           <TouchableOpacity
             style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
-            disabled={isModelRunning}
-            onPress={() => {
-              // if (modelVerdict && user && capturedPhoto)
-              //   dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, plasticLetter: plasticTypes[modelVerdict as keyof typeof plasticTypes], image: capturedPhoto }));
-
-              setIsAnimating(false);
-              setCapturedPhoto(null);
-              dispatch(cameraClosed());
-              bottomSheetRef.current?.close();
-              navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});       
-            }}
+            onPress={handleReusePress}
           >
             <Text style={styles.bottomSheetSelectButtonText}>I'M REUSING</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
-            disabled={isModelRunning}
-            onPress={() => {
-              // REDUX HERE
-              setIsAnimating(false);
-              setCapturedPhoto(null);
-              dispatch(cameraClosed());
-              bottomSheetRef.current?.close();
-              navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
-            }}
+            // disabled={isModelRunning}
+            onPress={selectButtonPressed}
           >
             <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>I'M RECYCLING</Text>
           </TouchableOpacity>
         </View>
+        <ReuseWarningModal 
+          modalVisible={reuseModalVisible} 
+          setModalVisible={setReuseModalVisible} 
+          plasticType={modelVerdict} 
+        />
       </RBSheet>
-        
     </View>
   );
 };
@@ -596,6 +554,25 @@ const styles = StyleSheet.create({
     fontSize: 21,
     fontWeight: '500',
     letterSpacing: -0.3,
+    alignContent: 'center',
+    alignSelf:'center',
+  },
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 35,
+    color: '#1B453C',
+    fontWeight: 'bold',
+    position: 'absolute',
+  },
+  svg: {
+    position: 'relative',
+    right: '5.5%',
+    bottom: '1%',
+    color: 'black',
   },
 });
 

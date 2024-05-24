@@ -17,8 +17,9 @@ import type { StackNavigationProp } from '@react-navigation/stack';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import { useNavigation } from '@react-navigation/native';
 import NavType from 'utils/NavType';
-import { cameraOpened } from 'redux/slices/cameraSlice';
+import { cameraClosed, cameraOpened } from 'redux/slices/cameraSlice';
 import Avatar from '../../../components/Avatar';
+import { Camera } from 'expo-camera';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -52,6 +53,7 @@ const MascotPage = () => {
 
   const handleUpdateUser = () => {
     dispatch(setAvatarFirstTime({id: user.id, avatarID: activeIndex+1}));
+    dispatch(cameraClosed());
   };
 
   let _carousel: Carousel<carouselItem> | null = null;
@@ -112,6 +114,7 @@ const MascotPage = () => {
           style={styles.button}
           onPress={async () => {
             handleUpdateUser();
+            dispatch(cameraClosed());
             navigation.navigate(BaseTabRoutes.HOME, {});
           }}
         >

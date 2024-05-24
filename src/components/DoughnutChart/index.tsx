@@ -21,7 +21,6 @@ const DoughnutChart = ({ data, size }: DoughnutChartProps) => {
   const innerRadius = radius - size / 4;
   const outerRadius = radius - 1;
   const padAngle = 0.01;
-  const totalPopulation = data.reduce((acc, item) => acc + item.population, 0);
 
   const customArcs = pie()
     .value((d: PieChartData) => d.population)

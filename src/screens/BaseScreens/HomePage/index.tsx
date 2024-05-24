@@ -35,6 +35,7 @@ import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 
 import FullAlertModal from './fullAlertModal';
 import { cameraClosed } from 'redux/slices/cameraSlice';
+import Avatar from 'components/Avatar';
 
 type HomePageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;
@@ -47,6 +48,8 @@ const HomePage = ({ navigation }: HomePageProps) => {
   const user = useAppSelector((state) => state.users.selectedUser);
   const currentLoginHist = useAppSelector((state) => state.loginhistory.history);
   const dispatch = useDispatch();
+
+  console.log('user rank:', user?.rank);
 
   dispatch(cameraClosed());
 
@@ -164,7 +167,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
         
         <View style={{ position: 'absolute', top: screenHeight * 0.25, left:screenWidth * 0.02 }}>
           <HomeAvaShadow style={{ position: 'absolute', top: screenHeight * 0.09, right: screenWidth * 0.06 }} width={screenWidth * 0.5} height ={screenHeight * 0.45}></HomeAvaShadow>
-          <HomeShiba width={screenWidth * 0.45} height ={screenHeight * 0.45}></HomeShiba>
+          <Avatar avatarID={user.avatarID} color={user.avatarColor} size={screenWidth * 0.5} accessory={user.avatarAccessoryEquipped} shadow={false} style={{top: screenHeight * 0.1}} mirror={user.avatarID==2}></Avatar>
           <TouchableOpacity style={{ position: 'absolute', top: screenHeight * 0.17, right: -screenWidth * 0.19 }} onPress={() => handleSnackPress({ points: user.points, uid: user.id, uhealth: user.avatarHealth })}>
             {user.points > 0 ? <HomeFullBowl width={screenWidth * 0.25} height ={screenHeight * 0.28} />  : <Bowl width={screenWidth * 0.33} height ={screenHeight * 0.33} />}
           </TouchableOpacity>

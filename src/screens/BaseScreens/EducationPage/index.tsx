@@ -558,9 +558,9 @@ const PolymerCard = ({ number, setModalVisible, setModalPlasticType }: PolymerCa
             setModalVisible(true); 
             setModalPlasticType(number);
             if (!loginHistoryToday.greenGoal){
-              dispatch(readInfoCard({id: user.id}))
-            }
-          }}>
+              dispatch(readInfoCard({id: user.id}));
+            }}}
+            >
             <Text style={{ ...styles.PolymerCardText, textDecorationLine:'underline', marginTop: 10 }}>Tap to explore</Text>
           </TouchableOpacity>
         </View>

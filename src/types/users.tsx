@@ -10,6 +10,7 @@ export interface IUser {
   id: string;
   email: string;
   username: string;
+  password?: string;
   name?: string;
   role: UserScopes;
   lastLogin: Date;
@@ -38,4 +39,4 @@ export interface IUser {
   Type5Reused: number;
   Type6Reused: number;
   Type7Reused: number;
-};
+}

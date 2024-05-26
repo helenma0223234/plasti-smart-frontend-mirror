@@ -4,7 +4,13 @@ import { View, Text, TouchableOpacity, StyleSheet, TextInput, Dimensions, SafeAr
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
 
+import useAppDispatch from '../../../hooks/useAppDispatch';
+import useAppSelector from 'hooks/useAppSelector';
+import { updateUser } from '../../../redux/slices/usersSlice'; 
+import { SERVER_URL } from 'utils/constants.js';
+
 import Colors from 'utils/Colors';
+import axios from 'axios';
 
 const visibleeye = () => ( 
   <Entypo name="eye" size={20} color='rgba(27, 69, 60, 1)' style={styles.eye} /> 
@@ -35,6 +41,14 @@ type PasswordSettingsPageProps = {
 };
 
 const PasswordSettingsPage = ({ navigation }: PasswordSettingsPageProps) => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.users.selectedUser);
+
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [updatedPassword, setUpdatedPassword] = useState('');
+  const [confirmedPassword, setConfirmedPassword] = useState('');
+
+  
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [passwordVisible2, setPasswordVisible2] = useState(false);
   const [passwordVisible3, setPasswordVisible3] = useState(false);
@@ -49,6 +63,42 @@ const PasswordSettingsPage = ({ navigation }: PasswordSettingsPageProps) => {
 
   const togglePasswordVisibility3 = () => {
     setPasswordVisible3(!passwordVisible3);
+  };
+
+  const handleUpdatePassword = () => {
+    // check if updated pass word or confirmed pass word is empty
+    if (!currentPassword || !updatedPassword || !confirmedPassword) {
+      alert('Please fill in all fields.');
+      return;
+    }
+
+    if (updatedPassword !== confirmedPassword) {
+      alert('Updated password does not match confirmed password.');
+      return;
+    }
+  
+    axios
+      .post(`${SERVER_URL}auth/check-password`, { email: user?.email, password: currentPassword })
+      .then((response) => {
+        if (response.data.match) {
+          dispatch(updateUser({ id: user?.id, password: updatedPassword }));
+          alert('Password updated successfully.');
+          navigation.navigate(BaseTabRoutes.SETTINGS, {});
+
+        } else {
+          navigation.navigate(BaseTabRoutes.SETTINGS, {});
+
+          alert('Something went wrong. Please try again later or contact us!');
+        }
+      })
+      .catch((error) => {
+        console.error('Error when checking password', error);
+        if (error.response && error.response.status === 401) {
+          alert('Current password is incorrect.');
+        } else {
+          alert('Something went wrong. Please try again later or contact us.');
+        }
+      });
   };
 
   
@@ -66,6 +116,8 @@ const PasswordSettingsPage = ({ navigation }: PasswordSettingsPageProps) => {
           <TextInput
             style={styles.inputDesign}
             secureTextEntry={!passwordVisible}
+            value={currentPassword}
+            onChangeText={setCurrentPassword}
           />
           <TouchableOpacity onPress={togglePasswordVisibility}>
             {passwordVisible ? visibleeye() : eyenotvisible()}
@@ -77,6 +129,8 @@ const PasswordSettingsPage = ({ navigation }: PasswordSettingsPageProps) => {
           <TextInput
             style={styles.inputDesign}
             secureTextEntry={!passwordVisible2}
+            value={updatedPassword}
+            onChangeText={setUpdatedPassword}
           />
           <TouchableOpacity onPress={togglePasswordVisibility2}>
             {passwordVisible2 ? visibleeye2() : eyenotvisible2()}
@@ -88,13 +142,14 @@ const PasswordSettingsPage = ({ navigation }: PasswordSettingsPageProps) => {
           <TextInput
             style={styles.inputDesign}
             secureTextEntry={!passwordVisible3}
+            value={confirmedPassword}
+            onChangeText={setConfirmedPassword}
           />
           <TouchableOpacity onPress={togglePasswordVisibility3}>
             {passwordVisible3 ? visibleeye3() : eyenotvisible3()}
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity style={styles.passwordButton}>
+        <TouchableOpacity style={styles.passwordButton} onPress={handleUpdatePassword}>
           <Text style={{ color: '#FBFBF4', fontSize: screenHeight * 0.018, fontWeight: 'bold' }}>CHANGE PASSWORD</Text>
         </TouchableOpacity>
 

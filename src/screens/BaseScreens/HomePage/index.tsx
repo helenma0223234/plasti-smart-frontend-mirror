@@ -1,16 +1,12 @@
 /* eslint-disable max-len */
-import React, { useMemo, useState } from 'react';
+import React, { useRef } from 'react';
 import { SafeAreaView, Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import useAppDispatch from '../../../hooks/useAppDispatch';
 import useAppSelector from 'hooks/useAppSelector';
-import AppButton from '../../../components/AppButton';
 import FormatStyle from '../../../utils/FormatStyle';
 import CircleBG from '../../../assets/Ellipse 66.svg';
 
 import Heart from '../../../assets/Heart.svg';
 import EmptyHeart from '../../../assets/EmptyHeart.svg';
-import Snack from '../../../assets/Snack.svg';
-import HomeShiba from '../../../assets/HomeShiba.svg';
 import HomeAvaShadow from '../../../assets/HomeAvaShadow.svg';
 import Wardrobe from '../../../assets/Wardrobe.svg';
 import Lamp from '../../../assets/Lamp.svg';
@@ -32,6 +28,7 @@ import { Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
+import { useFocusEffect } from '@react-navigation/native';
 
 import FullAlertModal from './fullAlertModal';
 import { cameraClosed } from 'redux/slices/cameraSlice';
@@ -56,6 +53,15 @@ const HomePage = ({ navigation }: HomePageProps) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalMessage, setModalMessage] = React.useState('');
 
+
+  // for deaulting to top of the page
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: false });
+    }, []),
+  );
   
   interface SnackProps {
     points: number
@@ -123,6 +129,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
     }
   }
 
+
   return (
     <SafeAreaView style={{ ...FormatStyle.container, justifyContent: 'flex-start' }}>
       <View style={{
@@ -138,7 +145,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
       </View>
 
       
-      <ScrollView style={{
+      <ScrollView ref={scrollViewRef} style={{
         flex: 1,
         width: '100%',
         marginTop: screenHeight * 0.018,
@@ -167,7 +174,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
         
         <View style={{ position: 'absolute', top: screenHeight * 0.25, left:screenWidth * 0.02 }}>
           <HomeAvaShadow style={{ position: 'absolute', top: screenHeight * 0.09, right: screenWidth * 0.06 }} width={screenWidth * 0.5} height ={screenHeight * 0.45}></HomeAvaShadow>
-          <Avatar avatarID={user.avatarID} color={user.avatarColor} size={screenWidth * 0.5} accessory={user.avatarAccessoryEquipped} shadow={false} style={{top: screenHeight * 0.1}} mirror={user.avatarID==2}></Avatar>
+          <Avatar avatarID={user.avatarID} color={user.avatarColor} size={screenWidth * 0.47} accessory={user.avatarAccessoryEquipped} shadow={false} style={{ top: screenHeight * 0.1 }} mirror={user.avatarID == 2}></Avatar>
           <TouchableOpacity style={{ position: 'absolute', top: screenHeight * 0.17, right: -screenWidth * 0.19 }} onPress={() => handleSnackPress({ points: user.points, uid: user.id, uhealth: user.avatarHealth })}>
             {user.points > 0 ? <HomeFullBowl width={screenWidth * 0.25} height ={screenHeight * 0.28} />  : <Bowl width={screenWidth * 0.33} height ={screenHeight * 0.33} />}
           </TouchableOpacity>

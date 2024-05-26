@@ -5,6 +5,11 @@ import { AntDesign } from '@expo/vector-icons';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
 
+import useAppDispatch from '../../../hooks/useAppDispatch';
+import useAppSelector from 'hooks/useAppSelector';
+import { updateUser } from '../../../redux/slices/usersSlice'; 
+
+
 import Colors from 'utils/Colors';
 
 type ProfileSettingsPageProps = {
@@ -15,9 +20,61 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const ProfileSettingsPage = ({ navigation } : ProfileSettingsPageProps) => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.users.selectedUser);
+
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+
+  
   const pressPicker = ()=>(
     navigation.navigate(BaseTabRoutes.AVATAR_CUSTOMIZATION, {})
   );
+
+  const isValidEmail = (emailAddr: string) => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(emailAddr).toLowerCase());
+  };
+
+  const handleUpdateProfile = () => {
+    if (!username && !email) {
+      alert('You must enter one field to submit your changes.');
+      return;
+    }
+
+    if (email && !isValidEmail(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    if (username && (username.length < 5 || username.length > 20)) {
+      alert('Username must be between 5 and 20 characters.');
+      return;
+    }
+    
+    // update user slice alr handles undefined case so we just pass them over
+    if (email) {
+      dispatch(updateUser({ id:user?.id, email:email }))
+        .then(() => {
+          alert('Email updated successfully');
+          navigation.navigate(BaseTabRoutes.SETTINGS, {});
+        })
+        .catch((error) => {
+          alert(`Error updating email: ${error.message}`);
+        });
+    }
+    if (username) {
+      dispatch(updateUser({ id:user?.id, username:username }))
+        .then(() => {
+          alert('Username updated successfully');
+          navigation.navigate(BaseTabRoutes.SETTINGS, {});
+
+        })
+        .catch((error) => {
+          alert(`Error updating username: ${error.message}`);
+        });
+    }
+  };
 
  
   return (
@@ -52,6 +109,8 @@ const ProfileSettingsPage = ({ navigation } : ProfileSettingsPageProps) => {
           <TextInput 
             placeholder='example@user.com'
             style={styles.inputDesign}
+            value={email}
+            onChangeText={setEmail}
           />
         </View>
 
@@ -60,10 +119,12 @@ const ProfileSettingsPage = ({ navigation } : ProfileSettingsPageProps) => {
           <TextInput 
             placeholder='new names goes here'
             style={styles.inputDesign}
+            value={username}
+            onChangeText={setUsername}
           />
         </View>
 
-        <TouchableOpacity style={styles.updateButton}>
+        <TouchableOpacity style={styles.updateButton} onPress={handleUpdateProfile}>
           <Text style={{ color: '#FBFBF4', fontSize: screenHeight * 0.018, fontWeight: 'bold' }}>UPDATE PROFILE</Text>
         </TouchableOpacity>
       </View>

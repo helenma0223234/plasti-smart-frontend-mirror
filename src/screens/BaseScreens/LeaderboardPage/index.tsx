@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, SafeAreaView, View, Text } from 'react-native';
+import { ScrollView, SafeAreaView, View, Text, Dimensions } from 'react-native';
 import { SERVER_URL } from 'utils/constants';
 import FormatStyle from '../../../utils/FormatStyle';
 import CircleBG from '../../../assets/Ellipse 66.svg';
@@ -9,10 +9,17 @@ import axios from 'axios';
 import Cat from '../../../assets/Cat.svg';
 import useAppSelector from 'hooks/useAppSelector';
 import usersSlice from 'redux/slices/usersSlice';
+import Avatar from 'components/Avatar';
+
+
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 interface leaderboardEntry {
   name: string;
   score: number;
+  avatarID: number;
+  avatarColor: number;
 }
 
 const LeaderboardPage = () => {
@@ -23,9 +30,8 @@ const LeaderboardPage = () => {
     (async () => {
       try {
         const response = await axios.get(SERVER_URL + 'users/leaderboard');
-        // map response data from {username : string, monthlyTotalScans: number} to leaderboardEntry
-        const leaderboardData = response.data.map((entry: { username: string, monthlyTotalScans: number }) => {
-          return { name: entry.username ? entry.username : 'username', score: entry.monthlyTotalScans };
+        const leaderboardData = response.data.map((entry: { username: string, monthlyPoints: number, avatarID: number, avatarColor: string}) => {
+          return { name: entry.username ? entry.username : 'username', score: entry.monthlyPoints, avatarID: entry.avatarID, avatarColor: entry.avatarColor};
         });
         setLeaderboard(leaderboardData);
       } catch (error) {
@@ -36,47 +42,42 @@ const LeaderboardPage = () => {
 
   return (
     leaderboard.length > 0 && <SafeAreaView style={{ ...FormatStyle.topContainer, alignItems: 'center' }}>
-      <View
-        style={{
-          width: '100%',
-          height: 1000,
-          overflow: 'hidden',
-          aspectRatio: 1,
-          alignItems: 'center',
-          position: 'absolute',
-          bottom: -420,
-        }}
-      >
-        <CircleBG></CircleBG>
-      </View>
-
-      <>
-        <View style={{ position: 'absolute', top: 120 }}>
-          <Podium name={leaderboard[0].name} place={1}></Podium>
-        </View>
-        <View style={{ position: 'absolute', left: 10, top: 150 }}>
-          <Podium name={leaderboard[1].name} place={2}></Podium>
-        </View>
-        <View style={{ position: 'absolute', right: 10, top: 150 }}>
-          <Podium name={leaderboard[2].name} place={3}></Podium>
-        </View>
-      </>
-
-      <View style={{ margin: 20, justifyContent: 'center' }}>
-        <Text
-          style={{
-            ...TextStyles.regular,
-            fontSize: 30,
-            alignSelf: 'flex-start',
-          }}
-        >
+      <View style={{marginTop: screenHeight*0.025}}>
+        <Text style={{ ...TextStyles.regular, fontSize: 30, alignSelf: 'flex-start', }} > 
           {(() => {return user.name.charAt(0).toUpperCase() + user.name.slice(1);})()}'s Leaderboard
         </Text>
+      </View>
+      
+      <View
+        style={{
+          alignItems: 'center',
+          alignSelf: 'center',
+          bottom: screenHeight * 0.95,
+        }}
+      >
+        <CircleBG height={screenHeight*3}  width={screenWidth*2} style={{position: 'absolute', top: screenHeight *0.04 }}></CircleBG>
+      </View>
+
+      <View style={{ position: 'absolute', zIndex: 1, alignItems: 'center', marginBottom: screenHeight*0.1 }}>
+          <View style={{ position: 'absolute', top: screenHeight*0.18 }}>
+            <Podium name={leaderboard[0].name} place={1} avatarColor={leaderboard[0].avatarColor} avatarID={leaderboard[0].avatarID}></Podium>
+          </View>
+          <View style={{ position: 'absolute', right: screenWidth*0.2, top: screenHeight*0.25 }}>
+            <Podium name={leaderboard[1].name} place={2} avatarColor={leaderboard[1].avatarColor} avatarID={leaderboard[1].avatarID}></Podium>
+          </View>
+          <View style={{ position: 'absolute', left: screenWidth*0.2, top: screenHeight*0.25 }}>
+            <Podium name={leaderboard[2].name} place={3} avatarColor={leaderboard[2].avatarColor} avatarID={leaderboard[2].avatarID}></Podium>
+          </View>
+        </View>
+
+
+      <View style={{ justifyContent: 'center' }}>
+        
         <View
           style={{
             gap: 20,
             position: 'relative',
-            top: 250,
+            top: screenHeight * 0.35,
             width: 330,
             height: 392,
             justifyContent: 'center',
@@ -135,7 +136,7 @@ const LeaderboardPage = () => {
                     </Text>
                   </View>
 
-                  <Text style={{ ...TextStyles.regular }}>{place.name}</Text>
+                  <Text style={{ ...TextStyles.regular, fontFamily:'Inter600_SemiBold', fontSize:screenHeight*0.022 }}>{place.name}</Text>
                 </View>
                 {index + 4 < leaderboard.length ? (
                   <View
@@ -157,9 +158,11 @@ const LeaderboardPage = () => {
 interface PodiumProps {
   name: string;
   place: number;
+  avatarID: number;
+  avatarColor: number;
 }
 
-const Podium = ({ name, place }: PodiumProps) => {
+const Podium = ({ name, place, avatarColor, avatarID }: PodiumProps) => {
   return (
     <View style={{ flexDirection: 'column', alignItems: 'center', gap: 5 }}>
       <View
@@ -171,23 +174,24 @@ const Podium = ({ name, place }: PodiumProps) => {
           alignItems: 'center',
         }}
       >
-        {/* <Cat></Cat> */}
+        <Avatar avatarID={avatarID} color={avatarColor} size={screenWidth * 0.225} accessory={-1} shadow={false}></Avatar>
+        
       </View>
       <View
         style={{
           ...FormatStyle.circle,
-          width: 40,
-          height: 40,
+          width: screenWidth * 0.125,
+          height: screenWidth * 0.125,
           marginTop: 0,
           backgroundColor: place == 1 ? Colors.primary.dark : '#1B453C',
         }}
       >
-        <Text style={{ ...TextStyles.regular, color: Colors.secondary.white }}>
+        <Text style={{ ...TextStyles.regular, color: Colors.secondary.white, fontFamily: 'Inter_400Regular', fontSize:screenHeight*0.025 }}>
           {place}
         </Text>
       </View>
 
-      <Text style={{ ...TextStyles.regular, width: 100, textAlign: 'center' }}>
+      <Text style={{ ...TextStyles.regular, width: 100, textAlign: 'center', fontFamily:'Inter600_SemiBold', fontSize:screenHeight*0.022 }}>
         {name}
       </Text>
     </View>

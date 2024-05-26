@@ -60,6 +60,7 @@ import SqueezeBottlesGreen from '../../../assets/SqueezeBottlesGreen.svg';
 import StyrofoamGreen from '../../../assets/StyrofoamGreen.svg';
 import UnionGreen from '../../../assets/UnionGreen.svg';
 import WaterBottleGreen from '../../../assets/WaterBottleGreen.svg';
+import Avatar from 'components/Avatar';
 
 
 
@@ -403,8 +404,8 @@ const EducationPage = () => {
 
               <ProgressCard
                 title={'Top Plastic'}
-                number={maxRecycledType.type}
-                text={`You've recycled ${maxRecycledType.value ? maxRecycledType.value : 0} No.${maxRecycledType.type} plastics this month. Great work!`}
+                number={totalRecycled>0 ? maxRecycledType.type : undefined}
+                text={totalRecycled>0 ? `You've recycled ${maxRecycledType.value ? maxRecycledType.value : 0} No.${maxRecycledType.type} plastics this month. Great work!` : 'Get started recycling!'}
                 cornerComponent={
                   <Trophy width={60} height={60} style={{ left: -6, top:6 }}></Trophy>
                 }
@@ -412,12 +413,12 @@ const EducationPage = () => {
               </ProgressCard>
               <ProgressCard
                 title={'Earth Conscious'}
-                text={`You've reused ${totalReused} plastics this month! Keep going!`}
+                text={totalReused>0 ? `You've reused ${totalReused} plastics this month! Keep going!` : 'You haven\'t reused this month. Get started!'}
                 cornerComponent={
                   <View>
                     <Globe width={60} height={60}></Globe>
                     <View style={{ position: 'relative', bottom: 40, justifyContent: 'center', alignItems: 'center' }}>
-                      <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalReused}</Text>
+                      {totalReused>0 && <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalReused}</Text>}
                     </View>
                   </View>
                 }>
@@ -425,12 +426,12 @@ const EducationPage = () => {
               
               <ProgressCard
                 title={'Green Vision'}
-                text={'You’ve recycled seven plastics this month! Keep going!'}
+                text={totalRecycled>0 ? `You’ve recycled ${totalRecycled} plastics this month! Keep going!` : `You haven't recycled this month. Get started!`}
                 cornerComponent={
                   <View>
                     <RecycleSymbol height={70} width={70} style={{ left: -10, bottom: 5 }}></RecycleSymbol>
                     <View style={{ position: 'relative', left: -10, bottom: 50, justifyContent: 'center', alignItems: 'center' }}>
-                      <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalRecycled}</Text>
+                      {totalRecycled>0&&<Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalRecycled}</Text>}
                     </View>
                   </View>
                 }>
@@ -439,8 +440,8 @@ const EducationPage = () => {
 
               <ProgressCard
                 title={'Pal Points'}
-                text={`You’ve gained ${user.monthlyPoints} points for your avatar this month. Your pal says thanks! `}
-                cornerComponent={<Cat height={100} width={100} style={{ left: -20 }}></Cat>}>
+                text={user.monthlyPoints>0 ?`You’ve gained ${user.monthlyPoints} points for your pal this month. Your pal says thanks!` : 'Get started earning points! Your pal is waiting!'}
+                cornerComponent={<Avatar avatarID={3} color={user.avatarColor} shadow={false} size={progressCardWidth*0.5} accessory={user.avatarAccessoryEquipped} style={{right:progressCardWidth*0.075}}></Avatar>}>
               </ProgressCard>
             </View>
           </ScrollView>

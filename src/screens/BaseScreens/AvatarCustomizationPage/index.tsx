@@ -181,7 +181,10 @@ const AvatarCustomizationPage = () => {
             {selectedButton === 2 && avatarCustomization.AvatarAccessories.map((accessory, index) => (
               <GridItem unlocked={accessory.unlocked} cost={accessory.cost} setModalVisible={setModalVisible} 
               setModalBuyType={setModalBuyType} setModalBuyID={setModalBuyID} buyType={2} buyID={accessory.id}
-              equipItem={equipItem} user={user}></GridItem>
+              equipItem={equipItem} user={user} component={ () =>
+                <Avatar avatarID={user.avatarID} color={user.avatarColor} size={gridItemWidth* 0.95} accessory={accessory.id} shadow={true}></Avatar>
+              }>
+              </GridItem>
             ))}
           
           </View>

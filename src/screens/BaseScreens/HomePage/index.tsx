@@ -3,14 +3,11 @@ import React, { useMemo, useState } from 'react';
 import { SafeAreaView, Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
 import useAppSelector from 'hooks/useAppSelector';
-import AppButton from '../../../components/AppButton';
 import FormatStyle from '../../../utils/FormatStyle';
 import CircleBG from '../../../assets/Ellipse 66.svg';
 
 import Heart from '../../../assets/Heart.svg';
 import EmptyHeart from '../../../assets/EmptyHeart.svg';
-import Snack from '../../../assets/Snack.svg';
-import HomeShiba from '../../../assets/HomeShiba.svg';
 import HomeAvaShadow from '../../../assets/HomeAvaShadow.svg';
 import Wardrobe from '../../../assets/Wardrobe.svg';
 import Lamp from '../../../assets/Lamp.svg';
@@ -26,7 +23,6 @@ import Calendar from 'components/Calendar';
 import Colors from 'utils/Colors';
 import DailyTasks from 'components/DailyTasks';
 
-import { useDispatch } from 'react-redux';
 import { feedAvatar } from '../../../redux/slices/usersSlice'; // import the action
 import { Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -47,7 +43,7 @@ const screenHeight = Dimensions.get('window').height;
 const HomePage = ({ navigation }: HomePageProps) => {
   const user = useAppSelector((state) => state.users.selectedUser);
   const currentLoginHist = useAppSelector((state) => state.loginhistory.history);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   console.log('user rank:', user?.rank);
 

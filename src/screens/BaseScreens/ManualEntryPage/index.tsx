@@ -7,7 +7,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Image,
+  Dimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SvgXml } from 'react-native-svg';
@@ -24,6 +24,9 @@ import { reusedRedux, recycledRedux } from 'redux/slices/scanSlice';
 import TextStyles from 'utils/TextStyles';
 import Carousel from 'react-native-snap-carousel';
 import ReuseWarningModal from '../UnknownPlasticPage/reuseWarningModal';
+
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
 type ManualEntryPageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;
@@ -135,7 +138,7 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
               navigation.navigate(BaseTabRoutes.HOME, {});
             }}
           >
-            <Ionicons name="arrow-back-outline" size={36} color="#1B453C" />
+            <Ionicons name="arrow-back-outline" size={screenHeight * 0.03} color="#1B453C" />
           </TouchableOpacity>
         </View>
       </View>
@@ -194,8 +197,8 @@ const manualEntryStyles = StyleSheet.create({
     left: '4%',
     borderColor: '#1B453C',
     borderWidth: 1,
-    width: 60,
-    height: 60,
+    width: screenHeight * 0.06,
+    height: screenHeight * 0.06,
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',

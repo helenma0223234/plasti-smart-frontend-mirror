@@ -21,6 +21,8 @@ import {
   LeaderboardPage,
   EducationPage,
   SettingsPage,
+  ProfileSettingsPage,
+  PasswordSettingsPage,
 } from './BaseScreens';
 
 export {
@@ -43,4 +45,6 @@ export {
   LeaderboardPage,
   EducationPage,
   SettingsPage,
+  ProfileSettingsPage,
+  PasswordSettingsPage,
 };

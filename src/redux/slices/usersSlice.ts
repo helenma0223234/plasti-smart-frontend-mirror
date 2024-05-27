@@ -4,6 +4,46 @@ import axios from 'axios';
 import { UserScopes, IUser } from 'types/users.jsx';
 import { updateFirstLoginHistory } from './loginhistorySlice';
 import { AvatarCustomization } from '../../types/avatars';
+import { getBearerToken } from 'utils/asyncStorage';
+
+// NOTE: commented out return false for failed request so not to break the app
+// under circumstances like when user tries to update user email to existing emails
+
+interface User {
+  id: string;
+  email?: string;
+  token: string;
+  password?: string;
+  username?: string;
+  name?: string;
+  role?: UserScopes;
+  lastLogin?: Date;
+  rank?: number;
+  avatarSet?: boolean;
+  avatarID?: number;
+  avatarColor?: number;
+  avatarHealth?: number;
+  avatarAccessoryEquipped?: number;
+  avatarCustomization?: AvatarCustomization;
+  points?: number;
+  monthlyPoints?: number;
+  monthlyTotalReused?: number;
+  monthlyTotalRecycled?: number;
+  Type1Recycled?: number;
+  Type2Recycled?: number;
+  Type3Recycled?: number;
+  Type4Recycled?: number;
+  Type5Recycled?: number;
+  Type6Recycled?: number;
+  Type7Recycled?: number;
+  Type1Reused?: number;
+  Type2Reused?: number;
+  Type3Reused?: number;
+  Type4Reused?: number;
+  Type5Reused?: number;
+  Type6Reused?: number;
+  Type7Reused?: number;
+}
 
 export interface UserState {
   loading: boolean
@@ -27,7 +67,8 @@ export const createUser = createAsyncThunk(
       })
       .catch((error) => {
         console.error('Error when creating user', error);
-        return false;
+        // return false;
+        alert(error.response.data.message);
       });
   },
 );
@@ -44,57 +85,41 @@ export const getUser = createAsyncThunk(
       })
       .catch((error) => {
         console.error('Error when getting user', error);
-        return false;
+        // return false;
+        alert(error.response.data.message);
       });
   },
 );
 
-// subject to change!!
 export const updateUser = createAsyncThunk(
   'users/updateUser',
-  async (req: { 
-    id?: string;
-    email?: string;
-    username?: string;
-    name?: string;
-    role?: UserScopes;
-    lastLogin?: Date;
-    rank?: number;
-    avatarSet?: boolean;
-    avatarID?: number;
-    avatarColor?: number;
-    avatarHealth?: number;
-    avatarAccessoryEquipped?: number;
-    avatarCustomization?: AvatarCustomization;
-    points?: number;
-    monthlyPoints?: number;
-    monthlyTotalReused?: number;
-    monthlyTotalRecycled?: number;
-    Type1Recycled?: number;
-    Type2Recycled?: number;
-    Type3Recycled?: number;
-    Type4Recycled?: number;
-    Type5Recycled?: number;
-    Type6Recycled?: number;
-    Type7Recycled?: number;
-    Type1Reused?: number;
-    Type2Reused?: number;
-    Type3Reused?: number;
-    Type4Reused?: number;
-    Type5Reused?: number;
-    Type6Reused?: number;
-    Type7Reused?: number;
-  }, { dispatch }) => {
+  async (user: User, { dispatch }) => {
+    const token = await getBearerToken();
+    if (!token) {
+      throw Error('null token');
+    }
+    const { id, ...params } = user;
+
     dispatch(startUsersLoading());
     return axios
-      .patch(`${SERVER_URL}users/${req.id}`, req)
+      .patch(`${SERVER_URL}users/${id}`, params, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .finally(() => dispatch(stopUsersLoading()))
       .then((response) => {
         return response.data;
       })
       .catch((error) => {
         console.error('Error when updating user', error);
-        return false;
+        if (error.response && error.response.status === 400) {
+          // notify with the message from the server
+          alert(error.response.data.message);
+          throw new Error(error.response.data.message);
+        }
+        // If the error is not a 400 error, throw a generic error
+        throw new Error('Error when updating user');
       });
   },
 );
@@ -111,7 +136,11 @@ export const deleteUser = createAsyncThunk(
       })
       .catch((error) => {
         console.error('Error when deleting user', error);
-        return false;
+        if (error.response && error.response.status === 400) {
+          // notify with the message from the server
+          alert(error.response.data.message);
+          throw new Error(error.response.data.message);
+        }
       });
   },
 );
@@ -160,7 +189,7 @@ export const setAvatarFirstTime = createAsyncThunk(
       .post(`${SERVER_URL}users/${req.id}/setAvatarFirstTime`, req)
       .finally(() => dispatch(stopUsersLoading()))
       .then((response) => {
-        console.log("response data", response.data)
+        console.log('response data', response.data);
         return response.data;
       })
       .catch((error) => {
@@ -304,15 +333,15 @@ export const usersSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(createUser.fulfilled, (state, action) => {
       state.selectedUser = action.payload as IUser;
-      alert('Created user as: ' + JSON.stringify(action.payload));
+      // alert('Created user as: ' + JSON.stringify(action.payload));
     });
     builder.addCase(getUser.fulfilled, (state, action) => {
       state.selectedUser = action.payload as IUser;
-      alert('Retrieved user as: ' + JSON.stringify(action.payload));
+      // alert('Retrieved user as: ' + JSON.stringify(action.payload));
     });
     builder.addCase(updateUser.fulfilled, (state, action) => {
       state.selectedUser = action.payload as IUser;
-      alert('Updated user to: ' + JSON.stringify(action.payload));
+      // alert('Updated user to: ' + JSON.stringify(action.payload));
     });
     builder.addCase(deleteUser.fulfilled, (state, action) => {
       const user: IUser = action.payload as IUser;
@@ -320,7 +349,7 @@ export const usersSlice = createSlice({
       if (curSelectedUser.id === user.id) {
         state.selectedUser = null;
       }
-      alert('Deleted user with id ' + user.id);
+      // alert('Deleted user with id ' + user.id);
     });
     builder.addCase(feedAvatar.fulfilled, (state, action) => {
       state.selectedUser = action.payload as IUser;

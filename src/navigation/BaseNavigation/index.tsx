@@ -25,6 +25,9 @@ import {
   AvatarCustomizationPage,
   SettingsPage,
   MascotPage,
+  ProfileSettingsPage,
+  PasswordSettingsPage,
+  NotificationsSettingsPage,
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
@@ -152,6 +155,21 @@ export const SettingsNavigator = () => {
       <BaseStack.Screen
         name={BaseTabRoutes.SETTINGS}
         component={SettingsPage}
+        options={{ header: () => null }}
+      />
+      <BaseStack.Screen
+        name={BaseTabRoutes.PROFILE_SETTINGS}
+        component={ProfileSettingsPage}
+        options={{ header: () => null }}
+      />
+      <BaseStack.Screen
+        name={BaseTabRoutes.PASSWORD_SETTINGS}
+        component={PasswordSettingsPage}
+        options={{ header: () => null }}
+      />
+      <BaseStack.Screen
+        name={BaseTabRoutes.NOTIFICATIONS_SETTINGS}
+        component={NotificationsSettingsPage}
         options={{ header: () => null }}
       />
     </BaseStack.Navigator>

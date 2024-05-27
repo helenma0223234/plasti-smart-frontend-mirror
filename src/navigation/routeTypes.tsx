@@ -32,6 +32,9 @@ export enum BaseTabRoutes {
   CAMERA_MODAL = 'CameraModal',
   SETTINGS = 'Settings',
   MASCOT = 'Mascot',
+  PROFILE_SETTINGS = 'ProfileSettings',
+  PASSWORD_SETTINGS  = 'PasswordSettings',
+  NOTIFICATIONS_SETTINGS = 'NotificationsSettings',
 }
 
 export type BaseNavigationList = {
@@ -51,4 +54,7 @@ export type BaseNavigationList = {
   [BaseTabRoutes.CAMERA_MODAL]: Record<string, unknown>;
   [BaseTabRoutes.SETTINGS]: Record<string, unknown>;
   [BaseTabRoutes.MASCOT]: Record<string, unknown>;
+  [BaseTabRoutes.PROFILE_SETTINGS]: Record<string, unknown>;
+  [BaseTabRoutes.PASSWORD_SETTINGS]: Record<string, unknown>;
+  [BaseTabRoutes.NOTIFICATIONS_SETTINGS]: Record<string, unknown>;
 };

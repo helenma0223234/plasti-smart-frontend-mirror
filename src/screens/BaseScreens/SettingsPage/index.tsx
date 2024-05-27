@@ -3,43 +3,60 @@ import React, { useState } from 'react';
 import { View, Text, SafeAreaView, StyleSheet, Image, TouchableOpacity, Modal, Button } from 'react-native';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
-import useAppDispatch from '../../../hooks/useAppDispatch';
 import { logout } from '../../../redux/slices/authSlice';
+import { deleteUser } from '../../../redux/slices/usersSlice';
+import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
+import type { StackNavigationProp } from '@react-navigation/stack';
+
+import useAppDispatch from '../../../hooks/useAppDispatch';
+import useAppSelector from 'hooks/useAppSelector';
 
 import Colors from 'utils/Colors';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-const SettingsPage = () => {
+type SettingsPageProps = {
+  navigation: StackNavigationProp<BaseNavigationList>;
+};
+
+const SettingsPage = ({ navigation } : SettingsPageProps) => {
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const user = useAppSelector((state) => state.users.selectedUser);
   const dispatch = useAppDispatch();
   
   const toggleOverlay = () => {
     setIsOverlayVisible(!isOverlayVisible);
   };
 
+  const handleDelete = () => {
+    if (user) {
+      dispatch(deleteUser({ id: user.id }));
+    } else {
+      console.error('No user selected');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.overall}>
         <Text style={{ marginTop: screenHeight * 0.01, fontSize: screenWidth * 0.08, marginBottom: screenHeight * 0.02, color: Colors.primary.dark, fontWeight: 'bold' }}>Settings</Text>
-        <View style={{ marginBottom: 20, width: '100%', borderColor: Colors.primary.dark, borderWidth: 1, borderStyle: 'solid', alignSelf:'center', borderRadius: 10, padding:15,  display: 'flex',  flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+        <View style={{ marginBottom: screenHeight * 0.02, width: '100%', borderColor: Colors.primary.dark, borderWidth: 1, borderStyle: 'solid', alignSelf:'flex-start', borderRadius: 10, padding:15,  display: 'flex',  flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
           <Image
             source={require('../../../assets/settings/profile.png')}
             style={styles.image}
             resizeMode="cover"
           />
-          <View style={{ position: 'relative', right: screenWidth * 0.075 }}>
-            <Text style={{ color: Colors.primary.dark, fontWeight: 'bold', fontSize: screenHeight * 0.020 }}>diner_Lukelore</Text>
-            <Text style={{ color: '#ADC0AB', fontSize: screenHeight * 0.016, marginTop:2 }}>luke.a.danes.92@dartmouth.edu</Text>
+          <View style={{ position: 'absolute', right: screenWidth * 0.26 }}>
+            <Text style={{ color: Colors.primary.dark, fontWeight: 'bold', fontSize: screenHeight * 0.020 }}>{user?.username}</Text>
+            <Text style={{ color: '#ADC0AB', fontSize: screenHeight * 0.016, marginTop:2 }}>{user?.email}</Text>
           </View>
         </View>
         
 
         <View>
           <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(173, 192, 171, 1)' }}>
-            {/* <TouchableOpacity style={styles.alignButtons} onPress={()=>navigation.navigate('Profile_Settings')}> */}
-            <TouchableOpacity style={styles.alignButtons} >
+            <TouchableOpacity style={styles.alignButtons} onPress={()=>navigation.navigate(BaseTabRoutes.PROFILE_SETTINGS, {})}>
               <Text style={{ color: Colors.primary.dark, fontSize: screenHeight * 0.020, fontWeight: 'bold' }}>Profile</Text>
               <MaterialIcons name="chevron-right" size={screenHeight * 0.028} color={Colors.primary.dark} />
             </TouchableOpacity>
@@ -47,8 +64,7 @@ const SettingsPage = () => {
 
 
           <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(173, 192, 171, 1)' }}>
-            {/* <TouchableOpacity style={styles.alignButtons} onPress={()=>navigation.navigate('Password_Settings')}> */}
-            <TouchableOpacity style={styles.alignButtons}>
+            <TouchableOpacity style={styles.alignButtons} onPress={()=>navigation.navigate(BaseTabRoutes.PASSWORD_SETTINGS, {})}>
               <Text style={{ color: Colors.primary.dark, fontSize: screenHeight * 0.020, fontWeight: 'bold' }}>Password</Text>
               <MaterialIcons name="chevron-right" size={screenHeight * 0.028} color={Colors.primary.dark} />
             </TouchableOpacity>
@@ -57,8 +73,7 @@ const SettingsPage = () => {
 
 
           <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(173, 192, 171, 1)' }}>
-            {/* <TouchableOpacity style={styles.alignButtons} onPress={()=>navigation.navigate('Notifications_Settings')}> */}
-            <TouchableOpacity style={styles.alignButtons}>
+            <TouchableOpacity style={styles.alignButtons} onPress={()=>navigation.navigate(BaseTabRoutes.NOTIFICATIONS_SETTINGS, {})}>
               <Text style={{ color: Colors.primary.dark, fontSize: screenHeight * 0.020, fontWeight: 'bold' }}>Notifications</Text>
               <MaterialIcons name="chevron-right" size={screenHeight * 0.028} color={Colors.primary.dark} />
             </TouchableOpacity>
@@ -100,13 +115,15 @@ const SettingsPage = () => {
                 resizeMode="contain"
                 style={styles.closeImage}
               />
-              <Text style={{ color: Colors.primary.dark, fontWeight: 'bold', fontSize: 20, textAlign: 'center' }}>We're sorry to see you go! Are you sure you want to delete your account? </Text>
+              <Text style={{ color: Colors.primary.dark, fontWeight: 'bold', fontSize: 20, textAlign: 'center', marginBottom: 10 }}>We're sorry to see you go! Are you sure you want to delete your account? </Text>
               
               <TouchableOpacity onPress={toggleOverlay} style={{ marginTop: 15, backgroundColor: Colors.primary.dark, paddingTop:12, paddingBottom: 12, paddingLeft: 25, paddingRight: 25, borderRadius: 10, width:screenWidth * 0.5, alignItems:'center', justifyContent:'center'  }}>
                 <Text style={{ color: 'rgba(255, 255, 255, 1)', fontSize: 14, fontWeight: 'bold' }}>KEEP ACCOUNT</Text>
               </TouchableOpacity>
-
-              <TouchableOpacity style={{ marginTop: 15, backgroundColor: 'transparent', paddingTop:12, paddingBottom: 12, paddingLeft: 25, paddingRight: 25, borderRadius: 10, borderColor: Colors.primary.dark, borderWidth: 1, borderStyle: 'solid', width:screenWidth * 0.5, alignItems:'center', justifyContent:'center'   }}>
+              <TouchableOpacity 
+                style={{ marginTop: 15, backgroundColor: 'transparent', paddingTop:12, paddingBottom: 12, paddingLeft: 25, paddingRight: 25, borderRadius: 10, borderColor: Colors.primary.dark, borderWidth: 1, borderStyle: 'solid', width:screenWidth * 0.5, alignItems:'center', justifyContent:'center' }}
+                onPress={handleDelete}
+              >
                 <Text style={{ color: Colors.primary.dark, fontSize: 14, fontWeight: 'bold' }}>DELETE ACCOUNT</Text>
               </TouchableOpacity>
 
@@ -135,7 +152,7 @@ const styles = StyleSheet.create({
     height:screenWidth * 0.15,
     width: screenWidth * 0.16,
     position: 'relative',
-    right: screenWidth * 0.04,
+    right: -screenWidth * 0.02,
     borderRadius: 100,
   },
   alignButtons:{
@@ -189,7 +206,8 @@ const styles = StyleSheet.create({
     width: 148,
     height: 148,
     borderRadius: 100,
-    marginBottom: 10,
+    marginBottom: 14,
+    marginTop:-24,
   },
 });
 

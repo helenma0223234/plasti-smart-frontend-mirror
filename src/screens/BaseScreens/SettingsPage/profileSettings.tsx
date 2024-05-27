@@ -1,167 +1,160 @@
+/* eslint-disable max-len */
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Dimensions, SafeAreaView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
+import type { StackNavigationProp } from '@react-navigation/stack';
 
-const ProfileSettings = ({ navigation }) => {
-  const [isPickerVisible, setIsPickerAvailable] = useState(0);
-  const togglePicker = ()=>(
-    setIsPickerAvailable(!isPickerVisible)
+import useAppDispatch from '../../../hooks/useAppDispatch';
+import useAppSelector from 'hooks/useAppSelector';
+import { updateUser } from '../../../redux/slices/usersSlice'; 
+
+
+import Colors from 'utils/Colors';
+
+type ProfileSettingsPageProps = {
+  navigation: StackNavigationProp<BaseNavigationList>;
+};
+
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+
+const ProfileSettingsPage = ({ navigation } : ProfileSettingsPageProps) => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.users.selectedUser);
+
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+
+  
+  const pressPicker = ()=>(
+    navigation.navigate(BaseTabRoutes.AVATAR_CUSTOMIZATION, {})
   );
 
+  const isValidEmail = (emailAddr: string) => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(emailAddr).toLowerCase());
+  };
+
+  const handleUpdateProfile = () => {
+    if (!username && !email) {
+      alert('You must enter one field to submit your changes.');
+      return;
+    }
+
+    if (email && !isValidEmail(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    if (username && (username.length < 5 || username.length > 20)) {
+      alert('Username must be between 5 and 20 characters.');
+      return;
+    }
+    
+    // update user slice alr handles undefined case so we just pass them over
+    if (email) {
+      dispatch(updateUser({ id:user?.id, email:email }))
+        .then(() => {
+          alert('Email updated successfully');
+          navigation.navigate(BaseTabRoutes.SETTINGS, {});
+        })
+        .catch((error) => {
+          alert(`Error updating email: ${error.message}`);
+        });
+    }
+    if (username) {
+      dispatch(updateUser({ id:user?.id, username:username }))
+        .then(() => {
+          alert('Username updated successfully');
+          navigation.navigate(BaseTabRoutes.SETTINGS, {});
+
+        })
+        .catch((error) => {
+          alert(`Error updating username: ${error.message}`);
+        });
+    }
+  };
 
  
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.arrowBorder} onPress={()=>{navigation.goBack();}} > 
-        <AntDesign name="arrowleft" size={24} color="rgba(27, 69, 60, 1)"  style={{ alignSelf:'center' }}/>
-      </TouchableOpacity>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.overall}>
+        <TouchableOpacity style={styles.arrowBorder} onPress={()=>{navigation.goBack();}} > 
+          <AntDesign name="arrowleft" size={screenHeight * 0.03} color={Colors.primary.dark}  style={{ alignSelf:'center' }}/>
+        </TouchableOpacity>
       
-      <Text style={{ fontSize: 30, marginBottom: 10, fontWeight:'bold', color: 'rgba(27, 69, 60, 1)' }}>Profile Settings</Text>
+        <Text style={{ fontSize: 30, marginBottom: screenHeight * 0.03, fontWeight:'bold', color: Colors.primary.dark }}>Profile Settings</Text>
 
-      <View style={{ alignSelf: 'center', width:148, height:148, backgroundColor: 'rgba(218, 229, 215, 1)', borderRadius: 100, justifyContent:'center', display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 15 }}>
-        <Image
-          source={require('../../../../assets/profile.png')}
-          style={styles.profilePicture}
-          resizeMode="contain"
-        />
-
-        <TouchableOpacity onPress={togglePicker} style={{ position: 'relative', bottom: 14, left: 40, backgroundColor: 'rgba(244, 243, 231, 1)', width: 44, height: 44, borderRadius: 100, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ alignSelf: 'center', width:screenHeight * 0.16, height:screenHeight * 0.16, backgroundColor: 'rgba(218, 229, 215, 1)', borderRadius: 100, justifyContent:'center', display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: screenHeight * 0.02 }}>
           <Image
-            source={require('../../../../assets/pencil.png')}
-            style={{ height: 22, width: 22 }}
+            source={require('../../../assets/settings/profile.png')}
+            style={styles.profilePicture}
             resizeMode="contain"
           />
+
+          <TouchableOpacity onPress={pressPicker} style={{ position: 'relative', bottom: 14, left: 40, backgroundColor: 'rgba(244, 243, 231, 1)', width: 44, height: 44, borderRadius: 100, alignItems: 'center', justifyContent: 'center' }}>
+            <Image
+              source={require('../../../assets/settings/pencil.png')}
+              style={{ height: 22, width: 22 }}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
+
+        {/* Code below for text input */}
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.updateTextField}>Update Email</Text>
+          <TextInput 
+            placeholder='example@user.com'
+            style={styles.inputDesign}
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.updateTextField}>Update username</Text>
+          <TextInput 
+            placeholder='new names goes here'
+            style={styles.inputDesign}
+            value={username}
+            onChangeText={setUsername}
+          />
+        </View>
+
+        <TouchableOpacity style={styles.updateButton} onPress={handleUpdateProfile}>
+          <Text style={{ color: '#FBFBF4', fontSize: screenHeight * 0.018, fontWeight: 'bold' }}>UPDATE PROFILE</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Code below for text input */}
-      <ScrollView behavior="padding" style={styles.allInputs} showsVerticalScrollIndicator={false}>
-
-
-
-        <View style={styles.inputContainer}>
-          <Text style={{ color:'rgba(27, 69, 60, 1)', fontSize:18, fontWeight:'bold' }}>Update Email</Text>
-          <TextInput 
-            placeholder='luke.a.danes.92@dartmouth.edu'
-            style={styles.inputDesign}
-            required
-          />
-        </View>
-
-
-        <View style={styles.inputContainer}>
-          <Text style={{ color:'rgba(27, 69, 60, 1)', fontWeight:'bold', fontSize:18  }}>Update username</Text>
-          <TextInput 
-            placeholder='diner_luklore'
-            style={styles.inputDesign}
-            required
-          />
-        </View>
-     
-
-        {/* <View style={styles.inputContainer}>
-          <Text style={{ color:'rgba(27, 69, 60, 1)',  fontWeight:'bold', fontSize:18  }}>Update password</Text>
-          <TextInput 
-            placeholder='1232dfe33##%&'
-            style={styles.inputDesign}
-            required
-            secureTextEntry={true}
-          />
-        </View>
-
-
-        <View style={styles.inputContainer}>
-          <Text style={{ color:'rgba(27, 69, 60, 1)',  fontWeight:'bold', fontSize:18  }}>Confirm password</Text>
-          <TextInput 
-            placeholder='1232dfe33##%&'
-            style={styles.inputDesign}
-            required
-            secureTextEntry={true}
-          />
-        </View> */}
-
-
-
-
-
-        <TouchableOpacity style={styles.updateButton}>
-          <Text style={{ color: 'rgba(218, 229, 215, 1)', fontSize: 15, fontWeight: 'bold' }}>UPDATE PROFILE</Text>
-        </TouchableOpacity>
-
-
-      </ScrollView>
-
-      <Modal visible={isPickerVisible} animationType="slide" transparent={true} >
-        <View style={styles.overlay}>
-          <View style={styles.overlayContent}>
-
-            
-            <TouchableOpacity title="Close" onPress={togglePicker}  style={styles.closeButton}>
-              <AntDesign name="closecircleo" size={24} color="rgba(27, 69, 60, 1)" />
-            </TouchableOpacity>
-            {/* <View>
-
-
-              <Text style={{ alignSelf: 'center', fontSize: 20, fontWeight: 'bold', color: 'rgba(27, 69, 60, 1)' }}>Profile Picture</Text>
-
-              <View style={styles.alignButtons}>
-
-                <TouchableOpacity style={styles.designButton} onPress={()=> alert('Camera Opened')}>
-                  <EvilIcons name="camera" size={26} color="white" />
-                  <Text style={{ color: 'white' }}>Camera</Text>
-                </TouchableOpacity>
-
-
-                <TouchableOpacity style={styles.designButton}>
-                  <EvilIcons name="image" size={26} color="white" onPress={()=> alert('Gallery Opened') } />
-                  <Text style={{ color: 'white' }}>Gallery</Text>
-                </TouchableOpacity>
-              </View>
-
-
-
-            </View> */}
-
-
-          </View>
-        </View>
-      </Modal>
-
-
-
-
-
-
-
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
-    boxSizing: 'border-box',
-    paddingLeft: 20,
-    paddingRight: 20, 
-    paddingTop: 30,
+    backgroundColor: '#FBFBF4',
+  },
+  overall:{
+    margin:screenWidth * 0.05,
   },
   arrowBorder:{
-   
     borderColor: 'rgba(27, 69, 60, 1)',
     borderWidth: 1,
     borderStyle: 'solid',
-    height: 40,
-    width: 40,
+    height: screenHeight * 0.05,
+    width: screenHeight * 0.05,
     borderRadius: 100,
-    marginBottom: 30,
+    marginBottom: screenHeight * 0.02,
     justifyContent: 'center',
   },
   profilePicture:{
-    width: 150,
-    height: 162,
+    width: screenHeight * 0.16,
+    height: screenHeight * 0.16,
     position: 'relative',
-    top: 20,
+    top: screenHeight * 0.023,
   },
   inputContainer:{
     display: 'flex',
@@ -172,86 +165,34 @@ const styles = StyleSheet.create({
   },
   inputDesign:{
     width: '100%',
-    borderColor: 'rgba(27, 69, 60, 1)',
+    borderColor: Colors.primary.dark,
     borderWidth: 1,
     borderStyle: 'solid',
-    borderRadius: 5,
-    padding: 12,
-    marginTop: 5,
-    color: 'rgba(27, 69, 60, 1)',
-    fontSize: 16,
-  },
-  allInputs:{
-    position:'relative',
-    paddingTop: 30,
-    paddingBottom: 20,
-  },
-  overlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    width: '100%',
-    position: 'relative',
-  },
-  overlayContent: {
-    backgroundColor: 'rgba(218, 229, 215, 1)',
-    padding: 20,
-    alignItems: 'center',
-    width: 348,
-    height: 198,
-    borderRadius: 20,
-  },
-  closeButton:{
-    display:'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 30,
-    height:30,
-  
-    position: 'relative',
-    left: 140,
-  },
-  closeImage:{
-    width: 148,
-    height: 148,
-    borderRadius: 100,
-    marginBottom: 10,
-  },
-  designButton:{
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    width: 60,
-    height: 60,
-    padding: 40,
-    backgroundColor: 'rgba(27, 69, 60, 1)',
-    borderRadius: 10,
-    marginTop: 10,
-    margin: 10,
-  },
-  alignButtons:{
-    width: '100%',
-    backgroundColor: 'transparent',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    borderRadius: 8,
+    padding: screenHeight * 0.018,
+    marginTop: screenHeight * 0.004,
+    color: Colors.primary.dark,
+    fontSize: screenHeight * 0.018,
   },
   updateButton:{
     width: '100%',
-    height: 50,
+    height: screenHeight * 0.06,
     borderRadius: 10,
-    backgroundColor: 'rgba(27, 69, 60, 1)',
+    backgroundColor: Colors.primary.dark,
     display:'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
+    marginTop: screenHeight * 0.06,
   },
-
+  updateTextField:{
+    color: Colors.primary.dark,
+    fontSize: screenHeight * 0.020,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    lineHeight: 36,
+    letterSpacing: 0.2,
+  },
 });
 
-export default ProfileSettings;
+export default ProfileSettingsPage;

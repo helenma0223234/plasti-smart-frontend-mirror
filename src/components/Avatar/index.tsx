@@ -16,9 +16,9 @@ import Shiba3Hat from "../../assets/avatars/shiba3hat.svg";
 import Penguin1Hat from "../../assets/avatars/penguin1hat.svg";
 import Penguin2Hat from "../../assets/avatars/penguin2hat.svg";
 import Penguin3Hat from "../../assets/avatars/penguin3hat.svg";
-import Cat1hat from "../../assets/avatars/cat1hat.svg";
-import Cat2hat from "../../assets/avatars/cat2hat.svg";
-import Cat3hat from "../../assets/avatars/cat3hat.svg";
+import Cat1Hat from "../../assets/avatars/cat1hat.svg";
+import Cat2Hat from "../../assets/avatars/cat2hat.svg";
+import Cat3Hat from "../../assets/avatars/cat3hat.svg";
 import Cat1Glasses from "../../assets/avatars/cat1glasses.svg";
 import Cat2Glasses from "../../assets/avatars/cat2glasses.svg";
 import Cat3Glasses from "../../assets/avatars/cat3glasses.svg";
@@ -45,12 +45,17 @@ import Penguin2Bow from "../../assets/avatars/penguin2bow.svg";
 import Penguin3Bow from "../../assets/avatars/penguin3bow.svg";
 import Cat1Bow from "../../assets/avatars/cat1bow.svg";
 import Cat2Bow from "../../assets/avatars/cat2bow.svg";
-import Cat3Bow from "../../assets/avatars/cat3bow.svg"; 
+import Cat3Bow from "../../assets/avatars/cat3bow.svg";
+import Bird1 from "../../assets/avatars/bird1.svg";
+import Bird1Hat from "../../assets/avatars/bird1hat.svg";
+import Bird1Glasses from "../../assets/avatars/bird1glasses.svg";
+import Bird1Beanie from "../../assets/avatars/bird1beanie.svg";
+import Bird1Bow from "../../assets/avatars/bird1bow.svg";
 
 
 interface AvatarProps {
-  avatarID: number; // 1 is shiba, 2 is pengiun, 3 is cat
-  color: number; // 1-3
+  avatarID: number; // 1 is shiba, 2 is pengiun, 3 is cat, 4 is bird
+  color: number; // 1-3, only 1 for bird
   size: number; 
   accessory: number;
   style?: any;
@@ -129,7 +134,7 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: Ava
         case 1:
           switch (accessory) {
             case -1: AvatarSVG = Cat1; break;
-            case 1: AvatarSVG = Cat1hat; break;
+            case 1: AvatarSVG = Cat1Hat; break;
             case 2: AvatarSVG = Cat1Glasses; break;
             case 3: AvatarSVG = Cat1Beanie; break;
             case 4: AvatarSVG = Cat1Bow; break;
@@ -138,7 +143,7 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: Ava
         case 2: 
           switch (accessory) {
             case -1: AvatarSVG = Cat2; break;
-            case 1: AvatarSVG = Cat2hat; break;
+            case 1: AvatarSVG = Cat2Hat; break;
             case 2: AvatarSVG = Cat2Glasses; break;
             case 3: AvatarSVG = Cat2Beanie; break;
             case 4: AvatarSVG = Cat2Bow; break;
@@ -147,7 +152,7 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: Ava
         case 3: 
           switch (accessory) {
             case -1: AvatarSVG = Cat3; break;
-            case 1: AvatarSVG = Cat3hat; break;
+            case 1: AvatarSVG = Cat3Hat; break;
             case 2: AvatarSVG = Cat3Glasses; break;
             case 3: AvatarSVG = Cat3Beanie; break;
             case 4: AvatarSVG = Cat3Bow; break;
@@ -155,6 +160,14 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: Ava
           break;
       }
       break;
+    case 4: // bird
+      switch (accessory) {
+        case -1: AvatarSVG = Bird1; break;
+        case 1: AvatarSVG = Bird1Hat; break;
+        case 2: AvatarSVG = Bird1Glasses; break;
+        case 3: AvatarSVG = Bird1Beanie; break;
+        case 4: AvatarSVG = Bird1Bow; break;
+      }
   }
 
   return (

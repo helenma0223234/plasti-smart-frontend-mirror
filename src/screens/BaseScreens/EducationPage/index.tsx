@@ -441,7 +441,7 @@ const EducationPage = () => {
               <ProgressCard
                 title={'Pal Points'}
                 text={user.monthlyPoints>0 ?`You’ve gained ${user.monthlyPoints} points for your pal this month. Your pal says thanks!` : 'Get started earning points! Your pal is waiting!'}
-                cornerComponent={<Avatar avatarID={3} color={user.avatarColor} shadow={false} size={progressCardWidth*0.5} accessory={user.avatarAccessoryEquipped} style={{right:progressCardWidth*0.075}}></Avatar>}>
+                cornerComponent={<Avatar avatarID={user.avatarID} color={user.avatarColor} shadow={false} size={progressCardWidth*0.5} accessory={user.avatarAccessoryEquipped} style={{right:progressCardWidth*0.075}}></Avatar>}>
               </ProgressCard>
             </View>
           </ScrollView>

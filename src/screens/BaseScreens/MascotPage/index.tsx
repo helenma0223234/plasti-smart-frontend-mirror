@@ -1,29 +1,23 @@
-import React, { useState, useRef } from 'react';
-import { SafeAreaView, Text, View, StyleSheet, Dimensions } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { SafeAreaView, Text, View, StyleSheet, Dimensions, Animated } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { TouchableOpacity } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { updateUser, equipAvatar, setAvatarFirstTime } from '../../../redux/slices/usersSlice';
+import {setAvatarFirstTime } from '../../../redux/slices/usersSlice';
 import useAppSelector from '../../../hooks/useAppSelector';
 import useAppDispatch from '../../../hooks/useAppDispatch';
 import FormatStyle from '../../../utils/FormatStyle';
 import TextStyles from '../../../utils/TextStyles';
-import Cat from '../../../assets/Cat.svg';
-import Cat1 from '../../../assets/Cat1.svg';
-import Cat2 from '../../../assets/Cat2.svg';
 import GoRightButton from '../../../assets/GoRightButton.svg';
 import GoLeftButton from '../../../assets/GoLeftButton.svg';
-import type { StackNavigationProp } from '@react-navigation/stack';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import { useNavigation } from '@react-navigation/native';
 import NavType from 'utils/NavType';
 import { cameraClosed, cameraOpened } from 'redux/slices/cameraSlice';
 import Avatar from '../../../components/Avatar';
-import { Camera } from 'expo-camera';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-const catContainerHeight = screenHeight*0.3;
+const avatarContainerHeight = screenHeight*0.3;
 
 type carouselItem = {
   avatarID: number;
@@ -45,20 +39,47 @@ const MascotPage = () => {
   const { id, email } = user || { id: '', email: '' };
   const userData = useAppSelector((state) => state.users.selectedUser);
   const [activeIndex, setActiveIndex] = useState(0);
+  const animatedValues = useRef(carouselData.map(() => new Animated.Value(0))).current;
   const carouselRef = useRef(null);
+
+  useEffect(() => {
+    // Animate the active index size change
+    animatedValues.forEach((animatedValue, index) => {
+      Animated.timing(animatedValue, {
+        toValue: index === activeIndex ? 1 : 0,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    });
+  }, [activeIndex]);
 
   const handleUpdateUser = () => {
     dispatch(setAvatarFirstTime({id: user.id, avatarID: activeIndex+1}));
     dispatch(cameraClosed());
   };
 
+  const animateToIndex = (index: number) => {
+    animatedValues.forEach((animatedValue, i) => {
+      Animated.timing(animatedValue, {
+        toValue: i === index ? 1 : 0,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    });
+  };
+
   let _carousel: Carousel<carouselItem> | null = null;
 
   const _renderItem = ({ item, index }: renderItem) => {
+    const size = animatedValues[index].interpolate({
+      inputRange: [0, 1],
+      outputRange: [screenWidth * 0.3, screenWidth * 0.4],
+    });
+
     return (
-      <View style={{alignSelf: 'center', justifyContent: 'center', alignItems: 'center', maxWidth:screenWidth*0.4}}>
-        <Avatar avatarID={item.avatarID} color={1} accessory={-1} size={index==activeIndex ?  screenWidth*0.4:screenWidth*0.3 } shadow={true}></Avatar>
-      </View>
+      <Animated.View style={{ alignSelf: 'center', justifyContent: 'center', alignItems: 'center', width: size, height: size }}>
+        <AnimatedAvatar avatarID={item.avatarID} color={1} accessory={-1} size={size} shadow={true} />
+      </Animated.View>
     );
   };
 
@@ -70,11 +91,17 @@ const MascotPage = () => {
   };
 
   const goPrev = () => {
-    carouselRef.current.snapToPrev();
+    const newIndex = activeIndex > 0 ? activeIndex - 1 : carouselData.length - 1;
+    setActiveIndex(newIndex);
+    animateToIndex(newIndex);
+    carouselRef.current.snapToItem(newIndex);
   };
 
   const goNext = () => {
-    carouselRef.current.snapToNext();
+    const newIndex = activeIndex < carouselData.length - 1 ? activeIndex + 1 : 0;
+    setActiveIndex(newIndex);
+    animateToIndex(newIndex);
+    carouselRef.current.snapToItem(newIndex);
   };
 
   return (
@@ -85,7 +112,7 @@ const MascotPage = () => {
           <Text style={[TextStyles.regular, {textAlign:'center', fontSize:screenHeight*0.0225, fontFamily: 'Inter_500Medium', marginTop: 10}]}>
             This will be your adventure pal! Don’t worry, you can always make changes later</Text>
         </View>
-        <View style={styles.catContainer}>
+        <View style={styles.avatarContainer}>
           <Carousel
             ref={carouselRef}
             layout={'default'}
@@ -93,14 +120,17 @@ const MascotPage = () => {
             sliderWidth={screenWidth}
             itemWidth={screenWidth*0.5}
             renderItem={_renderItem}
-            onSnapToItem={index => setActiveIndex(index)}
+            onSnapToItem={index => {
+              setActiveIndex(index);
+              animateToIndex(index);
+            }}
             enableSnap={true}
             enableMomentum={true}
           />
-          <TouchableOpacity style={{ position: 'absolute', left: screenWidth*0.19, bottom: catContainerHeight*0.4, zIndex:1 }} onPress={goPrev}>
+          <TouchableOpacity style={{ position: 'absolute', left: screenWidth*0.19, bottom: avatarContainerHeight*0.4, zIndex:1 }} onPress={goPrev}>
             <GoLeftButton  width={screenWidth*0.1} height={screenWidth*0.1}/>
           </TouchableOpacity>
-          <TouchableOpacity style={{ position: 'absolute', right: screenWidth*0.19, bottom: catContainerHeight*0.4, zIndex:1 }} onPress={goNext}>
+          <TouchableOpacity style={{ position: 'absolute', right: screenWidth*0.19, bottom: avatarContainerHeight*0.4, zIndex:1 }} onPress={goNext}>
             <GoRightButton  width={screenWidth*0.1} height={screenWidth*0.1}/>
           </TouchableOpacity>
         </View>
@@ -121,11 +151,35 @@ const MascotPage = () => {
   );
 };
 
+interface AnimatedAvatarProps {
+  avatarID: number;
+  color: number;
+  accessory: number;
+  size: Animated.AnimatedInterpolation;
+  shadow: boolean;
+}
+
+const AnimatedAvatar = ({ avatarID, color, accessory, size, shadow }: AnimatedAvatarProps) => {
+  const [avatarSize, setAvatarSize] = useState<number>(size.__getValue());
+
+  useEffect(() => {
+    const listenerId = size.addListener(({ value }) => {
+      setAvatarSize(value);
+    });
+    return () => {
+      size.removeListener(listenerId);
+    };
+  }, [size]);
+
+  return <Avatar avatarID={avatarID} color={color} accessory={accessory} size={avatarSize} shadow={shadow} />;
+};
+
+
 const styles = StyleSheet.create({
-  catContainer: {
-    maxHeight:catContainerHeight,
+  avatarContainer: {
+    maxHeight:avatarContainerHeight,
     marginTop: screenHeight*0.05,
-    paddingTop: catContainerHeight*0.175,
+    paddingTop: avatarContainerHeight*0.175,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignContent: 'center',

@@ -10,6 +10,7 @@ import { Dimensions } from 'react-native';
 import Svg, { G, Path } from 'react-native-svg';
 
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 interface CalendarProps {
   children?: React.ReactNode;
@@ -43,7 +44,7 @@ const Calendar = ({ circlesArray }: CalendarProps) => {
   const isEmpty = newCirclesArray.every((subArray) => subArray.length === 0);
 
   return (
-    <View style={{ marginTop: 8, marginLeft:6 }}>
+    <View style={{ marginTop: 8, marginLeft:6, marginBottom: screenHeight*0.01 }}>
       <Text style={{ color: Colors.primary.dark, marginBottom: -12, fontSize: screenWidth*0.06 }}>
         Daily Goal
       </Text>

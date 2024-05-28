@@ -7,8 +7,10 @@ import Colors from 'utils/Colors';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { Dimensions } from 'react-native';
+import Svg, { G, Path } from 'react-native-svg';
 
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 interface CalendarProps {
   children?: React.ReactNode;
@@ -42,8 +44,8 @@ const Calendar = ({ circlesArray }: CalendarProps) => {
   const isEmpty = newCirclesArray.every((subArray) => subArray.length === 0);
 
   return (
-    <View style={{ marginTop: 8, marginLeft:6 }}>
-      <Text style={{ color: Colors.primary.dark, marginBottom: -12 }}>
+    <View style={{ marginTop: 8, marginLeft:6, marginBottom: screenHeight*0.01 }}>
+      <Text style={{ color: Colors.primary.dark, marginBottom: -12, fontSize: screenWidth*0.06 }}>
         Daily Goal
       </Text>
       <ScrollView
@@ -93,6 +95,34 @@ const DateCircle = ({
   ];
 
   const circleDim = screenWidth * 0.018;
+  const radius = screenWidth * 0.051;
+  const thickness = radius*0.3;
+
+  const createArcPath = (startAngle: number, endAngle: number, radius: number) => {
+    const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+    const start = polarToCartesian(radius, radius, radius - thickness / 2, endAngle);
+    const end = polarToCartesian(radius, radius, radius - thickness / 2, startAngle);
+
+    return [
+      'M', start.x, start.y,
+      'A', (radius - thickness / 2), (radius - thickness / 2), 0, largeArcFlag, 0, end.x, end.y
+    ].join(' ');
+  };
+
+
+  const polarToCartesian = (centerX: number, centerY: number, radius: number, angleInDegrees: number) => {
+    const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+    return {
+      x: centerX + (radius * Math.cos(angleInRadians)),
+      y: centerY + (radius * Math.sin(angleInRadians))
+    };
+  };
+
+  const arcs = [
+    { color: Colors.secondary.red, startAngle: 2.5, endAngle: 117.5, completed: colorcircles[0] },
+    { color: Colors.secondary.yellow, startAngle: 122.5, endAngle: 237.5, completed: colorcircles[1] },
+    { color: Colors.primary.dark, startAngle: 242, endAngle: 358, completed: colorcircles[2] }
+  ];
 
   return (
     <View
@@ -107,58 +137,32 @@ const DateCircle = ({
         style={{
           ...FormatStyle.circle,
           backgroundColor:
-            (isPast && '#ADC0AB') ||
-            (active && Colors.primary.dark) ||
-            Colors.secondary.white,
+            (isPast && Colors.secondary.light) ||
+            (active && "#ADC0AB") ||
+            Colors.secondary.light,
           width: screenWidth * 0.102,
           height: screenWidth * 0.102,
         }}
       >
+        <Svg height={radius * 2} width={radius * 2} style={{position: 'absolute'}}>
+          {arcs.map((arc, index) => arc.completed === 1 && (
+            <Path
+              key={index}
+              d={createArcPath(arc.startAngle, arc.endAngle, radius)}
+              fill="none"
+              stroke={arc.color}
+              strokeWidth={thickness}
+            />
+          ))}
+        </Svg>
         <Text
           style={{
             ...TextStyles.small,
-            color: active && Colors.secondary.white,
+            // color: active && Colors.secondary.white,
           }}
         >
           {date}
         </Text>
-      </View>
-      <View style={{ alignItems: 'center', flexDirection: 'row', gap: 4 }}>
-        {/* {colorcircles.map((circle: number, key: number) => (
-          circle === 1 ? (
-            <View style={{
-              ...FormatStyle.circle,
-              backgroundColor: circleColors[key],
-              width: 6,
-              height: 6,
-              borderWidth: 0,
-            }} key={key}></View>
-          ) : null
-        ))} */}
-        {isEmpty ? (
-          <View style={{
-            ...FormatStyle.circle,
-            backgroundColor: 'transparent',
-            width: circleDim,
-            height: circleDim,
-            borderWidth: 0,
-          }}></View>
-        ) : (
-          colorcircles.map((circle: number, key: number) =>
-            circle === 1 ? (
-              <View
-                style={{
-                  ...FormatStyle.circle,
-                  backgroundColor: circleColors[key],
-                  width: circleDim,
-                  height: circleDim,
-                  borderWidth: 0,
-                }}
-                key={key}
-              ></View>
-            ) : null,
-          )
-        )}
       </View>
     </View>
   );

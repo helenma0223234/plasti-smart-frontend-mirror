@@ -44,7 +44,7 @@ const Calendar = ({ circlesArray }: CalendarProps) => {
 
   return (
     <View style={{ marginTop: 8, marginLeft:6 }}>
-      <Text style={{ color: Colors.primary.dark, marginBottom: -12 }}>
+      <Text style={{ color: Colors.primary.dark, marginBottom: -12, fontSize: screenWidth*0.06 }}>
         Daily Goal
       </Text>
       <ScrollView
@@ -118,8 +118,8 @@ const DateCircle = ({
   };
 
   const arcs = [
-    { color: Colors.secondary.red, startAngle: 2, endAngle: 118, completed: colorcircles[0] },
-    { color: Colors.secondary.yellow, startAngle: 122, endAngle: 238, completed: colorcircles[1] },
+    { color: Colors.secondary.red, startAngle: 2.5, endAngle: 117.5, completed: colorcircles[0] },
+    { color: Colors.secondary.yellow, startAngle: 122.5, endAngle: 237.5, completed: colorcircles[1] },
     { color: Colors.primary.dark, startAngle: 242, endAngle: 358, completed: colorcircles[2] }
   ];
 
@@ -157,7 +157,7 @@ const DateCircle = ({
         <Text
           style={{
             ...TextStyles.small,
-            color: active && Colors.secondary.white,
+            // color: active && Colors.secondary.white,
           }}
         >
           {date}

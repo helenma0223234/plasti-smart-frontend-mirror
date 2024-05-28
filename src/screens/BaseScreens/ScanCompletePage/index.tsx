@@ -4,6 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Dimensions
 } from 'react-native';
 
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
@@ -17,15 +18,19 @@ import Colors from 'utils/Colors';
 import Penguine from '../../../assets/Penguine.svg';
 import Shiba from '../../../assets/Shiba.svg';
 import CatAvatar from '../../../assets/CatAvatar.svg';
+import Avatar from 'components/Avatar';
+
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 type ScanCompletePageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;
 };
 
 const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
-  // const user = useAppSelector((state) => state.users.selectedUser);
+  const user = useAppSelector((state) => state.users.selectedUser);
   const recycled = useAppSelector((state) => state.scan.recycled);
-  // console.log(user);
+
   return (
     <View style={styles.container}>
 
@@ -67,7 +72,7 @@ const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
         </Text>
       </View>
       <View style={styles.svgContainer}>
-        <CatAvatar />
+        <Avatar size={screenWidth*0.4} avatarID={user.avatarID} color={user.avatarColor} accessory={user.avatarAccessoryEquipped} shadow={true} />
       </View>
       <View style={styles.selectButtonContainer}>
         <TouchableOpacity

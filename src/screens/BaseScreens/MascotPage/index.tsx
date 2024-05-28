@@ -33,11 +33,7 @@ type renderItem = {
   index: number;
 };
 
-const carouselData: Array<carouselItem> = Array.from({ length: 3 }, (_, i) => ({avatarID: i + 1}));
-
-const svgs = [<Avatar avatarID={1} color={1} accessory={-1} size={screenWidth*0.5} shadow={false}></Avatar>, 
-<Avatar avatarID={2} color={1} accessory={-1} size={screenWidth*0.5} shadow={false}></Avatar>,
-<Avatar avatarID={3} color={1} accessory={-1} size={screenWidth*0.5} shadow={false}></Avatar>];
+const carouselData: Array<carouselItem> = Array.from({ length: 4 }, (_, i) => ({avatarID: i + 1}));
 
 const MascotPage = () => {
   const navigation = useNavigation<NavType>();
@@ -61,7 +57,7 @@ const MascotPage = () => {
   const _renderItem = ({ item, index }: renderItem) => {
     return (
       <View style={{alignSelf: 'center', justifyContent: 'center', alignItems: 'center', maxWidth:screenWidth*0.4}}>
-        <Avatar avatarID={item.avatarID} color={1} accessory={-1} size={screenWidth*0.4} shadow={true}></Avatar>
+        <Avatar avatarID={item.avatarID} color={1} accessory={-1} size={index==activeIndex ?  screenWidth*0.4:screenWidth*0.3 } shadow={true}></Avatar>
       </View>
     );
   };

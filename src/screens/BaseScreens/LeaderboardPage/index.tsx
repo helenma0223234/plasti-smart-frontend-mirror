@@ -63,7 +63,7 @@ const LeaderboardPage = () => {
       };
 
       fetchLeaderboard();
-    }, [])
+    }, []),
   );
 
   // const userRank = user?.rank || 100;
@@ -233,7 +233,7 @@ const LeaderboardPage = () => {
           {userRank > 20 && 
       <View style={{
         position: 'absolute',
-        top: screenHeight * 0.34,
+        top: screenHeight * 0.32,
         left: -screenWidth * 0.04,
         width: '110%',
         height: screenHeight * 0.062,

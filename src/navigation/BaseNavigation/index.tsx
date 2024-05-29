@@ -215,6 +215,7 @@ const BaseNavigation = () => {
         // dispatch get user settings
         dispatch(getNotificationSettings({ userID: userSelf?.id }));
         let deviceID = await SecureStore.getItemAsync('secure_deviceid');
+        // if this is a new device:
         if (notifications && notifications.deviceID != deviceID) {
         // get new device id
           try {

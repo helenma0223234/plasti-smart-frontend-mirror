@@ -183,7 +183,7 @@ const LeaderboardPage = () => {
                       <>
                         {(place.avatarID !== null && place.avatarID !== undefined && place.avatarColor !== null && place.avatarColor !== undefined) && 
                           <ProfilePicture size={40} avatarID={place.avatarID} color={place.avatarColor} accessory={place.avatarAccessoryEquipped}></ProfilePicture>}
-                        <View
+                        {/* <View
                           style={{
                             ...FormatStyle.circle,
                             width: 40,
@@ -192,7 +192,7 @@ const LeaderboardPage = () => {
                             backgroundColor: Colors.secondary.white,
                           }}
                         >
-                        </View>
+                        </View> */}
                         <View
                           style={{
                             ...FormatStyle.circle,

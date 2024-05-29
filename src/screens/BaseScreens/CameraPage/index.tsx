@@ -211,7 +211,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       setIsAnimating(false);
       setReuseModalVisible(true);
     } else if (capturedPhoto && modelVerdict && user) {
-      dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, plasticLetter: plasticTypes[modelVerdict as keyof typeof plasticTypes], image: capturedPhoto, reused: true, recycled: false }));
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, image: capturedPhoto, reused: true, recycled: false }));
       dispatch(reusedRedux());
       setIsAnimating(false);
       setCapturedPhoto(null);
@@ -224,7 +224,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   const selectButtonPressed = () => {
     if (capturedPhoto && modelVerdict && user) {
       dispatch(recycledRedux());
-      dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, plasticLetter: plasticTypes[modelVerdict as keyof typeof plasticTypes], image: capturedPhoto, reused: false, recycled: true }));
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, image: capturedPhoto, reused: false, recycled: true }));
     }
     setIsAnimating(false);
     setCapturedPhoto(null);

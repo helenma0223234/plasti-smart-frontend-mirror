@@ -188,7 +188,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
         
         <View style={{ position: 'absolute', top: screenHeight * 0.25, left:screenWidth * 0.02 }}>
           <HomeAvaShadow style={{ position: 'absolute', top: screenHeight * 0.09, right: screenWidth * 0.06 }} width={screenWidth * 0.5} height ={screenHeight * 0.45}></HomeAvaShadow>
-          <Avatar avatarID={user.avatarID} color={user.avatarColor} size={screenWidth * 0.47} accessory={user.avatarAccessoryEquipped} shadow={false} style={{ top: screenHeight * 0.12 }} mirror={user.avatarID == 2 || user.avatarID == 4}></Avatar>
+          <Avatar avatarID={user.avatarID} color={user.avatarColor} size={screenWidth * 0.47} accessory={user.avatarAccessoryEquipped} shadow={false} style={{ top: screenHeight * 0.12 }} mirror={user.avatarID >= 2}></Avatar>
           <TouchableOpacity style={{ position: 'absolute', top: screenHeight * 0.17, right: -screenWidth * 0.19 }} onPress={() => handleSnackPress({ points: user.points, uid: user.id, uhealth: user.avatarHealth })}>
             {user.points > 5 ? <HomeFullBowl width={screenWidth * 0.25} height ={screenHeight * 0.28} />  : <Bowl width={screenWidth * 0.33} height ={screenHeight * 0.33} />}
           </TouchableOpacity>

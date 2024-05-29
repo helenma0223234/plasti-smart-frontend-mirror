@@ -9,6 +9,7 @@ import Colors from 'utils/Colors';
 import axios from 'axios';
 import useAppSelector from 'hooks/useAppSelector';
 import usersSlice from 'redux/slices/usersSlice';
+import ProfilePicture from 'components/ProfilePicture';
 import Avatar from 'components/Avatar';
 
 
@@ -32,12 +33,32 @@ const LeaderboardPage = () => {
       const fetchLeaderboard = async () => {
         try {
           const response = await axios.get(SERVER_URL + 'users/leaderboard');
+          
           const leaderboardData = response.data.map((entry: { username: string, monthlyPoints: number, avatarID: number, avatarColor: number, avatarAccessoryEquipped: number  }) => {
-            return { name: entry.username ? entry.username : 'username', score: entry.monthlyPoints, avatarID: entry.avatarID, avatarColor: entry.avatarColor, avatarAccessoryEquipped: entry.avatarAccessoryEquipped };
+            return { name: entry.username, score: entry.monthlyPoints, avatarID: entry.avatarID, avatarColor: entry.avatarColor, avatarAccessoryEquipped: entry.avatarAccessoryEquipped };
           });
+          console.log('Leaderboard data:', leaderboardData);
+          // for loop through leaderboardData and print name if any field is either null or undefined
+          for (let i = 0; i < leaderboardData.length; i++) {
+            if (leaderboardData[i].name === null || leaderboardData[i].name === undefined) {
+              console.log('Name is null or undefined at index:', i);
+            }
+            if (leaderboardData[i].score === null || leaderboardData[i].score === undefined) {
+              console.log('Score is null or undefined at index:', i);
+            }
+            if (leaderboardData[i].avatarID === null || leaderboardData[i].avatarID === undefined) {
+              console.log('Avatar ID is null or undefined at index:', i);
+            }
+            if (leaderboardData[i].avatarColor === null || leaderboardData[i].avatarColor === undefined) {
+              console.log('Avatar color is null or undefined at index:', i);
+            }
+            if (leaderboardData[i].avatarAccessoryEquipped === null || leaderboardData[i].avatarAccessoryEquipped === undefined) {
+              console.log('Avatar accessory is null or undefined at index:', i);
+            }
+          }
           setLeaderboard(leaderboardData);
         } catch (error) {
-          console.error('Error when getting leaderboard', error);
+          console.log('Error when getting leaderboard', error);
         }
       };
 
@@ -45,7 +66,8 @@ const LeaderboardPage = () => {
     }, [])
   );
 
-  const userRank = user?.rank || 100;
+  // const userRank = user?.rank || 100;
+  const userRank = 22;
 
   return (
     leaderboard.length > 0 && <SafeAreaView style={{ ...FormatStyle.topContainer, alignItems: 'center' }}>
@@ -130,15 +152,8 @@ const LeaderboardPage = () => {
                   >
                     {rank === userRank ? (
                       <>
-                        <View
-                          style={{
-                            ...FormatStyle.circle,
-                            width: 40,
-                            height: 40,
-                            marginTop: 0,
-                            backgroundColor: Colors.primary.dark,
-                          }}
-                        ></View>
+                        {(place.avatarID !== null && place.avatarID !== undefined && place.avatarColor !== null && place.avatarColor !== undefined) && 
+                          <ProfilePicture size={40} avatarID={place.avatarID} color={place.avatarColor} accessory={place.avatarAccessoryEquipped}></ProfilePicture>}
                         <View
                           style={{
                             ...FormatStyle.circle,
@@ -166,6 +181,8 @@ const LeaderboardPage = () => {
                       </>
                     ) : (
                       <>
+                        {(place.avatarID !== null && place.avatarID !== undefined && place.avatarColor !== null && place.avatarColor !== undefined) && 
+                          <ProfilePicture size={40} avatarID={place.avatarID} color={place.avatarColor} accessory={place.avatarAccessoryEquipped}></ProfilePicture>}
                         <View
                           style={{
                             ...FormatStyle.circle,
@@ -174,7 +191,8 @@ const LeaderboardPage = () => {
                             marginTop: 0,
                             backgroundColor: Colors.secondary.white,
                           }}
-                        ></View>
+                        >
+                        </View>
                         <View
                           style={{
                             ...FormatStyle.circle,
@@ -236,7 +254,7 @@ const LeaderboardPage = () => {
         gap: 0,
         padding: 3,
       }}>
-        <View
+        {/* <View
           style={{
             ...FormatStyle.circle,
             width: 40,
@@ -244,7 +262,9 @@ const LeaderboardPage = () => {
             marginTop: 0,
             backgroundColor: Colors.primary.dark,
           }}
-        ></View>
+        ></View> */}
+        {(user.avatarID !== null && user.avatarID !== undefined && user.avatarColor !== null && user.avatarColor !== undefined) && 
+                          <ProfilePicture size={40} avatarID={user.avatarID} color={user.avatarColor} accessory={user.avatarAccessoryEquipped}></ProfilePicture>}
         <View
           style={{
             ...FormatStyle.circle,

@@ -18,6 +18,11 @@ const VerifyPage = () => {
   const [code, setCode] = useState<string>('');
   const [timer, setTimer] = useState<number>(0);
 
+  // send a code to the user once they enter this page!
+  useEffect(() => {
+    if (id && email && id !== '' && email !== '') dispatch(resendCode({ id, email }));
+  }, []);
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (timer > 0) {

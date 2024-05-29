@@ -128,7 +128,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
       return styles.largePoints;
     }
   }
-
+  dispatch(cameraClosed());
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container, justifyContent: 'flex-start' }}>

@@ -6,6 +6,7 @@ import usersReducer from './slices/usersSlice';
 import cameraReducer from './slices/cameraSlice';
 import loginhistoryReducer from './slices/loginhistorySlice';
 import scanReducer from './slices/scanSlice';
+import notificationReducer from './slices/notificationSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     camera: cameraReducer,
     loginhistory: loginhistoryReducer,
     scan : scanReducer,
+    notifications : notificationReducer,
   },
 });
 

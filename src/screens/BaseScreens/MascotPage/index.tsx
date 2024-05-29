@@ -18,6 +18,7 @@ import Avatar from '../../../components/Avatar';
 import * as Notifications from 'expo-notifications';
 import { registerForPushNotificationsAsync } from 'components/Notifications/registerNotifications';
 import { scheduleAvatarPushNotification, scheduleDailyGoalPushNotification } from 'components/Notifications/pushNotifications';
+import { setTutorial } from 'redux/slices/tutorialSlice';
 
 // for device ID
 import * as SecureStore from 'expo-secure-store';
@@ -67,6 +68,8 @@ const MascotPage = () => {
   const handleUpdateUser = async () => {
     if (user) {
       dispatch(setAvatarFirstTime({ id: user.id, avatarID: activeIndex + 1 }));
+      // turn on tutorial
+      dispatch(setTutorial());
       // also init the notification settings and device ID
       dispatch(createDefaultNotificationSettings({ userID: user.id }));
       let deviceID = await SecureStore.getItemAsync('secure_deviceid');

@@ -33,6 +33,7 @@ const SignUpPage = () => {
     else if (!username) alert('Please confirm your password!');
     else {
       dispatch(signUp({ email, password, username, name }));
+      navigation.navigate(AuthStackRoutes.SIGNIN, {});
     }
   };
 

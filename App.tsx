@@ -7,6 +7,11 @@ import { useFonts, Raleway_400Regular, Raleway_600SemiBold, Raleway_800ExtraBold
 import { Inter_400Regular, Inter_700Bold, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
 // import { Inter } from './src/assets/fonts/Inter-VariableFont_slnt,wght.ttf'
 import { LogBox } from 'react-native';
+import {
+  TourGuideProvider,
+} from 'rn-tourguide';
+
+import { dispatch } from 'd3';
 LogBox.ignoreAllLogs(true);
 
 export default function App() {
@@ -24,11 +29,16 @@ export default function App() {
   if (!fontsLoaded) {
     return <View />;
   }
+  
 
   return (
+    
     <Provider store={store}>
       <StatusBar barStyle = 'dark-content' />
-      <RootNavigation />
+      <TourGuideProvider preventOutsideInteraction  {...{ borderRadius: 16 }}>
+        <RootNavigation />
+      </TourGuideProvider>
     </Provider>
+    
   );
 }

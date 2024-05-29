@@ -23,6 +23,12 @@ import Calendar from 'components/Calendar';
 import Colors from 'utils/Colors';
 import DailyTasks from 'components/DailyTasks';
 
+import {
+  TourGuideZone, // Main wrapper of highlight component
+  TourGuideZoneByPosition, // Component to use mask on overlay (ie, position absolute)
+  useTourGuideController, // hook to start, etc.
+} from 'rn-tourguide';
+
 import { feedAvatar } from '../../../redux/slices/usersSlice'; // import the action
 import { Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -30,6 +36,8 @@ import type { StackNavigationProp } from '@react-navigation/stack';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import { useFocusEffect } from '@react-navigation/native';
 
+
+import { doneTutorial } from 'redux/slices/tutorialSlice';
 import FullAlertModal from './fullAlertModal';
 import { cameraClosed } from 'redux/slices/cameraSlice';
 import Avatar from 'components/Avatar';
@@ -44,6 +52,7 @@ const screenHeight = Dimensions.get('window').height;
 const HomePage = ({ navigation }: HomePageProps) => {
   const user = useAppSelector((state) => state.users.selectedUser);
   const currentLoginHist = useAppSelector((state) => state.loginhistory.history);
+  const needTutorial = useAppSelector((state) => state.tutorial.needTutorial);
   const dispatch = useAppDispatch();
 
   // console.log('user rank:', user?.rank);
@@ -142,6 +151,37 @@ const HomePage = ({ navigation }: HomePageProps) => {
   const rankNum = user?.rank;
   const displayNumber = rankNum > 80 ? '80+' : rankNum;
 
+  /////////////////// tutorial //////////////////////
+  const {   // Use Hooks to control!
+    canStart, // a boolean indicate if you can start tour guide
+    start, // a function to start the tourguide
+    stop, // a function  to stopping it
+    eventEmitter, // an object for listening some events
+  } = useTourGuideController();
+
+  // Can start at mount 
+  React.useEffect(() => {
+    if (canStart) {
+      start();
+      dispatch(doneTutorial());
+    }
+  }, [needTutorial]);
+
+  // const handleOnStart = () => console.log('start');
+  // const handleOnStop = () => console.log('stop');
+  // const handleOnStepChange = () => console.log('stepChange');
+
+  // React.useEffect(() => {
+  //   eventEmitter.on('start', handleOnStart);
+  //   eventEmitter.on('stop', handleOnStop);
+  //   eventEmitter.on('stepChange', handleOnStepChange);
+
+  //   return () => {
+  //     eventEmitter.off('start', handleOnStart);
+  //     eventEmitter.off('stop', handleOnStop);
+  //     eventEmitter.off('stepChange', handleOnStepChange);
+  //   };
+  // }, []);
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container, justifyContent: 'flex-start' }}>
@@ -172,7 +212,15 @@ const HomePage = ({ navigation }: HomePageProps) => {
             <Text style={getPointsStyle(user?.points)}>{user?.points} </Text>
             <Text style={styles.badgeText}>POINTS</Text>
           </View>
-          <HomeShelf style={{ position: 'absolute', bottom: screenHeight * 0.37, right: -screenWidth * 0.14 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></HomeShelf>
+          <TourGuideZone
+            zone={2}
+            keepTooltipPosition
+            shape='rectangle'
+            text={'A react-native-copilot remastered! 🎉'}
+            borderRadius={16}
+          >
+            <HomeShelf style={{ position: 'absolute', bottom: screenHeight * 0.37, right: -screenWidth * 0.14 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></HomeShelf>
+          </TourGuideZone>
           <TouchableOpacity style={{ backgroundColor:'blue', position: 'absolute', bottom: screenHeight * 0.32, right: -screenWidth * 0.15, maxHeight: screenWidth * 0.45 }} onPress={() => navigation.navigate(BaseTabRoutes.AVATAR_CUSTOMIZATION, {})}>
             <Wardrobe style={{ position: 'absolute', bottom: 1, right: 3, maxHeight: screenWidth * 0.45 }} width={screenWidth * 0.65} height ={screenHeight * 0.65}></Wardrobe>
           </TouchableOpacity>
@@ -203,6 +251,46 @@ const HomePage = ({ navigation }: HomePageProps) => {
           <Calendar circlesArray={taskCompletionStatuses}></Calendar>
           <DailyTasks taskCompletionStatuses={todayTasksCompletion}></DailyTasks>
         </View>
+        <TourGuideZoneByPosition
+          zone={1}
+          shape={'rectangle'}
+          isTourGuide
+          text={'This shelf leads to your Learning Page! Learn about  plastics polymers and check your recycling progress here!'}
+          top={screenHeight * 0.03}
+          left={screenWidth * 0.5}
+          width={screenWidth * 0.46}
+          height={screenHeight * 0.21}
+        />
+        <TourGuideZoneByPosition
+          zone={2}
+          shape={'rectangle'}
+          text={'Is your pal hungry? Level your pal up by tapping on their bowl to feed them.'}
+          isTourGuide
+          top={screenHeight * 0.37}
+          left={screenWidth * 0.04}
+          width={screenWidth * 0.62}
+          height={screenHeight * 0.25}
+        />
+        <TourGuideZoneByPosition
+          zone={3}
+          shape={'rectangle'}
+          isTourGuide
+          text = {'Gain points from learning, reusing, and recycling.'}
+          top={screenHeight * 0.03}
+          left={screenWidth * 0.07}
+          width={screenWidth * 0.3}
+          height={screenHeight * 0.08}
+        />
+        <TourGuideZoneByPosition
+          zone={4}
+          shape={'rectangle'}
+          isTourGuide
+          text={'And spruce up your pal’s wardrobe and style with your points!'}
+          top={screenHeight * 0.23}
+          left={screenWidth * 0.5}
+          width={screenWidth * 0.48}
+          height={screenHeight * 0.24}
+        />
       </ScrollView>
       <FullAlertModal modalVisible={modalVisible} setModalVisible={setModalVisible} modalMessage={modalMessage} />
     </SafeAreaView>

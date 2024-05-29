@@ -83,6 +83,9 @@ export const updateNotificationSettings = createAsyncThunk(
       })
       .catch((error) => {
         console.error('Error when updating Notification Settings', error);
+        if (error.response && error.response.status === 500 && req.userID) {
+          dispatch(createDefaultNotificationSettings({ userID: req.userID }));
+        }
       });
   },
 );

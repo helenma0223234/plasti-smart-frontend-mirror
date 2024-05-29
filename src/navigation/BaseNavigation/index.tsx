@@ -38,6 +38,7 @@ import * as SecureStore from 'expo-secure-store';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import { scheduleAvatarPushNotification, scheduleDailyGoalPushNotification } from 'components/Notifications/pushNotifications';
+import { doneTutorial } from 'redux/slices/tutorialSlice';
 
 const BaseTab = createBottomTabNavigator<BaseNavigationList>();
 const BaseStack = createStackNavigator<BaseNavigationList>();
@@ -208,6 +209,7 @@ const BaseNavigation = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
+    dispatch(doneTutorial());
     // UNCOMMENT WHEN BUILDING FOR PRODUCTION
     const fetchAndSetNotificationReady = async () => {
     // check if deviceID is new

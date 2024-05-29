@@ -9,7 +9,7 @@ import NavType from 'utils/NavType';
 import { BaseTabRoutes } from 'navigation/routeTypes';
 import Colors from 'utils/Colors';
 import { Dimensions } from 'react-native';
-import {readInfoCard} from 'redux/slices/usersSlice';
+import { readInfoCard } from 'redux/slices/usersSlice';
 
 import Cat from '../../../assets/Cat.svg';
 import Trophy from '../../../assets/Trophy.svg';
@@ -404,8 +404,8 @@ const EducationPage = () => {
 
               <ProgressCard
                 title={'Top Plastic'}
-                number={totalRecycled>0 ? maxRecycledType.type : undefined}
-                text={totalRecycled>0 ? `You've recycled ${maxRecycledType.value ? maxRecycledType.value : 0} No.${maxRecycledType.type} plastics this month. Great work!` : 'Get started recycling!'}
+                number={totalRecycled > 0 ? maxRecycledType.type : undefined}
+                text={totalRecycled > 0 ? `You've recycled ${maxRecycledType.value ? maxRecycledType.value : 0} No.${maxRecycledType.type} plastics this month. Great work!` : 'Get started recycling!'}
                 cornerComponent={
                   <Trophy width={60} height={60} style={{ left: -6, top:6 }}></Trophy>
                 }
@@ -413,12 +413,12 @@ const EducationPage = () => {
               </ProgressCard>
               <ProgressCard
                 title={'Earth Conscious'}
-                text={totalReused>0 ? `You've reused ${totalReused} plastics this month! Keep going!` : 'You haven\'t reused this month. Get started!'}
+                text={totalReused > 0 ? `You've reused ${totalReused} plastics this month! Keep going!` : 'You haven\'t reused this month. Get started!'}
                 cornerComponent={
                   <View>
                     <Globe width={60} height={60}></Globe>
                     <View style={{ position: 'relative', bottom: 40, justifyContent: 'center', alignItems: 'center' }}>
-                      {totalReused>0 && <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalReused}</Text>}
+                      {totalReused > 0 && <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalReused}</Text>}
                     </View>
                   </View>
                 }>
@@ -426,12 +426,12 @@ const EducationPage = () => {
               
               <ProgressCard
                 title={'Green Vision'}
-                text={totalRecycled>0 ? `You’ve recycled ${totalRecycled} plastics this month! Keep going!` : `You haven't recycled this month. Get started!`}
+                text={totalRecycled > 0 ? `You’ve recycled ${totalRecycled} plastics this month! Keep going!` : 'You haven\'t recycled this month. Get started!'}
                 cornerComponent={
                   <View>
                     <RecycleSymbol height={70} width={70} style={{ left: -10, bottom: 5 }}></RecycleSymbol>
                     <View style={{ position: 'relative', left: -10, bottom: 50, justifyContent: 'center', alignItems: 'center' }}>
-                      {totalRecycled>0&&<Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalRecycled}</Text>}
+                      {totalRecycled > 0 && <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalRecycled}</Text>}
                     </View>
                   </View>
                 }>
@@ -440,8 +440,8 @@ const EducationPage = () => {
 
               <ProgressCard
                 title={'Pal Points'}
-                text={user.monthlyPoints>0 ?`You’ve gained ${user.monthlyPoints} points for your pal this month. Your pal says thanks!` : 'Get started earning points! Your pal is waiting!'}
-                cornerComponent={<Avatar avatarID={user.avatarID} color={user.avatarColor} shadow={false} size={progressCardWidth*0.5} accessory={user.avatarAccessoryEquipped} style={{right:progressCardWidth*0.075}}></Avatar>}>
+                text={user.monthlyPoints > 0 ? `You’ve gained ${user.monthlyPoints} points for your pal this month. Your pal says thanks!` : 'Get started earning points! Your pal is waiting!'}
+                cornerComponent={<Avatar avatarID={user.avatarID} color={user.avatarColor} shadow={false} size={progressCardWidth * 0.5} accessory={user.avatarAccessoryEquipped} style={{ right:progressCardWidth * 0.075 }}></Avatar>}>
               </ProgressCard>
             </View>
           </ScrollView>
@@ -558,10 +558,11 @@ const PolymerCard = ({ number, setModalVisible, setModalPlasticType }: PolymerCa
           <TouchableOpacity onPress={() => {
             setModalVisible(true); 
             setModalPlasticType(number);
-            if (!loginHistoryToday.greenGoal){
-              dispatch(readInfoCard({id: user.id}));
-            }}}
-            >
+            if (!loginHistoryToday.greenGoal) {
+              dispatch(readInfoCard({ id: user.id }));
+            }
+          }}
+          >
             <Text style={{ ...styles.PolymerCardText, textDecorationLine:'underline', marginTop: 10 }}>Tap to explore</Text>
           </TouchableOpacity>
         </View>
@@ -676,7 +677,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: screenHeight * 0.075,
+    // marginBottom: screenHeight * 0.075,
+    backgroundColor:'rgba(0, 0, 0, 0.3)',
   },
   modalInnerContainer: {
     borderRadius: 20,
@@ -685,6 +687,7 @@ const styles = StyleSheet.create({
     padding: 20,
     flexDirection: 'column',
     backgroundColor: Colors.secondary.normal,
+    marginBottom: screenHeight * 0.075,
     flex: 1,
   },
 });

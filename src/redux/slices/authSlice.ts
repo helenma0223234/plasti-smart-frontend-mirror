@@ -7,6 +7,7 @@ import { IUser } from 'types/users';
 import { setLoginHistory } from './loginhistorySlice';
 import { LoginHistory } from 'types/loginHistory';
 import { setSelectedUser } from './usersSlice';
+import { createDefaultNotificationSettings } from './notificationSlice';
 
 
 export interface AuthState {
@@ -63,7 +64,6 @@ export const signUp = createAsyncThunk(
         ////////////
         dispatch(setCredentials(response.data.token));
         dispatch(setLoginHistory(response.data.history));
-
         return response.data;
       })
       .catch((error) => {

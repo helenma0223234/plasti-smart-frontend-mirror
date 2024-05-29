@@ -47,7 +47,7 @@ const SettingsPage = ({ navigation } : SettingsPageProps) => {
             style={styles.image}
             resizeMode="cover"
           />
-          <View style={{ position: 'absolute', right: screenWidth * 0.26 }}>
+          <View style={{ position: 'absolute', right: screenWidth * 0.16 }}>
             <Text style={{ color: Colors.primary.dark, fontWeight: 'bold', fontSize: screenHeight * 0.020 }}>{user?.username}</Text>
             <Text style={{ color: '#ADC0AB', fontSize: screenHeight * 0.016, marginTop:2 }}>{user?.email}</Text>
           </View>

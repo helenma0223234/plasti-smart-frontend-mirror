@@ -1,16 +1,11 @@
 import { View, TouchableWithoutFeedback } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
-import { AntDesign, Octicons, Ionicons, MaterialIcons, Feather } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
-import Constants from 'expo-constants';
-
 import useAppSelector from 'hooks/useAppSelector';
+import useAppDispatch from 'hooks/useAppDispatch';
 import { UserScopes } from 'types/users';
 import {
   FrontPage,
@@ -31,10 +26,18 @@ import {
 } from 'screens/BaseScreens';
 import { BaseTabRoutes, BaseNavigationList } from '../routeTypes';
 import Colors from 'utils/Colors';
-import useAppDispatch from 'hooks/useAppDispatch';
 import { useEffect, useState } from 'react';
 import FormatStyle from 'utils/FormatStyle';
 import CameraOptionsModal from './CameraOptionsModal';
+
+// for device ID and notifications
+import { getNotificationSettings, updateNotificationSettings } from 'redux/slices/notificationSlice';
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import * as SecureStore from 'expo-secure-store';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+import { scheduleAvatarPushNotification, scheduleDailyGoalPushNotification } from 'components/Notifications/pushNotifications';
 
 const BaseTab = createBottomTabNavigator<BaseNavigationList>();
 const BaseStack = createStackNavigator<BaseNavigationList>();
@@ -45,14 +48,6 @@ const ProtectedRoute = (allowableScopes: UserScopes[]) => {
   return allowableScopes.includes(role) && authenticated;
 };
 const EmptyComponent = () => null;
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-    shouldShowAlert: true,
-  }),
-});
 
 export const HomeNavigator = () => {
   return (
@@ -205,7 +200,8 @@ const BaseNavigation = () => {
   const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
-
+  const notifications = useAppSelector((state) => state.notifications.settings);
+  const userSelf = useAppSelector((state) => state.users.selectedUser);
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -213,71 +209,55 @@ const BaseNavigation = () => {
 
   useEffect(() => {
     // UNCOMMENT WHEN BUILDING FOR PRODUCTION
-    // registerForPushNotificationsAsync()
-    //   .then(token => {
-    //     // register / send to backend
-    //   })
-    //   .catch(error => {
-    //     console.error(error);
-    //   });
-    // schedulePushNotification()
-    //   .catch(error => {
-    //     console.error(error);
-    //   });
+    const fetchAndSetNotificationReady = async () => {
+    // check if deviceID is new
+      if (userSelf?.id) {
+        // dispatch get user settings
+        dispatch(getNotificationSettings({ userID: userSelf?.id }));
+        let deviceID = await SecureStore.getItemAsync('secure_deviceid');
+        // if this is a new device:
+        if (notifications && notifications.deviceID != deviceID) {
+        // get new device id
+          try {
+            const uuid = uuidv4();
+            await SecureStore.setItemAsync('secure_deviceid', uuid);
+            deviceID = await SecureStore.getItemAsync('secure_deviceid');
+            // update deviceID
+            if (deviceID) dispatch(updateNotificationSettings({ userID: userSelf?.id, deviceID: deviceID }));
+          } catch (error) {
+            console.error('Error generating UUID:', error);
+          }
+          // cancel all previous notifications 
+          // (note: not redundant calls cuz we are cancelling potentially on previous device)
+          await Notifications.cancelAllScheduledNotificationsAsync();
+          Notifications.cancelScheduledNotificationAsync(notifications.dailyGoalIdentifier);
+          Notifications.cancelScheduledNotificationAsync(notifications.avatarIdentifier);
+          // set up notifications
+          if (notifications.generalPush) {
+            if (notifications.avatarPush) {
+              scheduleAvatarPushNotification(8, 0)
+                .then(identifier => {
+                  dispatch(updateNotificationSettings({ userID: userSelf?.id, avatarIdentifier: identifier }));
+                })
+                .catch(error => {
+                  console.error(error);
+                });
+            }
+            if (notifications.dailyGoalPush) {
+              scheduleDailyGoalPushNotification(16, 0)
+                .then(identifier => {
+                  dispatch(updateNotificationSettings({ userID: userSelf?.id, dailyGoalIdentifier: identifier }));
+                })
+                .catch(error => {
+                  console.error(error);
+                });
+            }
+          }
+        }
+      }
+    };
+    fetchAndSetNotificationReady();
   }, []);
-
-  async function registerForPushNotificationsAsync(): Promise<string> {
-    let token: string;
-    if (Device.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
-        return '';
-      }
-
-      const projectId =
-      Constants?.expoConfig?.extra?.eas?.projectId ??
-      Constants?.easConfig?.projectId;
-      if (!projectId) {
-        const errorMessage =
-        'Project ID not found';
-        alert(errorMessage);
-        throw new Error(errorMessage);
-      }
-      try {
-        const pushTokenString = (
-          await Notifications.getExpoPushTokenAsync({
-            projectId,
-          })
-        ).data;
-        return pushTokenString;
-      } catch (e: unknown) {
-        if (e instanceof Error) {
-          throw new Error(e.message);
-        } else { throw new Error(String(e));}
-      } 
-    } else {
-      alert('Must use physical device for Push Notifications');
-    }
-  }
-
-  async function schedulePushNotification() {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "You've got notification! 🔔",
-        body: 'Here is the notification body',
-        data: { data: 'goes here' },
-      },
-      // trigger: { seconds: 2 },
-      trigger: { hour: 15, minute: 16, repeats: true },   // everyday at this time
-    });
-  }
 
   return (
     <View style={{ flex: 1 }}>

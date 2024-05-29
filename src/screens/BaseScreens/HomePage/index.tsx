@@ -128,7 +128,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
       return styles.largePoints;
     }
   }
-
+  dispatch(cameraClosed());
   const getTrophyTextStyle = (number: number) => {
     if (number >= 80) {
       return styles.trophyTextSmall;

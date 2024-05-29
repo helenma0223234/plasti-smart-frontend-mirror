@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, SafeAreaView, View, Text, Dimensions } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { SERVER_URL } from 'utils/constants';
 import FormatStyle from '../../../utils/FormatStyle';
 import CircleBG from '../../../assets/Ellipse 66.svg';
 import TextStyles from 'utils/TextStyles';
 import Colors from 'utils/Colors';
 import axios from 'axios';
-import Cat from '../../../assets/Cat.svg';
 import useAppSelector from 'hooks/useAppSelector';
 import usersSlice from 'redux/slices/usersSlice';
 import Avatar from 'components/Avatar';
@@ -20,25 +20,30 @@ interface leaderboardEntry {
   score: number;
   avatarID: number;
   avatarColor: number;
+  avatarAccessoryEquipped: number;
 }
 
 const LeaderboardPage = () => {
   const user = useAppSelector((state) => state.users.selectedUser);
   const [leaderboard, setLeaderboard] = useState([] as leaderboardEntry[]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await axios.get(SERVER_URL + 'users/leaderboard');
-        const leaderboardData = response.data.map((entry: { username: string, monthlyPoints: number, avatarID: number, avatarColor: string }) => {
-          return { name: entry.username ? entry.username : 'username', score: entry.monthlyPoints, avatarID: entry.avatarID, avatarColor: entry.avatarColor };
-        });
-        setLeaderboard(leaderboardData);
-      } catch (error) {
-        console.error('Error when getting leaderboard', error);
-      }
-    })();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchLeaderboard = async () => {
+        try {
+          const response = await axios.get(SERVER_URL + 'users/leaderboard');
+          const leaderboardData = response.data.map((entry: { username: string, monthlyPoints: number, avatarID: number, avatarColor: number, avatarAccessoryEquipped: number  }) => {
+            return { name: entry.username ? entry.username : 'username', score: entry.monthlyPoints, avatarID: entry.avatarID, avatarColor: entry.avatarColor, avatarAccessoryEquipped: entry.avatarAccessoryEquipped };
+          });
+          setLeaderboard(leaderboardData);
+        } catch (error) {
+          console.error('Error when getting leaderboard', error);
+        }
+      };
+
+      fetchLeaderboard();
+    }, [])
+  );
 
   const userRank = user?.rank || 100;
 
@@ -63,13 +68,13 @@ const LeaderboardPage = () => {
 
       <View style={{ position: 'absolute', zIndex: 1, alignItems: 'center', marginBottom: screenHeight * 0.1 }}>
         <View style={{ position: 'absolute', top: screenHeight * 0.18 }}>
-          <Podium name={leaderboard[0].name} place={1} avatarColor={leaderboard[0].avatarColor} avatarID={leaderboard[0].avatarID}></Podium>
+          <Podium name={leaderboard[0].name} place={1} avatarColor={leaderboard[0].avatarColor} avatarID={leaderboard[0].avatarID} avatarAccessoryEquipped={leaderboard[0].avatarAccessoryEquipped}></Podium>
         </View>
         <View style={{ position: 'absolute', right: screenWidth * 0.2, top: screenHeight * 0.25 }}>
-          <Podium name={leaderboard[1].name} place={2} avatarColor={leaderboard[1].avatarColor} avatarID={leaderboard[1].avatarID}></Podium>
+          <Podium name={leaderboard[1].name} place={2} avatarColor={leaderboard[1].avatarColor} avatarID={leaderboard[1].avatarID} avatarAccessoryEquipped={leaderboard[1].avatarAccessoryEquipped}></Podium>
         </View>
         <View style={{ position: 'absolute', left: screenWidth * 0.2, top: screenHeight * 0.25 }}>
-          <Podium name={leaderboard[2].name} place={3} avatarColor={leaderboard[2].avatarColor} avatarID={leaderboard[2].avatarID}></Podium>
+          <Podium name={leaderboard[2].name} place={3} avatarColor={leaderboard[2].avatarColor} avatarID={leaderboard[2].avatarID} avatarAccessoryEquipped={leaderboard[2].avatarAccessoryEquipped}></Podium>
         </View>
       </View>
 
@@ -277,9 +282,10 @@ interface PodiumProps {
   place: number;
   avatarID: number;
   avatarColor: number;
+  avatarAccessoryEquipped: number;
 }
 
-const Podium = ({ name, place, avatarColor, avatarID }: PodiumProps) => {
+const Podium = ({ name, place, avatarColor, avatarID, avatarAccessoryEquipped }: PodiumProps) => {
   return (
     <View style={{ flexDirection: 'column', alignItems: 'center', gap: 5 }}>
       <View
@@ -291,7 +297,7 @@ const Podium = ({ name, place, avatarColor, avatarID }: PodiumProps) => {
           alignItems: 'center',
         }}
       >
-        <Avatar avatarID={avatarID} color={avatarColor} size={screenWidth * 0.225} accessory={-1} shadow={false}></Avatar>
+        <Avatar avatarID={avatarID} color={avatarColor} size={screenWidth * 0.225} accessory={avatarAccessoryEquipped} shadow={false}></Avatar>
         
       </View>
       <View

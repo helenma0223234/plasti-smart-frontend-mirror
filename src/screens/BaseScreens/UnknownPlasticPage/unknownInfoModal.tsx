@@ -78,7 +78,7 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
   const recycleButtonPressed = () => {
     if (user) {
       dispatch(recycledRedux());
-      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticTypeNumbers[selectedValue], plasticLetter: plasticTypes[selectedValue as keyof typeof plasticTypes], image: null, reused: false, recycled: true }));
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticTypeNumbers[selectedValue], image: null, reused: false, recycled: true }));
     }
     dispatch(cameraClosed());
     setThisModalVisible(false);
@@ -91,7 +91,7 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
       setReuseModalVisible(true);
     } else if (user) {
       dispatch(reusedRedux());
-      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticTypeNumbers[selectedValue], plasticLetter: plasticTypes[selectedValue as keyof typeof plasticTypes], image: null, reused: true, recycled: false }));
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticTypeNumbers[selectedValue], image: null, reused: true, recycled: false }));
     }
   };
   useFocusEffect(

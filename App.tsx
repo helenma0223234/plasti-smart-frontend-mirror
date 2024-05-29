@@ -5,7 +5,6 @@ import { store } from './src/redux/store';
 import RootNavigation from './src/navigation';
 import { useFonts, Raleway_400Regular, Raleway_600SemiBold, Raleway_800ExtraBold } from '@expo-google-fonts/raleway';
 import { Inter_400Regular, Inter_700Bold, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
-// import { Inter } from './src/assets/fonts/Inter-VariableFont_slnt,wght.ttf'
 import { LogBox } from 'react-native';
 LogBox.ignoreAllLogs(true);
 

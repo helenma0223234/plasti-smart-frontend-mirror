@@ -12,6 +12,7 @@ import useAppDispatch from '../../../hooks/useAppDispatch';
 import useAppSelector from 'hooks/useAppSelector';
 
 import Colors from 'utils/Colors';
+import ProfilePicture from 'components/ProfilePicture';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -42,12 +43,8 @@ const SettingsPage = ({ navigation } : SettingsPageProps) => {
       <View style={styles.overall}>
         <Text style={{ marginTop: screenHeight * 0.01, fontSize: screenWidth * 0.08, marginBottom: screenHeight * 0.02, color: Colors.primary.dark, fontWeight: 'bold' }}>Settings</Text>
         <View style={{ marginBottom: screenHeight * 0.02, width: '100%', borderColor: Colors.primary.dark, borderWidth: 1, borderStyle: 'solid', alignSelf:'flex-start', borderRadius: 10, padding:15,  display: 'flex',  flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-          <Image
-            source={require('../../../assets/settings/profile.png')}
-            style={styles.image}
-            resizeMode="cover"
-          />
-          <View style={{ position: 'absolute', right: screenWidth * 0.16 }}>
+          <ProfilePicture size={screenWidth * 0.15} avatarID={user.avatarID} color={user.avatarColor} accessory={user.avatarAccessoryEquipped} />
+          <View style={{ position: 'relative', marginLeft: screenWidth * 0.05 }}>
             <Text style={{ color: Colors.primary.dark, fontWeight: 'bold', fontSize: screenHeight * 0.020 }}>{user?.username}</Text>
             <Text style={{ color: '#ADC0AB', fontSize: screenHeight * 0.016, marginTop:2 }}>{user?.email}</Text>
           </View>

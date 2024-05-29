@@ -66,8 +66,8 @@ const LeaderboardPage = () => {
     }, []),
   );
 
-  // const userRank = user?.rank || 100;
-  const userRank = 22;
+  const userRank = user?.rank || 100;
+  // const userRank = 22;
 
   return (
     leaderboard.length > 0 && <SafeAreaView style={{ ...FormatStyle.topContainer, alignItems: 'center' }}>

@@ -11,7 +11,7 @@ import EmptyHeart from '../../../assets/EmptyHeart.svg';
 import HomeAvaShadow from '../../../assets/HomeAvaShadow.svg';
 import Wardrobe from '../../../assets/Wardrobe.svg';
 import Lamp from '../../../assets/Lamp.svg';
-import HomeTrophy from '../../../assets/HomeTrophy.svg';
+import HomeNewTrophy from '../../../assets/HomeNewTrophy.svg';
 import Bowl from '../../../assets/Bowl.svg';
 import HomePointBadge from '../../../assets/HomePointBadge.svg';
 import HomeShelf from '../../../assets/HomeShelf.svg';
@@ -46,23 +46,26 @@ const HomePage = ({ navigation }: HomePageProps) => {
   const currentLoginHist = useAppSelector((state) => state.loginhistory.history);
   const dispatch = useAppDispatch();
 
-  console.log('user rank:', user?.rank);
+  // console.log('user rank:', user?.rank);
 
   dispatch(cameraClosed());
 
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalMessage, setModalMessage] = React.useState('');
 
+  if (user === null) {
+    return <Text>Loading...</Text>;
+  }
 
-  // for deaulting to top of the page
+  // for defaulting to top of the page
   const scrollViewRef = useRef<ScrollView>(null);
-
   useFocusEffect(
     React.useCallback(() => {
       scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: false });
     }, []),
   );
   
+  //////////////// snacks ////////////////
   interface SnackProps {
     points: number
     uid: string
@@ -80,12 +83,8 @@ const HomePage = ({ navigation }: HomePageProps) => {
     }
   };
 
-  if (user === null) {
-    return <Text>Loading...</Text>;
-  }
-
+  //////////////// daily tasks ////////////////
   const today = new Date();
-  // today.setUTCHours(0, 0, 0, 0);
 
   let todayTasksCompletion = [false, false, false];
   if (currentLoginHist.length > 0) {
@@ -119,6 +118,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
     taskCompletionStatuses.push([]);
   }
 
+  //////////////// trophy text styles ////////////////
   function getPointsStyle(points: number) {
     if (points < 100) {
       return styles.smallPoints;
@@ -129,6 +129,19 @@ const HomePage = ({ navigation }: HomePageProps) => {
     }
   }
   dispatch(cameraClosed());
+  const getTrophyTextStyle = (number: number) => {
+    if (number >= 80) {
+      return styles.trophyTextSmall;
+    } else if (number >= 10) {
+      return styles.trophyTextMedium;
+    } else {
+      return styles.trophyTextLarge;
+    }
+  };
+  
+  const rankNum = user?.rank;
+  const displayNumber = rankNum > 80 ? '80+' : rankNum;
+
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container, justifyContent: 'flex-start' }}>
@@ -167,8 +180,9 @@ const HomePage = ({ navigation }: HomePageProps) => {
             <HomeBook width={screenWidth * 0.25} height ={screenHeight * 0.3}></HomeBook>
           </TouchableOpacity>
           <Lamp style={{ position: 'absolute', bottom: screenHeight * 0.435, right: screenWidth * 0.22 }} width={screenWidth * 0.28} height ={screenHeight * 0.28}></Lamp>
-          <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.45, right: screenWidth * 0.017 }} onPress={() => navigation.navigate(BaseTabRoutes.LEADERBOARD, {})}>
-            <HomeTrophy width={screenWidth * 0.2} height ={screenHeight * 0.2}></HomeTrophy>
+          <TouchableOpacity style={{ position: 'absolute', bottom: screenHeight * 0.464, right: screenWidth * 0.017 }} onPress={() => navigation.navigate(BaseTabRoutes.LEADERBOARD, {})}>
+            <HomeNewTrophy width={screenWidth * 0.17} height ={screenHeight * 0.17}></HomeNewTrophy>
+            <Text style={getTrophyTextStyle(rankNum)}>{displayNumber}</Text>
           </TouchableOpacity>
         </View>
         
@@ -284,6 +298,45 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     letterSpacing: 0.01,
     color: Colors.primary.dark,
+  },
+  trophyTextLarge : {
+    position: 'absolute',
+    bottom: screenHeight * 0.08,
+    right: screenWidth * 0.068,
+    color: '#C6961C',
+    textAlign: 'right',
+    fontSize: screenHeight * 0.022,
+    fontStyle: 'normal',
+    fontWeight: '700',
+    lineHeight: 20,
+    letterSpacing: 0.3,
+    textTransform: 'uppercase',
+  },
+  trophyTextMedium : {
+    position: 'absolute',
+    bottom: screenHeight * 0.08,
+    right: screenWidth * 0.058,
+    color: '#C6961C',
+    textAlign: 'right',
+    fontSize: screenHeight * 0.020,
+    fontStyle: 'normal',
+    fontWeight: '700',
+    lineHeight: 22,
+    letterSpacing: 0.3,
+    textTransform: 'uppercase',
+  },
+  trophyTextSmall : {
+    position: 'absolute',
+    bottom: screenHeight * 0.08,
+    right: screenWidth * 0.054,
+    color: '#C6961C',
+    textAlign: 'right',
+    fontSize: screenHeight * 0.013,
+    fontStyle: 'normal',
+    fontWeight: '700',
+    lineHeight: 22,
+    letterSpacing: 0.3,
+    textTransform: 'uppercase',
   },
 });
 

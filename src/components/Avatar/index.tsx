@@ -71,6 +71,8 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: Ava
             case 2: AvatarSVG = Shiba1Glasses; break;
             case 3: AvatarSVG = Shiba1Beanie; break;
             case 4: AvatarSVG = Shiba1Bow; break;
+            default: AvatarSVG = Shiba1; break;
+
           }
           break;
         case 2: 
@@ -80,6 +82,8 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: Ava
             case 2: AvatarSVG = Shiba2Glasses; break;
             case 3: AvatarSVG = Shiba2Beanie; break;
             case 4: AvatarSVG = Shiba2Bow; break;
+            default: AvatarSVG = Shiba2; break;
+
           }
           break;
         case 3:
@@ -89,8 +93,11 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: Ava
             case 2: AvatarSVG = Shiba3Glasses; break;
             case 3: AvatarSVG = Shiba3Beanie; break;
             case 4: AvatarSVG = Shiba3Bow; break;
+            default: AvatarSVG = Shiba3; break;
+
           }
           break;
+        default: AvatarSVG = Shiba1; break;
       }
       break;
     case 2: // penguin
@@ -102,6 +109,7 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: Ava
             case 2: AvatarSVG = Penguin1Glasses; break;
             case 3: AvatarSVG = Penguin1Beanie; break;
             case 4: AvatarSVG = Penguin1Bow; break;
+            default: AvatarSVG = Penguin1; break;
           }
           break;
         case 2: 
@@ -111,6 +119,7 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: Ava
             case 2: AvatarSVG = Penguin2Glasses; break;
             case 3: AvatarSVG = Penguin2Beanie; break;
             case 4: AvatarSVG = Penguin2Bow; break;
+            default: AvatarSVG = Penguin2; break;
           }
           break;
         case 3: 
@@ -120,8 +129,11 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: Ava
             case 2: AvatarSVG = Penguin3Glasses; break;
             case 3: AvatarSVG = Penguin3Beanie; break;
             case 4: AvatarSVG = Penguin3Bow; break;
+            default: AvatarSVG = Penguin3; break;
           }
           break;
+        default: AvatarSVG = Penguin1; break;
+
       }
       break;
     case 3: // bird
@@ -133,6 +145,7 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: Ava
             case 2: AvatarSVG = Bird1Glasses; break;
             case 3: AvatarSVG = Bird1Beanie; break;
             case 4: AvatarSVG = Bird1Bow; break;
+            default: AvatarSVG = Bird1; break;
           }
           break;
         case 2: 
@@ -142,6 +155,7 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: Ava
             case 2: AvatarSVG = Bird2Glasses; break;
             case 3: AvatarSVG = Bird2Beanie; break;
             case 4: AvatarSVG = Bird2Bow; break;
+            default: AvatarSVG = Bird2; break;
           }
           break;
         case 3: 
@@ -151,10 +165,15 @@ const Avatar = ({ avatarID, color , size, accessory, style, shadow, mirror}: Ava
             case 2: AvatarSVG = Bird3Glasses; break;
             case 3: AvatarSVG = Bird3Beanie; break;
             case 4: AvatarSVG = Bird3Bow; break;
+            default: AvatarSVG = Bird3; break;
           }
           break;
+        default: AvatarSVG = Bird1; break;
       }
       break;
+    default:
+      console.error('Invalid avatarID or color');
+      return null;
   }
 
   return (

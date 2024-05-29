@@ -85,6 +85,7 @@ const ProfilePicture = ({
             case 4:
               ProfileSVG = Shiba1Bow;
               break;
+            default: ProfileSVG = Shiba1; break;
           }
           break;
         case 2:
@@ -104,6 +105,7 @@ const ProfilePicture = ({
             case 4:
               ProfileSVG = Shiba2Bow;
               break;
+            default: ProfileSVG = Shiba2; break;
           }
           break;
         case 3:
@@ -123,8 +125,10 @@ const ProfilePicture = ({
             case 4:
               ProfileSVG = Shiba3Bow;
               break;
+            default: ProfileSVG = Shiba3; break;
           }
           break;
+        default: ProfileSVG = Shiba1; break;
       }
       break;
     case 2: // penguin
@@ -146,6 +150,7 @@ const ProfilePicture = ({
             case 4:
               ProfileSVG = Penguin1Bow;
               break;
+            default: ProfileSVG =  Penguin1; break;
           }
           break;
         case 2:
@@ -165,6 +170,7 @@ const ProfilePicture = ({
             case 4:
               ProfileSVG = Penguin2Bow;
               break;
+            default: ProfileSVG =  Penguin2; break;
           }
           break;
         case 3:
@@ -184,8 +190,10 @@ const ProfilePicture = ({
             case 4:
               ProfileSVG = Penguin3Bow;
               break;
+            default: ProfileSVG =  Penguin3; break;
           }
           break;
+        default: ProfileSVG = Penguin1; break;
       }
       break;
     case 3: // bird
@@ -207,6 +215,7 @@ const ProfilePicture = ({
             case 4:
               ProfileSVG = Bird1Bow;
               break;
+            default: ProfileSVG =  Bird1; break;
           }
           break;
         case 2:
@@ -226,6 +235,7 @@ const ProfilePicture = ({
             case 4:
               ProfileSVG = Bird2Bow;
               break;
+            default: ProfileSVG =  Bird2; break;
           }
           break;
         case 3:
@@ -245,10 +255,15 @@ const ProfilePicture = ({
             case 4:
               ProfileSVG = Bird3Bow;
               break;
+            default: ProfileSVG =  Bird3; break;
           }
           break;
+        default: ProfileSVG = Bird1; break;
       }
       break;
+      default:
+        console.error('Invalid avatarID or color');
+        return null;
   }
 
   return (

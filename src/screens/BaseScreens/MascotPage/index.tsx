@@ -37,7 +37,7 @@ type renderItem = {
   index: number;
 };
 
-const carouselData: Array<carouselItem> = Array.from({ length: 4 }, (_, i) => ({ avatarID: i + 1 }));
+const carouselData: Array<carouselItem> = Array.from({ length: 3 }, (_, i) => ({ avatarID: i + 1 }));
 
 const MascotPage = () => {
   const navigation = useNavigation<NavType>();

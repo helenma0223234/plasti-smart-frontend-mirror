@@ -86,6 +86,7 @@ const LeaderboardPage = () => {
         <CircleBG height={screenHeight * 3}  width={screenWidth * 2} style={{ position: 'absolute', top: screenHeight * 0.04 }}></CircleBG>
       </View>
 
+      {/* Podiums */}
       <View style={{ position: 'absolute', zIndex: 1, alignItems: 'center', marginBottom: screenHeight * 0.1 }}>
         <View style={{ position: 'absolute', top: screenHeight * 0.18 }}>
           <Podium name={leaderboard[0].name} place={1} avatarColor={leaderboard[0].avatarColor} avatarID={leaderboard[0].avatarID} avatarAccessoryEquipped={leaderboard[0].avatarAccessoryEquipped}></Podium>
@@ -100,7 +101,6 @@ const LeaderboardPage = () => {
 
 
       <View style={{ justifyContent: 'center' }}>
-        
         <View
           style={{
             position: 'relative',
@@ -217,57 +217,57 @@ const LeaderboardPage = () => {
               );
             })}
           </ScrollView>
-          {userRank > 20 && 
-      <View style={{
-        position: 'absolute',
-        top: screenHeight * 0.32,
-        left: -screenWidth * 0.04,
-        width: '110%',
-        height: screenHeight * 0.062,
-        backgroundColor: '#FBFBF4',
-        zIndex: 2,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 18,
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        flexDirection: 'row',
-        gap: 0,
-        padding: 3,
-      }}>
-        {(user.avatarID !== null && user.avatarID !== undefined && user.avatarColor !== null && user.avatarColor !== undefined) && 
-                          <ProfilePicture size={40} avatarID={user.avatarID} color={user.avatarColor} accessory={user.avatarAccessoryEquipped}></ProfilePicture>}
-        <View
-          style={{
-            ...FormatStyle.circle,
-            width: 20,
-            height: 20,
-            marginTop: 0,
-            position: 'relative',
-            right: 42,
-            bottom: 15,
-          }}
-        >
-          <Text
-            style={{
-              ...TextStyles.small,
-              color: Colors.secondary.white,
-              fontSize: 13,
-            }}
-          >
-            {userRank}
-          </Text>
-        </View>
-        <Text style={{ ...TextStyles.regular, fontFamily:'Inter600_SemiBold', fontSize:screenHeight * 0.022, marginRight: screenWidth * 0.4 }}>
-          {user.username}
-        </Text>
-      </View>
+          {userRank > 23 && 
+            <View style={{
+              position: 'absolute',
+              top: screenHeight * 0.32,
+              left: -screenWidth * 0.04,
+              width: '110%',
+              height: screenHeight * 0.062,
+              backgroundColor: '#FBFBF4',
+              zIndex: 2,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 18,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+              flexDirection: 'row',
+              gap: 0,
+              padding: 3,
+            }}>
+              {(user.avatarID !== null && user.avatarID !== undefined && user.avatarColor !== null && user.avatarColor !== undefined) && 
+                                <ProfilePicture size={40} avatarID={user.avatarID} color={user.avatarColor} accessory={user.avatarAccessoryEquipped}></ProfilePicture>}
+              <View
+                style={{
+                  ...FormatStyle.circle,
+                  width: 20,
+                  height: 20,
+                  marginTop: 0,
+                  position: 'relative',
+                  right: 42,
+                  bottom: 15,
+                }}
+              >
+                <Text
+                  style={{
+                    ...TextStyles.small,
+                    color: Colors.secondary.white,
+                    fontSize: 13,
+                  }}
+                >
+                  {userRank}
+                </Text>
+              </View>
+              <Text style={{ ...TextStyles.regular, fontFamily:'Inter600_SemiBold', fontSize:screenHeight * 0.022, marginRight: screenWidth * 0.4 }}>
+                {user.username}
+              </Text>
+            </View>
           }
         </View>
       </View>

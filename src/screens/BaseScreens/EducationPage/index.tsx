@@ -433,9 +433,6 @@ const EducationPage = () => {
                 cornerComponent={
                   <View>
                     <Globe width={60} height={60}></Globe>
-                    <View style={{ position: 'relative', bottom: 40, justifyContent: 'center', alignItems: 'center' }}>
-                      {totalReused > 0 && <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalReused}</Text>}
-                    </View>
                   </View>
                 }>
               </ProgressCard>
@@ -446,9 +443,6 @@ const EducationPage = () => {
                 cornerComponent={
                   <View>
                     <RecycleSymbol height={70} width={70} style={{ left: -10, bottom: 5 }}></RecycleSymbol>
-                    <View style={{ position: 'relative', left: -10, bottom: 50, justifyContent: 'center', alignItems: 'center' }}>
-                      {totalRecycled > 0 && <Text style={{ fontSize: 18, fontWeight: '700', color:Colors.primary.dark }}>{totalRecycled}</Text>}
-                    </View>
                   </View>
                 }>
 

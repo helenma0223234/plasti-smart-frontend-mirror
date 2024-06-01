@@ -11,28 +11,30 @@ import {
   TouchableOpacity,
   Animated,
   ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import FormatStyle from '../../../utils/FormatStyle';
 import { Ionicons } from '@expo/vector-icons';
 import { SvgXml } from 'react-native-svg';
-import * as tf from '@tensorflow/tfjs-react-native';
-import * as tfjs from '@tensorflow/tfjs';
 import useAppSelector from '../../../hooks/useAppSelector';
 import useAppDispatch from 'hooks/useAppDispatch';
 import { cameraClosed, cameraOpened } from 'redux/slices/cameraSlice';
 import { reusedRedux, recycledRedux } from 'redux/slices/scanSlice';
 import { createScan } from 'redux/slices/usersSlice';
-import { RootState } from 'redux/store';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { PinchGestureHandler } from 'react-native-gesture-handler';
 import { PinchGestureHandlerGestureEvent } from 'react-native-gesture-handler';
 import { REPLICATE_URL, REPLICATE_VERSION, REPLICATE_API_TOKEN } from '../../../utils/constants';
+import * as ImageManipulator from 'expo-image-manipulator';
+
 
 // components
 import RBSheet from 'react-native-raw-bottom-sheet';
-import Carousel from 'react-native-snap-carousel';
 import ReuseWarningModal from '../UnknownPlasticPage/reuseWarningModal';
+
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
 const plasticTypes = {
   1: 'Polyethylene Terephthalate',
@@ -59,13 +61,12 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
     new Animated.Value(0),
   );
 
-  const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
+  const [capturedPhoto, setCapturedPhoto] = useState<string | undefined>(undefined);
   const cameraRef = useRef<Camera | null>(null);
 
   const [modelVerdict, setModelVerdict] = useState<number>(0);
   const dispatch = useAppDispatch();
   
-  // use user slice user instead of auth slice user?
   const user = useAppSelector((state) => state.users.selectedUser);
 
   const [isAnimating, setIsAnimating] = useState(true);
@@ -138,43 +139,58 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       try {
         const options = { base64: true };
         const photo = await cameraRef.current.takePictureAsync(options);
-        // for test
-        setModelVerdict(1);
-        bottomSheetRef.current?.open();
 
-        // if (photo.base64) {
-        //   setCapturedPhoto(photo.base64);
+        if (photo.uri) {
 
-        //   // for test
-        //   setModelVerdict(1);
+          const imageWidth = photo.width;
+          const imageHeight = photo.height;
 
-        //   // // API call
-        //   // const response = await fetch(`${REPLICATE_URL}`, {
-        //   //   method: 'POST',
-        //   //   headers: {
-        //   //     'Authorization': `Bearer ${REPLICATE_API_TOKEN}`,
-        //   //     'Content-Type': 'application/json',
-        //   //   },
-        //   //   body: JSON.stringify({
-        //   //     version: `${REPLICATE_VERSION}`,
-        //   //     input: {
-        //   //       image: photo.base64,
-        //   //     },
-        //   //   }),
-        //   // });
+          // Define the cropping rectangle based on the image dimensions
+          const cropRect = {
+            originX: imageWidth * 0.175, 
+            originY: imageHeight * 0.25, 
+            width: imageWidth * 0.675, 
+            height: imageHeight * 0.35, 
+          };
 
-        //   if (!response.ok) {
-        //     throw new Error(`HTTP error! status: ${response.status}`);
-        //   }
-        //   const data = await response.json();
-        //   console.log(response);
-        //   if (data.type) {
-        //     setModelVerdict(data.type);
-        //     bottomSheetRef.current?.open();
-        //   }
-        // } else {
-        //   console.error('Failed to capture photo');
-        // }
+          const croppedPhoto = await ImageManipulator.manipulateAsync(
+            photo.uri,
+            [{ crop: cropRect }],
+            { base64: true }
+          );
+          console.log(croppedPhoto.base64);
+          setCapturedPhoto(croppedPhoto.base64);
+
+          setModelVerdict(1);
+
+          // API call
+          // const response = await fetch(`${REPLICATE_URL}`, {
+          //   method: 'POST',
+          //   headers: {
+          //     'Authorization': `Bearer ${REPLICATE_API_TOKEN}`,
+          //     'Content-Type': 'application/json',
+          //   },
+          //   body: JSON.stringify({
+          //     version: `${REPLICATE_VERSION}`,
+          //     input: {
+          //       image: croppedPhoto.base64,
+          //     },
+          //   }),
+          // });
+
+          // if (!response.ok) {
+          //   throw new Error(`HTTP error! status: ${response.status}`);
+          // }
+          // const data = await response.json();
+          // console.log(response);
+          // if (data.type) {
+          //   setModelVerdict(data.type);
+          //   bottomSheetRef.current?.open();
+          // }
+          bottomSheetRef.current?.open();
+        } else {
+          console.error('Failed to capture photo');
+        }
       } catch (error) {
         console.error('Error taking picture:', error);
         alert('Failed to take picture. Please try again.'); // alert the user

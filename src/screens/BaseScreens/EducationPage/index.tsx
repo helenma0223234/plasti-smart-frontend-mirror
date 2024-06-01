@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, SafeAreaView, View, Text, StyleSheet, Modal, Pressable, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent, StyleProp } from 'react-native';
+import { ScrollView, SafeAreaView, View, Text, StyleSheet, Modal, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent, Image } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
 import useAppSelector from 'hooks/useAppSelector';
 import FormatStyle from '../../../utils/FormatStyle';
@@ -11,12 +11,12 @@ import Colors from 'utils/Colors';
 import { Dimensions } from 'react-native';
 import { readInfoCard } from 'redux/slices/usersSlice';
 
-import Cat from '../../../assets/Cat.svg';
 import Trophy from '../../../assets/Trophy.svg';
 import PlasticSymbol from 'components/RecycleSymbol';
 import Globe from '../../../assets/Globe.svg';
 import RecycleSymbol from '../../../assets/Recycle.svg';
-import Polymer from '../../../assets/polymer.svg';
+import PE from '../../../assets/PE.png';
+import PET from '../../../assets/PET.png';
 import MicrowaveFilm from '../../../assets/MicrowaveFilm.svg';
 import PackingEnvelope from '../../../assets/PackingEnvelope.svg';
 import WaterBottle from '../../../assets/WaterBottle.svg';
@@ -62,8 +62,13 @@ import UnionGreen from '../../../assets/UnionGreen.svg';
 import WaterBottleGreen from '../../../assets/WaterBottleGreen.svg';
 import Avatar from 'components/Avatar';
 
-
-
+const images = {
+  PET: require('../../../assets/PET.png'),
+  PE: require('../../../assets/PE.png'),
+  PVC: require('../../../assets/PVC.png'),
+  PP: require('../../../assets/PP.png'),
+  PS: require('../../../assets/PS.png'),
+};
 
 const info = [
   {
@@ -85,6 +90,7 @@ const info = [
       { title: 'Fibers', SvgComponent: FibersGreen },
       { title: 'Packaging\nMaterials', SvgComponent: PackingEnvelopeGreen },
     ],
+    image: images['PET'],
   },
   {
     title: 'High-Density Polyethylene',
@@ -105,6 +111,7 @@ const info = [
       { title: 'Plastic bins', SvgComponent: NoLandfillGreen },
       { title: 'Agricultural pipes', SvgComponent: PipesGreen },
     ],
+    image: images['PE'],
   },
   {
     title: 'Polyvinyl Chloride',
@@ -121,6 +128,7 @@ const info = [
       { title: 'Floor panels', SvgComponent: FloorPanelsGreen },
       { title: 'Medical\napplications', SvgComponent: FluidBagGreen },
     ],
+    image: images['PVC'],
   },
   {
     title: 'Low-Density Polyethylene',
@@ -140,8 +148,9 @@ const info = [
     reusedToMake: [
       { title: 'Garbage bags', SvgComponent: NoLandfillGreen },
       { title: 'Trash bins', SvgComponent: PillableBagGreen },
-      { title: 'Packaging Materials', SvgComponent: PackingEnvelopeGreen },
+      { title: 'Packaging\nMaterials', SvgComponent: PackingEnvelopeGreen },
     ],
+    image: images['PE'],
   },
   {
     title: 'Polypropylene',
@@ -163,6 +172,7 @@ const info = [
       { title: 'Trash bins', SvgComponent: NoLandfillGreen },
       { title: 'Autoparts', SvgComponent: AutopartsGreen },
     ],
+    image: images['PP'],
   },
   {
     title: 'Polystyrene',
@@ -179,6 +189,7 @@ const info = [
       { title: 'Styrofoam', SvgComponent: StyrofoamGreen },
       { title: 'Synthetic rubber tires', SvgComponent: AutopartsGreen },
     ],
+    image: images['PS'],
   },
   {
     title: 'Miscellaneous/Other',
@@ -193,6 +204,7 @@ const info = [
       { title: 'Cold\nbeverage cups', SvgComponent: ColdBeverageCupGreen },
       { title: 'Alternatives\nto PS coating', SvgComponent: UnionGreen },
     ],
+    image: '',
   },
 ];
 
@@ -305,11 +317,15 @@ const EducationPage = () => {
                 </TouchableOpacity>
               </View>
 
-              <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: -30, marginTop: -20 }}>
-                <Polymer style={{ position: 'relative', maxHeight: polymerCardHeight * 0.25 }} />
-              </View>
+              {info[modalPlasticType - 1].image !== '' && <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: modalCardHeight * 0.16, marginBottom: modalCardHeight * 0.1}}>
+                <Image
+                  source={info[modalPlasticType - 1].image }
+                  style={{maxHeight: modalCardHeight * 0.2, maxWidth: modalCardWidth *0.95}}
+                  resizeMode="contain"
+                />
+              </View>}
 
-              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <View style={[{ justifyContent: 'center', alignItems: 'center' }, info[modalPlasticType - 1].image === '' && {marginTop: modalCardHeight*0.15}]}>
                 <Text style={{ ...styles.PolymerCardTitle, color: Colors.primary.dark }}>
                   {info[modalPlasticType - 1].title}
                 </Text>
@@ -603,7 +619,7 @@ const ExampleObjects = ({ title, SvgComponent, textColor }: ExampleObjectProps) 
   return (
     <View style={styles.ExampleObject}>
       <View style={styles.ExampleObjectTextContainer}>
-        <Text style={{ ...styles.PolymerCardText, fontSize:screenWidth * 0.035, color: textColor }}>{title}</Text>
+        <Text style={{ ...styles.PolymerCardText, fontSize:screenWidth * 0.03, color: textColor }}>{title}</Text>
       </View>
       <SvgComponent width={60} height={60} />
     </View>

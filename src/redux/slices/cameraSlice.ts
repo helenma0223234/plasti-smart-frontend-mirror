@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export interface CameraState {
   cameraOpen: boolean;
@@ -21,7 +21,10 @@ export const cameraSlice = createSlice({
   },
 });
 
-export const { cameraOpened, cameraClosed } =
-  cameraSlice.actions;
+export const { cameraOpened, cameraClosed } = cameraSlice.actions;
+
+export const cameraClosedAsync = createAsyncThunk('camera/cameraClosedAsync', async (_, { dispatch }) => {
+  dispatch(cameraClosed());
+});
 
 export default cameraSlice.reducer;

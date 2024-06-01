@@ -55,9 +55,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
   const needTutorial = useAppSelector((state) => state.tutorial.needTutorial);
   const dispatch = useAppDispatch();
 
-  // console.log('user rank:', user?.rank);
-
-  dispatch(cameraClosed());
+  const camera = useAppSelector((state) => state.camera.cameraOpen);
 
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalMessage, setModalMessage] = React.useState('');
@@ -155,33 +153,15 @@ const HomePage = ({ navigation }: HomePageProps) => {
   const {   // Use Hooks to control!
     canStart, // a boolean indicate if you can start tour guide
     start, // a function to start the tourguide
-    stop, // a function  to stopping it
-    eventEmitter, // an object for listening some events
   } = useTourGuideController();
 
-  // Can start at mount 
+  // Can start at mount if needTutorial is true
   React.useEffect(() => {
-    if (canStart) {
-      start();
-      dispatch(doneTutorial());
-    }
-  }, [needTutorial]);
-
-  // const handleOnStart = () => console.log('start');
-  // const handleOnStop = () => console.log('stop');
-  // const handleOnStepChange = () => console.log('stepChange');
-
-  // React.useEffect(() => {
-  //   eventEmitter.on('start', handleOnStart);
-  //   eventEmitter.on('stop', handleOnStop);
-  //   eventEmitter.on('stepChange', handleOnStepChange);
-
-  //   return () => {
-  //     eventEmitter.off('start', handleOnStart);
-  //     eventEmitter.off('stop', handleOnStop);
-  //     eventEmitter.off('stepChange', handleOnStepChange);
-  //   };
-  // }, []);
+    // if (needTutorial && canStart) {
+    start();
+    dispatch(doneTutorial());
+    // }
+  }, [needTutorial]); 
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container, justifyContent: 'flex-start' }}>
@@ -255,7 +235,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
           zone={1}
           shape={'rectangle'}
           isTourGuide
-          text={'This shelf leads to your Learning Page! Learn about  plastics polymers and check your recycling progress here!'}
+          text={'This shelf leads to your Learning Page! Learn about plastics polymers and check your recycling progress here!'}
           top={screenHeight * 0.03}
           left={screenWidth * 0.5}
           width={screenWidth * 0.46}

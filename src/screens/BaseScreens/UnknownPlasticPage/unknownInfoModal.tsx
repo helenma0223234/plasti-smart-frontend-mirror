@@ -94,12 +94,6 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
       dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticTypeNumbers[selectedValue], image: null, reused: true, recycled: false }));
     }
   };
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(cameraOpened());
-      return () => {};
-    }, [dispatch]),
-  );
 
   const plasticMessages = {
     first: 'This plastic type is the currently most recycled in the world! Check labels to confirm.',

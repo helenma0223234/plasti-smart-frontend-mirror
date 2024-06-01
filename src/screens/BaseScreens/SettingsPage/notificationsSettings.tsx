@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontStyle: 'normal',
     fontWeight: '400',
-    lineHeight: 'normal',
+    lineHeight: 36,
     letterSpacing: -0.3,
     color:Colors.primary.dark,
     marginBottom: screenHeight * 0.03,

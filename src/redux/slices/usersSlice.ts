@@ -189,7 +189,7 @@ export const setAvatarFirstTime = createAsyncThunk(
       .post(`${SERVER_URL}users/${req.id}/setAvatarFirstTime`, req)
       .finally(() => dispatch(stopUsersLoading()))
       .then((response) => {
-        console.log('response data', response.data);
+        // console.log('response data', response.data);
         return response.data;
       })
       .catch((error) => {

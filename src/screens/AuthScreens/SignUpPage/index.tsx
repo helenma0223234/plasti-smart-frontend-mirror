@@ -24,7 +24,6 @@ const SignUpPage = () => {
   const [password, setPassword] = useState<string>('');
   const [username, setUsername] = useState<string>('');
 
-  // TODO: add user name to signup action
   const handleSubmit = () => {
     // Send only if all fields filled in
     if (!name) alert('Please enter your name!');
@@ -33,7 +32,7 @@ const SignUpPage = () => {
     else if (!username) alert('Please confirm your password!');
     else {
       dispatch(signUp({ email, password, username, name }));
-      navigation.navigate(AuthStackRoutes.SIGNIN, {});
+      navigation.navigate(AuthStackRoutes.SIGNIN);
     }
   };
 
@@ -89,7 +88,7 @@ const SignUpPage = () => {
               disabled={!email || !password || !name || !username}
             />
             <Text style={TextStyles.small}>Already have an account? <Text style={{ textDecorationLine: 'underline' }}
-              onPress={() => navigation.navigate(AuthStackRoutes.SIGNIN, {})}>Sign in!</Text></Text>
+              onPress={() => navigation.navigate(AuthStackRoutes.SIGNIN)}>Sign in!</Text></Text>
           </View>
         </View>
       </SafeAreaView>

@@ -18,7 +18,6 @@ export type AuthNavigationList = {
 export enum BaseTabRoutes {
   FRONT = 'FrontPage',
   USERS = 'Users',
-  RESOURCES = 'Resources',
   FORBIDDEN = 'Forbidden',
   CAMERA = 'Camera',
   SCAN_COMPLETE = 'ScanComplete',
@@ -40,7 +39,6 @@ export enum BaseTabRoutes {
 export type BaseNavigationList = {
   [BaseTabRoutes.FRONT]: Record<string, unknown>;
   [BaseTabRoutes.USERS]: Record<string, unknown>;
-  [BaseTabRoutes.RESOURCES]: Record<string, unknown>;
   [BaseTabRoutes.FORBIDDEN]: Record<string, unknown>;
   [BaseTabRoutes.CAMERA]: Record<string, unknown>;
   [BaseTabRoutes.SCAN_COMPLETE]: Record<string, unknown>;

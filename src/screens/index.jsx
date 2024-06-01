@@ -9,7 +9,6 @@ import {
 
 import {
   FrontPage,
-  ResourcesPage,
   UsersPage,
   ForbiddenPage,
   CameraPage,
@@ -32,7 +31,6 @@ export {
   LaunchPage,
   VerifyPage,
   FrontPage,
-  ResourcesPage,
   UsersPage,
   ForbiddenPage,
   CameraPage,

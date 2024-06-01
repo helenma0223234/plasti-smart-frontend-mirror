@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ScrollView, SafeAreaView, View, Text, Dimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { SERVER_URL } from 'utils/constants';
@@ -8,7 +8,6 @@ import TextStyles from 'utils/TextStyles';
 import Colors from 'utils/Colors';
 import axios from 'axios';
 import useAppSelector from 'hooks/useAppSelector';
-import usersSlice from 'redux/slices/usersSlice';
 import ProfilePicture from 'components/ProfilePicture';
 import Avatar from 'components/Avatar';
 
@@ -67,7 +66,6 @@ const LeaderboardPage = () => {
   );
 
   const userRank = user?.rank || 100;
-  // const userRank = 22;
 
   return (
     leaderboard.length > 0 && <SafeAreaView style={{ ...FormatStyle.topContainer, alignItems: 'center' }}>
@@ -105,7 +103,6 @@ const LeaderboardPage = () => {
         
         <View
           style={{
-            // gap: 20,
             position: 'relative',
             top: screenHeight * 0.34,
             width: screenWidth * 0.86,
@@ -183,16 +180,6 @@ const LeaderboardPage = () => {
                       <>
                         {(place.avatarID !== null && place.avatarID !== undefined && place.avatarColor !== null && place.avatarColor !== undefined) && 
                           <ProfilePicture size={40} avatarID={place.avatarID} color={place.avatarColor} accessory={place.avatarAccessoryEquipped}></ProfilePicture>}
-                        {/* <View
-                          style={{
-                            ...FormatStyle.circle,
-                            width: 40,
-                            height: 40,
-                            marginTop: 0,
-                            backgroundColor: Colors.secondary.white,
-                          }}
-                        >
-                        </View> */}
                         <View
                           style={{
                             ...FormatStyle.circle,
@@ -254,15 +241,6 @@ const LeaderboardPage = () => {
         gap: 0,
         padding: 3,
       }}>
-        {/* <View
-          style={{
-            ...FormatStyle.circle,
-            width: 40,
-            height: 40,
-            marginTop: 0,
-            backgroundColor: Colors.primary.dark,
-          }}
-        ></View> */}
         {(user.avatarID !== null && user.avatarID !== undefined && user.avatarColor !== null && user.avatarColor !== undefined) && 
                           <ProfilePicture size={40} avatarID={user.avatarID} color={user.avatarColor} accessory={user.avatarAccessoryEquipped}></ProfilePicture>}
         <View
@@ -312,7 +290,6 @@ const Podium = ({ name, place, avatarColor, avatarID, avatarAccessoryEquipped }:
         style={{
           width: 100,
           height: 'auto',
-          // overflow: 'hidden',
           aspectRatio: 1,
           alignItems: 'center',
         }}

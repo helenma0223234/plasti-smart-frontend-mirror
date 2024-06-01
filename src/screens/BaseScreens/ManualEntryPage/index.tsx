@@ -100,7 +100,7 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
       if (user) {
         dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, image: null, reused: true, recycled:false  }));
       }
-      dispatch(reusedRedux);
+      dispatch(reusedRedux());
       dispatch(cameraClosed());
       navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
     } else {
@@ -181,7 +181,7 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
           </TouchableOpacity>
         </View>
       </View>
-      <ReuseWarningModal modalVisible={reuseModalVisible} setModalVisible={setReuseModalVisible} plasticType={plasticNum} />
+      <ReuseWarningModal navigation={navigation} modalVisible={reuseModalVisible} setModalVisible={setReuseModalVisible} plasticType={plasticNum} />
     </View>
   );
 };

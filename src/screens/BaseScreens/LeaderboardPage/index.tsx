@@ -37,7 +37,7 @@ const LeaderboardPage = () => {
           const leaderboardData = response.data.map((entry: { username: string, monthlyPoints: number, avatarID: number, avatarColor: number, avatarAccessoryEquipped: number  }) => {
             return { name: entry.username, score: entry.monthlyPoints, avatarID: entry.avatarID, avatarColor: entry.avatarColor, avatarAccessoryEquipped: entry.avatarAccessoryEquipped };
           });
-          console.log('Leaderboard data:', leaderboardData);
+          // console.log('Leaderboard data:', leaderboardData);
           // for loop through leaderboardData and print name if any field is either null or undefined
           for (let i = 0; i < leaderboardData.length; i++) {
             if (leaderboardData[i].name === null || leaderboardData[i].name === undefined) {

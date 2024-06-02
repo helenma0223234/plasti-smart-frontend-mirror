@@ -9,16 +9,20 @@ import FormatStyle from '../../../utils/FormatStyle';
 import TextStyles from '../../../utils/TextStyles';
 import GoRightButton from '../../../assets/GoRightButton.svg';
 import GoLeftButton from '../../../assets/GoLeftButton.svg';
-import { BaseTabRoutes } from 'navigation/routeTypes';
+// import { BaseTabRoutes } from 'navigation/routeTypes';
 import { useNavigation } from '@react-navigation/native';
 import NavType from 'utils/NavType';
-import { cameraClosed, cameraOpened } from 'redux/slices/cameraSlice';
+import { cameraClosedAsync, cameraOpened } from 'redux/slices/cameraSlice';
 import { createDefaultNotificationSettings, updateNotificationSettings } from 'redux/slices/notificationSlice';
 import Avatar from '../../../components/Avatar';
 import * as Notifications from 'expo-notifications';
 import { registerForPushNotificationsAsync } from 'components/Notifications/registerNotifications';
 import { scheduleAvatarPushNotification, scheduleDailyGoalPushNotification } from 'components/Notifications/pushNotifications';
-import { setTutorial } from 'redux/slices/tutorialSlice';
+import { setTutorialAsync } from 'redux/slices/tutorialSlice';
+
+import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
+import type { StackNavigationProp } from '@react-navigation/stack';
+
 
 // for device ID
 import * as SecureStore from 'expo-secure-store';
@@ -39,12 +43,16 @@ type renderItem = {
 
 const carouselData: Array<carouselItem> = Array.from({ length: 3 }, (_, i) => ({ avatarID: i + 1 }));
 
-const MascotPage = () => {
-  const navigation = useNavigation<NavType>();
+type MascotPageProps = {
+  navigation: StackNavigationProp<BaseNavigationList>;
+};
+
+const MascotPage = ({ navigation } : MascotPageProps) => {
+  // const navigation = useNavigation<NavType>();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+  const needTutorial = useAppSelector((state) => state.tutorial.needTutorial);
 
-  dispatch(cameraOpened());
 
   const { id, email } = user || { id: '', email: '' };
   const userData = useAppSelector((state) => state.users.selectedUser);
@@ -53,6 +61,7 @@ const MascotPage = () => {
   const carouselRef = useRef(null);
 
   useEffect(() => {
+    dispatch(cameraOpened());
     // Animate the active index size change
     animatedValues.forEach((animatedValue, index) => {
       Animated.timing(animatedValue, {
@@ -68,8 +77,6 @@ const MascotPage = () => {
   const handleUpdateUser = async () => {
     if (user) {
       dispatch(setAvatarFirstTime({ id: user.id, avatarID: activeIndex + 1 }));
-      // turn on tutorial
-      dispatch(setTutorial());
       // also init the notification settings and device ID
       dispatch(createDefaultNotificationSettings({ userID: user.id }));
       let deviceID = await SecureStore.getItemAsync('secure_deviceid');
@@ -99,11 +106,14 @@ const MascotPage = () => {
       // update device id
       dispatch(updateNotificationSettings({ userID: user.id, deviceID: deviceID ?? undefined }));
       
-      // schedule both avatar and daily goal notifications as default
-      scheduleAvatarPushNotification(8, 0);
-      scheduleDailyGoalPushNotification(16, 0);
+      // schedule both avatar and daily goal notifications as default and update to the db
+      scheduleAvatarPushNotification(8, 0).then(identifier => {
+        dispatch(updateNotificationSettings({ userID: user?.id, avatarIdentifier: identifier }));
+      });
+      scheduleDailyGoalPushNotification(16, 0).then(identifier => {
+        dispatch(updateNotificationSettings({ userID: user?.id, dailyGoalIdentifier: identifier }));
+      });
     }
-    dispatch(cameraClosed());
   };
 
   const animateToIndex = (index: number) => {
@@ -187,8 +197,10 @@ const MascotPage = () => {
         <TouchableOpacity
           style={styles.button}
           onPress={async () => {
-            handleUpdateUser();
-            dispatch(cameraClosed());
+            await handleUpdateUser();
+            await dispatch(cameraClosedAsync());
+            // turn on tutorial
+            await dispatch(setTutorialAsync());
             navigation.navigate(BaseTabRoutes.HOME, {});
           }}
         >

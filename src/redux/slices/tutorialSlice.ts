@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export interface TutorialState {
   needTutorial: boolean;
@@ -21,7 +21,10 @@ export const tutorialSlice = createSlice({
   },
 });
 
-export const { setTutorial, doneTutorial } =
-tutorialSlice.actions;
+export const { setTutorial, doneTutorial } = tutorialSlice.actions;
+
+export const setTutorialAsync = createAsyncThunk('tutorial/setTutorialAsync', async (_, { dispatch }) => {
+  dispatch(setTutorial());
+});
 
 export default tutorialSlice.reducer;

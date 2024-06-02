@@ -290,6 +290,7 @@ const BaseNavigation = () => {
             tabBarIcon: (props) => (
               <Feather name="home" size={40} color={props.color} />
             ),
+            headerShown: true,
           }}
         />
         <BaseTab.Screen

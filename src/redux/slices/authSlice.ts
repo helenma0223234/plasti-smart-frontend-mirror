@@ -7,8 +7,6 @@ import { IUser } from 'types/users';
 import { setLoginHistory } from './loginhistorySlice';
 import { LoginHistory } from 'types/loginHistory';
 import { setSelectedUser } from './usersSlice';
-import { createDefaultNotificationSettings } from './notificationSlice';
-
 
 export interface AuthState {
   authenticated: boolean

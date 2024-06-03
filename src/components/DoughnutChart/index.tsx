@@ -26,11 +26,13 @@ const DoughnutChart = ({ data, size }: DoughnutChartProps) => {
     .value((d: PieChartData) => d.population)
     .padAngle(padAngle);
 
-  const arcs = customArcs(data);
+  const arcs = customArcs(data.filter(d => d.population > 0));
   const arcPath = arc()
     .outerRadius(outerRadius)
     .innerRadius(innerRadius)
     .cornerRadius(7.5);
+
+    console.log(arcs);
 
   return (
     <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>

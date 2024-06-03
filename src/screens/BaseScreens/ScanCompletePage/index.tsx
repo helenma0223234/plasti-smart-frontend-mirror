@@ -14,14 +14,9 @@ import useAppSelector from '../../../hooks/useAppSelector';
 
 import CircleBG from '../../../assets/Ellipse 66.svg';
 import Confetti from '../../../assets/confetti.svg';
-import Colors from 'utils/Colors';
-import Penguine from '../../../assets/Penguine.svg';
-import Shiba from '../../../assets/Shiba.svg';
-import CatAvatar from '../../../assets/CatAvatar.svg';
 import Avatar from 'components/Avatar';
 
 const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
 
 type ScanCompletePageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;
@@ -78,7 +73,6 @@ const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
         <TouchableOpacity
           style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent', marginRight: 14 }]}
           onPress={() => {
-            // selectButtonPressed();
             navigation.navigate(BaseTabRoutes.EDUCATION, {});
           }}
         >
@@ -87,7 +81,6 @@ const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
         <TouchableOpacity
           style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C' }]}
           onPress={() => {
-            // reuseButtonPressed();
             navigation.navigate(BaseTabRoutes.HOME, {});
           }}
         >

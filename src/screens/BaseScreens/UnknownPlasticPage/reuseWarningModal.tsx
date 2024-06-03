@@ -4,11 +4,22 @@ import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
 import RedRecycleSymbol from '../../../assets/RedTriangleRecycle.svg';
 import CloseSVG from  '../../../assets/CloseModal.svg';
 import Colors from 'utils/Colors';
+import useAppDispatch from 'hooks/useAppDispatch';
+import useAppSelector from 'hooks/useAppSelector';
+import { BaseNavigationList, BaseTabRoutes } from 'navigation/routeTypes';
+import { cameraClosed } from 'redux/slices/cameraSlice';
+import { recycledRedux } from 'redux/slices/scanSlice';
+import { createScan } from 'redux/slices/usersSlice';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 interface PlasticModalProps {
+  navigation: StackNavigationProp<BaseNavigationList>;
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
   plasticType: number;
+  nestedModal?: boolean;
+  upperModalVisible?: boolean;
+  setUpperModalVisible?: (visible: boolean) => void;
 }
 
 type WarningMessages = {
@@ -19,10 +30,27 @@ const warnings:WarningMessages = {
   1: 'PET is not the safest to reuse.',
   3: 'PVC is not the safest to reuse.',
   6: 'PS is not the safest to reuse.',
-  7: 'Polymer 7 is not the safest to reuse.',
+  7: 'Plastic Type 7 is not the safest to reuse.',
 };
 
-const ReuseWarningModal: React.FC<PlasticModalProps> = ({ modalVisible, setModalVisible, plasticType }) => {
+const ReuseWarningModal: React.FC<PlasticModalProps> = ({navigation, modalVisible, setModalVisible, plasticType, nestedModal=false, upperModalVisible, setUpperModalVisible }) => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.users.selectedUser);
+  
+  const recycleButtonPressed = () => {
+    console.log('recycle button pressed on reuse warning modal');
+    if (user) {
+      dispatch(recycledRedux());
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticType, image: null, reused: false, recycled: true }));
+    }
+    dispatch(cameraClosed());
+    if (nestedModal && upperModalVisible && setUpperModalVisible) {
+      setUpperModalVisible(false);
+    }
+    setModalVisible(false);
+    navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
+  };
+
   return (
     <Modal
       animationType="none"
@@ -50,7 +78,9 @@ const ReuseWarningModal: React.FC<PlasticModalProps> = ({ modalVisible, setModal
           <View style={styles.selectButtonContainer}>
             <TouchableOpacity
               style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={() => {
+                recycleButtonPressed();
+              }}
             >
               <Text style={styles.bottomSheetSelectButtonText}>RECYCLE INSTEAD</Text>
             </TouchableOpacity>

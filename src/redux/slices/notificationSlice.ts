@@ -109,7 +109,7 @@ export const getNotificationSettings = createAsyncThunk(
         return response.data;
       })
       .catch((error) => {
-        console.error('Error when getting resource', error);
+        console.error('Error when getting notification settings', error);
         return false;
       });
   },
@@ -135,7 +135,7 @@ export const deleteNotificationSettings = createAsyncThunk(
         return response.data;
       })
       .catch((error) => {
-        console.error('Error when getting resource', error);
+        console.error('Error when deleting notification settings', error);
         return false;
       });
   },

@@ -45,18 +45,26 @@ const plasticTypeNumbers = {
   'fifth': 5,
   'sixth': 6,
   'seventh': 7,
-  'eighth': 8,
 };
 
-const plasticTypes = {
-  'first': 'Polyethylene Terephthalate',
-  'second': 'High-Density Polyethylene',
-  'third': 'Polyvinyl Chloride',
-  'fourth': 'Low-Density Polyethylene',
-  'fifth': 'Polypropylene',
-  'sixth': 'Polystyrene',
-  'seventh': 'Miscellaneous/Other',
-  'eighth': 'Unknown',
+const plasticTypeReversed: { [key: number]: string } = {
+  1: 'first',
+  2: 'second',
+  3: 'third',
+  4: 'fourth',
+  5: 'fifth',
+  6: 'sixth',
+  7: 'seventh',
+};
+
+const plasticTypes: { [key: number]: string } = {
+  1: 'Polyethylene Terephthalate',
+  2: 'High-Density Polyethylene',
+  3: 'Polyvinyl Chloride',
+  4: 'Low-Density Polyethylene',
+  5: 'Polypropylene',
+  6: 'Polystyrene',
+  7: 'Miscellaneous/Other',
 };
 
 const carouselSVG =
@@ -65,20 +73,17 @@ const carouselSVG =
 
 const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thisModalVisible }: UnknownInfoModalProps ) => {
   const dispatch = useAppDispatch();
-  // use user slice user instead of auth slice user?
   const user = useAppSelector((state) => state.users.selectedUser);
   const [reuseModalVisible, setReuseModalVisible] = React.useState(false);
 
-  type PlasticTypeKey = 'first' | 'second' | 'third' | 'fourth' | 'fifth' | 'sixth' | 'seventh' | 'eighth';
-  const selectedValue: PlasticTypeKey = 'first' as PlasticTypeKey;
+  type PlasticTypeKey = 'first' | 'second' | 'third' | 'fourth' | 'fifth' | 'sixth' | 'seventh' ;
+  const selectedValue: PlasticTypeKey = plasticTypeReversed[plasticNumber] as PlasticTypeKey;
   
-  // const selectedValue: PlasticTypeKey = route.params?.selectedValue ?? 'first' as PlasticTypeKey;
-
   /**************** Nav functions ****************/
   const recycleButtonPressed = () => {
     if (user) {
       dispatch(recycledRedux());
-      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticTypeNumbers[selectedValue], image: null, reused: false, recycled: true }));
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNumber, image: null, reused: false, recycled: true }));
     }
     dispatch(cameraClosed());
     setThisModalVisible(false);
@@ -91,7 +96,10 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
       setReuseModalVisible(true);
     } else if (user) {
       dispatch(reusedRedux());
-      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticTypeNumbers[selectedValue], image: null, reused: true, recycled: false }));
+      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNumber, image: null, reused: true, recycled: false }));
+      dispatch(cameraClosed());
+      setThisModalVisible(false);
+      navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
     }
   };
 
@@ -124,8 +132,6 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
               style={styles.backButton}
               onPress={() => {
                 setThisModalVisible(false);
-                // dispatch(cameraClosed());
-                // navigation.navigate(BaseTabRoutes.HOME, {});
               }}
             >
               <Ionicons name="arrow-back-outline" size={36} color="#1B453C" />
@@ -136,8 +142,8 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
           <Text style={[TextStyles.subTitle, { fontSize: 30, marginLeft:20 }]}>Your plastic is most likely:</Text>
         </View>
         <View style={{ justifyContent: 'center', alignItems: 'center', marginHorizontal: 20, marginTop:'14%' }}>
-          <Text style={[TextStyles.subTitle, { fontSize: 34, marginLeft:20, marginBottom:8 }]}>
-            {plasticTypes[selectedValue]}
+          <Text style={[TextStyles.subTitle, { fontSize: 34, textAlign:'center' }]}>
+            {plasticTypes[plasticNumber]}
           </Text>
           <Text style={[TextStyles.regular, { fontSize: 20, marginTop:0, marginHorizontal: 18, textAlign: 'center' }]}>
             {message}
@@ -174,7 +180,8 @@ const UnknownInfoModal = ({ navigation,  plasticNumber, setThisModalVisible, thi
             </TouchableOpacity>
           </View>
         </View>
-        <ReuseWarningModal modalVisible={reuseModalVisible} setModalVisible={setReuseModalVisible} plasticType={plasticTypeNumbers[selectedValue]} />
+        <ReuseWarningModal navigation={navigation} modalVisible={reuseModalVisible} setModalVisible={setReuseModalVisible} plasticType={plasticTypeNumbers[selectedValue]}
+        nestedModal={true} upperModalVisible={thisModalVisible} setUpperModalVisible={setThisModalVisible} />
       </SafeAreaView>
     </Modal>
   );

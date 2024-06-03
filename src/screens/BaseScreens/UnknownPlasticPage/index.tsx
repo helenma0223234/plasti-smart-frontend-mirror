@@ -24,6 +24,12 @@ type CustomRadioButtonProps = {
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
+const plasticTypes: { [key: string]: number } = {  'first': 1,
+  'second' : 2,
+  'third' : 5,
+  'fourth' : 4,
+  'fifth' : 2,
+};
 
 const CustomRadioButton: React.FC<CustomRadioButtonProps> = ({ selected, onPress }) => (
   <TouchableOpacity style={{ height: 33, width: 33, borderRadius: 16.5, borderWidth: 2, borderColor: Colors.primary.dark, alignItems: 'center', justifyContent: 'center', marginTop: -2 }} onPress={onPress}>
@@ -45,9 +51,6 @@ const UnknownPlasticPage = ({ navigation }: UnknownPlasticPageProps) => {
   );
 
   const selectButtonPressed = () => {
-    // if (user)
-    //   dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, plasticLetter: plasticTypes[plasticNum as keyof typeof plasticTypes], image: capturedPhoto }));
-    // navigation.navigate(BaseTabRoutes.UNKNOWN_INFO, { checked });
     setUnknownModalVisible(true);
   };
   
@@ -106,7 +109,7 @@ do you have?</Text>
       </View>
       <UnknownInfoModal
         navigation={navigation}
-        plasticNumber={1} // replace with the actual plastic number
+        plasticNumber={plasticTypes[checked]} // replace with the actual plastic number
         setThisModalVisible={setUnknownModalVisible}
         thisModalVisible={unknownModalVisible}
       />

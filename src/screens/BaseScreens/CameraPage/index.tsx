@@ -18,7 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SvgXml } from 'react-native-svg';
 import useAppSelector from '../../../hooks/useAppSelector';
 import useAppDispatch from 'hooks/useAppDispatch';
-import { cameraClosed, cameraOpened } from 'redux/slices/cameraSlice';
+import { cameraOpened } from 'redux/slices/cameraSlice';
 import { reusedRedux, recycledRedux } from 'redux/slices/scanSlice';
 import { createScan } from 'redux/slices/usersSlice';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
@@ -61,6 +61,8 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
     new Animated.Value(0),
   );
 
+  const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
+
   const [capturedPhoto, setCapturedPhoto] = useState<string | undefined>(undefined);
   const cameraRef = useRef<Camera | null>(null);
 
@@ -72,6 +74,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   const [isAnimating, setIsAnimating] = useState(true);
   const [zoom, setZoom] = useState(0);
   const [reuseModalVisible, setReuseModalVisible] = React.useState(false);
+
 
   // bottom sheet
   const bottomSheetRef = useRef(null);
@@ -85,7 +88,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   useFocusEffect(
     useCallback(() => {
       setIsAnimating(true);
-      setCapturedPhoto(null);
+      setCapturedPhoto(undefined);
       setZoom(0);
       dispatch(cameraOpened());
   
@@ -110,7 +113,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       }
     
       return () => animation && animation.stop();
-    }, [navigation, isAnimating]),
+    }, [ isAnimating, navigation]),
   );
 
   if (!permissions) {
@@ -257,7 +260,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       dispatch(reusedRedux());
       setIsAnimating(false);
       setCapturedPhoto(null);
-      dispatch(cameraClosed());
+      // dispatch(cameraClosed());
       bottomSheetRef.current?.close();
       navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
     }
@@ -269,16 +272,16 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, image: capturedPhoto, reused: false, recycled: true }));
     }
     setIsAnimating(false);
-    setCapturedPhoto(null);
-    dispatch(cameraClosed());
+    setCapturedPhoto(undefined);
+    // dispatch(cameraClosed());
     bottomSheetRef.current?.close();
     navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
   };
 
   const goToFrontPage = () => {
-    setCapturedPhoto(null);
+    setCapturedPhoto(undefined);
     setIsAnimating(false);
-    dispatch(cameraClosed());
+    // dispatch(cameraClosed());
     navigation.navigate(BaseTabRoutes.HOME, {});
   };
   /**************** Done Nav functions ****************/

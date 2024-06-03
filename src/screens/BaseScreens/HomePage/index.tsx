@@ -69,6 +69,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
   useFocusEffect(
     React.useCallback(() => {
       scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: false });
+      dispatch(cameraClosed());
     }, []),
   );
   
@@ -135,7 +136,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
       return styles.largePoints;
     }
   }
-  dispatch(cameraClosed());
+
   const getTrophyTextStyle = (number: number) => {
     if (number >= 80) {
       return styles.trophyTextSmall;

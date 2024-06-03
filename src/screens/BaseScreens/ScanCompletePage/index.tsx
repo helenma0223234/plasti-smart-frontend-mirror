@@ -15,7 +15,10 @@ import useAppSelector from '../../../hooks/useAppSelector';
 import CircleBG from '../../../assets/Ellipse 66.svg';
 import Confetti from '../../../assets/confetti.svg';
 import Avatar from 'components/Avatar';
-
+import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
+import useAppDispatch from 'hooks/useAppDispatch';
+import { cameraClosed } from 'redux/slices/cameraSlice';
 const screenWidth = Dimensions.get('window').width;
 
 type ScanCompletePageProps = {
@@ -25,6 +28,15 @@ type ScanCompletePageProps = {
 const ScanCompletePage = ({ navigation }: ScanCompletePageProps) => {
   const user = useAppSelector((state) => state.users.selectedUser);
   const recycled = useAppSelector((state) => state.scan.recycled);
+
+  const dispatch = useAppDispatch();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(cameraClosed());
+      return () => {};
+    }, [dispatch]),
+  );
 
   return (
     <View style={styles.container}>

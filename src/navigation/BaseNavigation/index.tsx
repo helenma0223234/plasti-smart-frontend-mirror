@@ -303,8 +303,6 @@ const BaseNavigation = () => {
             },
             tabBarIcon: (props) => (
               <Feather name="book-open" size={40} color={props.color} />),
-
-            // <Feather name="user" size={40} color={props.color} />),
           }}
         />
         <BaseTab.Screen

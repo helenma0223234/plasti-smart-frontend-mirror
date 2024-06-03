@@ -148,9 +148,9 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
           // Define the cropping rectangle based on the image dimensions
           const cropRect = {
             originX: imageWidth * 0.175, 
-            originY: imageHeight * 0.25, 
+            originY: imageHeight * 0.3, 
             width: imageWidth * 0.675, 
-            height: imageHeight * 0.35, 
+            height: imageHeight * 0.3, 
           };
 
           const croppedPhoto = await ImageManipulator.manipulateAsync(
@@ -161,35 +161,61 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
           console.log(croppedPhoto.base64);
           setCapturedPhoto(croppedPhoto.base64);
 
-          setModelVerdict(1);
 
           // API call
-          // const response = await fetch(`${REPLICATE_URL}`, {
-          //   method: 'POST',
-          //   headers: {
-          //     'Authorization': `Bearer ${REPLICATE_API_TOKEN}`,
-          //     'Content-Type': 'application/json',
-          //   },
-          //   body: JSON.stringify({
-          //     version: `${REPLICATE_VERSION}`,
-          //     input: {
-          //       image: croppedPhoto.base64,
-          //     },
-          //   }),
-          // });
+          const response = await fetch(`${REPLICATE_URL}`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${REPLICATE_API_TOKEN}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              version: `${REPLICATE_VERSION}`,
+              input: {
+                image: croppedPhoto.base64,
+              },
+            }),
+          });
 
-          // if (!response.ok) {
-          //   throw new Error(`HTTP error! status: ${response.status}`);
-          // }
-          // const data = await response.json();
-          // console.log(response);
-          // if (data.type) {
-          //   setModelVerdict(data.type);
-          //   bottomSheetRef.current?.open();
-          // }
-          bottomSheetRef.current?.open();
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.log('replicate: ', data);
+          
+          // Polling function to check the status
+          const pollStatus = async (url:string) => {
+          try {
+            const statusResponse = await fetch(url, {
+              headers: {
+                'Authorization': `Bearer ${REPLICATE_API_TOKEN}`,
+              },
+            });
+            if (!statusResponse.ok) {
+              throw new Error(`HTTP error! status: ${statusResponse.status}`);
+            }
+            const statusData = await statusResponse.json();
+            console.log('polling: ', statusData);
+
+            if (statusData.completed_at) {
+              setModelVerdict(statusData.output);
+              bottomSheetRef.current?.open();
+              setCapturedPhoto(undefined);
+            } else {
+              // Retry polling after a delay
+              setTimeout(() => pollStatus(url), 2000); // 2 seconds delay
+            }
+          } catch (error) {
+            console.error('Error polling status:', error);
+          }
+        };
+
+        // Start polling
+        pollStatus(data.urls.get);
+
         } else {
           console.error('Failed to capture photo');
+          alert('Failed to capture photo. Please try again.'); // alert the user
         }
       } catch (error) {
         console.error('Error taking picture:', error);
@@ -385,7 +411,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
 
           <TouchableOpacity
             style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
-            // disabled={isModelRunning}
             onPress={selectButtonPressed}
           >
             <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>I'M RECYCLING</Text>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, SafeAreaView, View, Text, StyleSheet, Modal, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent, Image } from 'react-native';
+import { ScrollView, SafeAreaView, View, Text, StyleSheet, Modal, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent, Image, Linking } from 'react-native';
 import useAppDispatch from '../../../hooks/useAppDispatch';
 import useAppSelector from 'hooks/useAppSelector';
 import FormatStyle from '../../../utils/FormatStyle';
@@ -15,8 +15,6 @@ import Trophy from '../../../assets/Trophy.svg';
 import PlasticSymbol from 'components/RecycleSymbol';
 import Globe from '../../../assets/Globe.svg';
 import RecycleSymbol from '../../../assets/Recycle.svg';
-import PE from '../../../assets/PE.png';
-import PET from '../../../assets/PET.png';
 import MicrowaveFilm from '../../../assets/MicrowaveFilm.svg';
 import PackingEnvelope from '../../../assets/PackingEnvelope.svg';
 import WaterBottle from '../../../assets/WaterBottle.svg';
@@ -225,7 +223,12 @@ const EducationPage = () => {
 
   const navigation = useNavigation<NavType>();
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    setCurrCardPlastic(Math.floor(((event.nativeEvent.contentOffset.x)) / modalCardWidth));
+    // setCurrCardPlastic(Math.floor(((event.nativeEvent.contentOffset.x)) / modalCardWidth));
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const centerX = contentOffsetX + (event.nativeEvent.layoutMeasurement.width / 2);
+
+    const cardIndex = Math.floor(centerX / modalCardWidth);
+    setCurrCardPlastic(cardIndex);
   };
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -234,16 +237,6 @@ const EducationPage = () => {
   const handlePress = (index: number) => {
     setCurrCard(index);
     setCurrCardPlastic(index);
-  };
-
-  const collectedTypes = {
-    1: user.Type1Collected,
-    2: user.Type2Collected,
-    3: user.Type3Collected,
-    4: user.Type4Collected,
-    5: user.Type5Collected,
-    6: user.Type6Collected,
-    7: user.Type7Collected,
   };
 
   const recycledTypes = {
@@ -317,10 +310,18 @@ const EducationPage = () => {
                 </TouchableOpacity>
               </View>
 
-              {info[modalPlasticType - 1].image !== '' && <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: modalCardHeight * 0.16, marginBottom: modalCardHeight * 0.1}}>
+              {modalPlasticType != 7 && modalPlasticType != 6 && <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: modalCardHeight * 0.16, marginBottom: modalCardHeight * 0.1}}>
                 <Image
                   source={info[modalPlasticType - 1].image }
                   style={{maxHeight: modalCardHeight * 0.2, maxWidth: modalCardWidth *0.95}}
+                  resizeMode="contain"
+                />
+              </View>}
+              { modalPlasticType == 6 &&
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: modalCardHeight * 0.15, marginBottom: modalCardHeight * 0.15}}>
+                <Image
+                  source={info[modalPlasticType - 1].image }
+                  style={{maxHeight: modalCardHeight * 0.35, maxWidth: modalCardWidth *0.95}}
                   resizeMode="contain"
                 />
               </View>}
@@ -390,7 +391,9 @@ const EducationPage = () => {
                 flex: 1,
                 minHeight: modalCardHeight * 0.03,
               }}>
-                <TouchableOpacity onPress={() => { }}>
+                <TouchableOpacity onPress={() => { 
+                  // Linking.openURL('https://example.com') // UNCOMMENT THIS LINE (REMOVE JUST THE TWO SLASHES AT THE BEGINNING) AND REPLACE 'https://example.com' WITH THE LINK TO THE INFO PAGE
+                }}>
                   <Text style={{
                     ...styles.ModalTextBold,
                     textDecorationLine: 'underline',
@@ -467,7 +470,7 @@ const EducationPage = () => {
             </View>
           </View>
 
-          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} contentOffset={{ x: 340 * currCard, y: 0 }} onScroll={handleScroll} scrollEventThrottle={16}>
+          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} contentOffset={{ x: modalCardWidth * currCard + currCard * 10, y: 0 }} onScroll={handleScroll} scrollEventThrottle={10}>
             <View style={{ gap: 10, flexDirection: 'row' }}>
               {info.map((card, index) => (
                 <PolymerCard number={index + 1} setModalVisible={setModalVisible} setModalPlasticType={setModalPlasticType} />

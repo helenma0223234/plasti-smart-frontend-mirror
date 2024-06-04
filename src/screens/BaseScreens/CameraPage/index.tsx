@@ -18,7 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SvgXml } from 'react-native-svg';
 import useAppSelector from '../../../hooks/useAppSelector';
 import useAppDispatch from 'hooks/useAppDispatch';
-import { cameraClosed, cameraOpened } from 'redux/slices/cameraSlice';
+import { cameraOpened } from 'redux/slices/cameraSlice';
 import { reusedRedux, recycledRedux } from 'redux/slices/scanSlice';
 import { createScan } from 'redux/slices/usersSlice';
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
@@ -32,9 +32,6 @@ import * as ImageManipulator from 'expo-image-manipulator';
 // components
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ReuseWarningModal from '../UnknownPlasticPage/reuseWarningModal';
-
-const screenHeight = Dimensions.get('window').height;
-const screenWidth = Dimensions.get('window').width;
 
 const plasticTypes = {
   1: 'Polyethylene Terephthalate',
@@ -63,8 +60,11 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
 
   const [capturedPhoto, setCapturedPhoto] = useState<string | undefined>(undefined);
   const cameraRef = useRef<Camera | null>(null);
-
+  const [modelRunning, setModelRunning] = useState<boolean>(false);
   const [modelVerdict, setModelVerdict] = useState<number>(0);
+  const [predictionID, setPredictionID] = useState<string>('');
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const dispatch = useAppDispatch();
   
   const user = useAppSelector((state) => state.users.selectedUser);
@@ -72,6 +72,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   const [isAnimating, setIsAnimating] = useState(true);
   const [zoom, setZoom] = useState(0);
   const [reuseModalVisible, setReuseModalVisible] = React.useState(false);
+
 
   // bottom sheet
   const bottomSheetRef = useRef(null);
@@ -85,7 +86,7 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   useFocusEffect(
     useCallback(() => {
       setIsAnimating(true);
-      setCapturedPhoto(null);
+      setCapturedPhoto(undefined);
       setZoom(0);
       dispatch(cameraOpened());
   
@@ -110,29 +111,43 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       }
     
       return () => animation && animation.stop();
-    }, [navigation, isAnimating]),
+    }, [ isAnimating, navigation]),
   );
-
-  if (!permissions) {
-    return (
-      <View style={FormatStyle.container}>
-        <Text>Requesting permissions...</Text>
-      </View>
-    );
-  }
-
-  if (!permissions.granted) {
-    return (
-      <View style={FormatStyle.container}>
-        <Text>No access to camera</Text>
-        <Button title="Grant Permission" onPress={() => requestPermission()} />
-      </View>
-    );
-  }
 
   function toggleCameraType() {
     setType(currentType => (currentType === CameraType.back ? CameraType.front : CameraType.back));
   }
+
+  const pollStatus = useCallback(async (url: string) => {
+    if (!modelRunning || !predictionID) {
+      return; 
+    }
+    try {
+      const statusResponse = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${REPLICATE_API_TOKEN}`,
+        },
+      });
+      if (!statusResponse.ok) {
+        throw new Error(`HTTP error! status: ${statusResponse.status}`);
+      }
+      const statusData = await statusResponse.json();
+      console.log('polling: ', statusData);
+
+      if (statusData.completed_at) {
+        setModelVerdict(statusData.output);
+        bottomSheetRef.current?.open();
+        setCapturedPhoto(undefined);
+        setModelRunning(false);
+        setPredictionID('');
+      } else {
+        // Retry polling after a delay
+        timeoutRef.current = setTimeout(() => pollStatus(url), 2000); // 2 seconds delay
+      }
+    } catch (error) {
+      console.error('Error polling status:', error);
+    }
+  }, [modelRunning, predictionID, bottomSheetRef]);
 
   const takePicture = async () => {
     if (cameraRef.current) {
@@ -161,7 +176,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
           console.log(croppedPhoto.base64);
           setCapturedPhoto(croppedPhoto.base64);
 
-
           // API call
           const response = await fetch(`${REPLICATE_URL}`, {
             method: 'POST',
@@ -181,37 +195,14 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
           const data = await response.json();
+          setModelRunning(true);
+          setPredictionID(data.id);
+
           console.log('replicate: ', data);
           
-          // Polling function to check the status
-          const pollStatus = async (url:string) => {
-          try {
-            const statusResponse = await fetch(url, {
-              headers: {
-                'Authorization': `Bearer ${REPLICATE_API_TOKEN}`,
-              },
-            });
-            if (!statusResponse.ok) {
-              throw new Error(`HTTP error! status: ${statusResponse.status}`);
-            }
-            const statusData = await statusResponse.json();
-            console.log('polling: ', statusData);
-
-            if (statusData.completed_at) {
-              setModelVerdict(statusData.output);
-              bottomSheetRef.current?.open();
-              setCapturedPhoto(undefined);
-            } else {
-              // Retry polling after a delay
-              setTimeout(() => pollStatus(url), 2000); // 2 seconds delay
-            }
-          } catch (error) {
-            console.error('Error polling status:', error);
-          }
-        };
-
-        // Start polling
-        pollStatus(data.urls.get);
+          // Start polling
+          pollStatus(data.urls.get);
+          // console.log('done polling');
 
         } else {
           console.error('Failed to capture photo');
@@ -257,7 +248,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       dispatch(reusedRedux());
       setIsAnimating(false);
       setCapturedPhoto(null);
-      dispatch(cameraClosed());
       bottomSheetRef.current?.close();
       navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
     }
@@ -269,19 +259,48 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       dispatch(createScan({ scannedBy: user.id, plasticNumber: modelVerdict, image: capturedPhoto, reused: false, recycled: true }));
     }
     setIsAnimating(false);
-    setCapturedPhoto(null);
-    dispatch(cameraClosed());
+    setCapturedPhoto(undefined);
     bottomSheetRef.current?.close();
     navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});
   };
 
   const goToFrontPage = () => {
-    setCapturedPhoto(null);
+    setCapturedPhoto(undefined);
     setIsAnimating(false);
-    dispatch(cameraClosed());
+    if (modelRunning) {
+      fetch(`${REPLICATE_URL}/${predictionID}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${REPLICATE_API_TOKEN}`,
+        },
+      });
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setModelRunning(false);
+    setPredictionID('');
+
     navigation.navigate(BaseTabRoutes.HOME, {});
   };
   /**************** Done Nav functions ****************/
+
+  if (!permissions) {
+    return (
+      <View style={FormatStyle.container}>
+        <Text>Requesting permissions...</Text>
+      </View>
+    );
+  }
+
+  if (!permissions.granted) {
+    return (
+      <View style={FormatStyle.container}>
+        <Text>No access to camera</Text>
+        <Button title="Grant Permission" onPress={() => requestPermission()} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

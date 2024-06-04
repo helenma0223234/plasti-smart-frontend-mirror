@@ -21,7 +21,6 @@ import { createScan } from 'redux/slices/usersSlice';
 
 import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
-import { useFocusEffect } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 
 // components

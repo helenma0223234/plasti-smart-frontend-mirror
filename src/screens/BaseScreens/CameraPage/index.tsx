@@ -32,6 +32,10 @@ import * as ImageManipulator from 'expo-image-manipulator';
 // components
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ReuseWarningModal from '../UnknownPlasticPage/reuseWarningModal';
+import PlasticSymbol from '../../../assets/PlasticSymbol.svg';
+
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
 const plasticTypes = {
   1: 'Polyethylene Terephthalate',
@@ -385,61 +389,104 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       </PinchGestureHandler>
       <RBSheet
         ref={bottomSheetRef}
-        height={350}
+        height={screenHeight * 0.4}
         openDuration={250}
         closeDuration={200}
-        closeOnDragDown={false}
-        closeOnPressMask={false}
+        closeOnDragDown={!(modelVerdict>=1 && modelVerdict<=7)}
+        closeOnPressMask={!(modelVerdict>=1 && modelVerdict<=7)}
+        dragFromTopOnly={!(modelVerdict>=1 && modelVerdict<=7)}
         customStyles={{
           wrapper: {
             backgroundColor: 'transparent',
           },
           container: {
             backgroundColor: '#FBFBF4',
-            justifyContent: 'center',
+            justifyContent: 'space-evenly',
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
+            alignItems: 'center',
+            paddingBottom: screenHeight * 0.05,
           },
           // only shows up when closeOnDragDown is true
           draggableIcon: {
             backgroundColor: '#000',
+            bottom: screenHeight * 0.03
           },
         }}
       >
+       {modelVerdict>=1 && modelVerdict<=7 ?
+        <>
         <View style={{ flexDirection: 'column', alignItems: 'center', marginBottom: 20, borderColor: 'black', marginTop:12 }}>
+              
+            <View style={{ justifyContent:'center', alignItems:'center', borderColor:'black', width: '50%', maxHeight: '40%', marginBottom: 8, marginTop:20  }}>
+              <PlasticSymbol right={'4.5%'}> </PlasticSymbol>
+              <Text style={[styles.bottomSheetTitle]}>{modelVerdict}</Text>
+            </View>
+            <Text style={{ fontSize: 16, color: '#1B453C', marginBottom: 20 }}>
+              {plasticTypes[modelVerdict as keyof typeof plasticTypes]}
+            </Text>
             
-          <View style={{ justifyContent:'center', alignItems:'center', borderColor:'black', width: '50%', maxHeight: '40%', marginBottom: 8, marginTop:20  }}>
-            <SvgXml
-              style={styles.bottomSheetsvg}
-              xml={carouselSVG}
-              width="105%"
-              height="105%"
-            />
-            <Text style={[styles.bottomSheetTitle]}>{modelVerdict}</Text>
-          </View>
-          <Text style={{ fontSize: 16, color: '#1B453C', marginBottom: 20 }}>
-            {plasticTypes[modelVerdict as keyof typeof plasticTypes]}
-          </Text>
-          
-          <TouchableOpacity
-            style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
-            onPress={handleReusePress}
-          >
-            <Text style={styles.bottomSheetSelectButtonText}>I'M REUSING</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
+              onPress={handleReusePress}
+            >
+              <Text style={styles.bottomSheetSelectButtonText}>I'M REUSING</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
-            onPress={selectButtonPressed}
-          >
-            <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>I'M RECYCLING</Text>
-          </TouchableOpacity>
-        </View>
-        <ReuseWarningModal 
+            <TouchableOpacity
+              style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
+              onPress={selectButtonPressed}
+            >
+              <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>I'M RECYCLING</Text>
+            </TouchableOpacity>
+          </View>
+          <ReuseWarningModal 
+          navigation={navigation}
           modalVisible={reuseModalVisible} 
           setModalVisible={setReuseModalVisible} 
-          plasticType={modelVerdict} 
-        />
+          plasticType={modelVerdict} /> 
+        </> :
+        <>
+              
+            <View style={{ justifyContent:'center', alignItems:'center', width: '95%', maxHeight: '40%' }}>
+              <Text style={[styles.bottomSheetTitle]}>Unknown Plastic Type</Text>
+            </View>
+
+            <View style={{ justifyContent:'center',  width: '90%',  marginTop: screenHeight * 0.01 }}>
+              <Text style={{ fontSize: screenHeight * 0.02, color: '#1B453C', textAlign: 'center' }}>We are unable to identify the type of plastic. Please try scanning again or manually enter.</Text>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: screenHeight * 0.01, marginTop: screenHeight * 0.01}]}
+              onPress={()=>{
+                bottomSheetRef.current?.close();
+                setCapturedPhoto(undefined);
+                setIsAnimating(true);
+                setModelVerdict(0);
+              }}
+            >
+              <Text style={styles.bottomSheetSelectButtonText}>Rescan Label</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
+              onPress={()=>{
+                bottomSheetRef.current?.close();
+                setCapturedPhoto(undefined);
+                setModelVerdict(0);
+                navigation.navigate(BaseTabRoutes.MANUAL_ENTRY, {});
+              }}
+            >
+              <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>Manually Enter</Text>
+            </TouchableOpacity>
+
+            
+
+        </>
+      }
+
+        
+
       </RBSheet>
     </View>
   );
@@ -582,8 +629,8 @@ const styles = StyleSheet.create({
   },
   bottomSheetSelectButton: {
     justifyContent: 'center',
-    width: 180,
-    height: 46,
+    width: screenWidth * 0.45,
+    height: screenHeight * 0.05,
     backgroundColor: '#1B453C',
     borderRadius: 10,
     borderWidth: 1,
@@ -591,15 +638,14 @@ const styles = StyleSheet.create({
   bottomSheetSelectButtonText: {
     textAlign: 'center',
     color: '#fff',
-    fontSize: 14,
+    fontSize: screenHeight * 0.0175,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 14,
     letterSpacing: -0.3,
     textTransform: 'uppercase',
   },
   bottomSheetTitle: {
-    fontSize: 35,
+    fontSize: screenHeight * 0.04,
     color: '#1B453C',
     fontWeight: 'bold',
     position: 'absolute',

@@ -58,7 +58,6 @@ export const createDefaultNotificationSettings = createAsyncThunk(
       })
       .catch((error) => {
         console.error('Error when creating Notification Settings', error);
-        return false;
       });
   },
 );
@@ -83,9 +82,6 @@ export const updateNotificationSettings = createAsyncThunk(
       })
       .catch((error) => {
         console.error('Error when updating Notification Settings', error);
-        if (error.response && error.response.status === 500 && req.userID) {
-          dispatch(createDefaultNotificationSettings({ userID: req.userID }));
-        }
       });
   },
 );
@@ -110,7 +106,10 @@ export const getNotificationSettings = createAsyncThunk(
       })
       .catch((error) => {
         console.error('Error when getting notification settings', error);
-        return false;
+        if (error.response && error.response.status === 500) {
+          console.log('creating another default for this user!');
+          dispatch(createDefaultNotificationSettings({ userID: req.userID }));
+        }
       });
   },
 );

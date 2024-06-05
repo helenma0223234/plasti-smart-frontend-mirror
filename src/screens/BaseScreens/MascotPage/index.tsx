@@ -9,9 +9,7 @@ import FormatStyle from '../../../utils/FormatStyle';
 import TextStyles from '../../../utils/TextStyles';
 import GoRightButton from '../../../assets/GoRightButton.svg';
 import GoLeftButton from '../../../assets/GoLeftButton.svg';
-// import { BaseTabRoutes } from 'navigation/routeTypes';
-import { useNavigation } from '@react-navigation/native';
-import NavType from 'utils/NavType';
+
 import { cameraClosedAsync, cameraOpened } from 'redux/slices/cameraSlice';
 import { createDefaultNotificationSettings, updateNotificationSettings } from 'redux/slices/notificationSlice';
 import Avatar from '../../../components/Avatar';
@@ -48,10 +46,8 @@ type MascotPageProps = {
 };
 
 const MascotPage = ({ navigation } : MascotPageProps) => {
-  // const navigation = useNavigation<NavType>();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const needTutorial = useAppSelector((state) => state.tutorial.needTutorial);
 
 
   const { id, email } = user || { id: '', email: '' };

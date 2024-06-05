@@ -32,6 +32,10 @@ import * as ImageManipulator from 'expo-image-manipulator';
 // components
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ReuseWarningModal from '../UnknownPlasticPage/reuseWarningModal';
+import PlasticSymbol from '../../../assets/PlasticSymbol.svg';
+
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
 const plasticTypes = {
   1: 'Polyethylene Terephthalate',
@@ -230,14 +234,6 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
   </svg>
 `;
 
-  /***************** Carousel *****************/
-
-  const carouselSVG =
-    '<svg width="141" height="129" viewBox="0 0 141 129" fill="none" xmlns="http://www.w3.org/2000/svg">\n<g id="pol 3">\n<g id="Vector" filter="url(#filter0_i_2375_19914)">\n<path d="M49.6918 39.8521L20.441 91.0468C19.4998 92.9125 19.0182 94.9763 19.0364 97.0661C19.0545 99.1559 19.5718 101.211 20.5451 103.06C21.5185 104.909 22.9196 106.498 24.6317 107.695C26.3437 108.892 28.317 109.662 30.3868 109.941L37.8571 110.065" stroke="#1B453C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>\n</g>\n<g id="Vector_2" filter="url(#filter1_i_2375_19914)">\n<path d="M64.4138 109.916H123.347C125.433 109.808 127.464 109.203 129.268 108.15C131.073 107.097 132.6 105.627 133.722 103.864C134.843 102.1 135.527 100.094 135.716 98.0118C135.904 95.9299 135.593 93.833 134.806 91.8962L131.205 85.3437M54.8273 57.4953L50.0341 39.5938L32.1445 44.3902" stroke="#1B453C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>\n</g>\n<g id="Vector_3" filter="url(#filter2_i_2375_19914)">\n<path d="M118.567 62.1172L89.0999 11.0466C87.9632 9.29334 86.424 7.83758 84.6106 6.80075C82.7973 5.76392 80.7625 5.17609 78.6759 5.08632C76.5894 4.99654 74.5116 5.40742 72.616 6.28467C70.7205 7.16191 69.062 8.48009 67.7791 10.1292L63.9092 16.5245" stroke="#1B453C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>\n</g>\n<g id="Vector_4" filter="url(#filter3_i_2375_19914)">\n<path d="M77.5104 96.8086L64.4141 109.914L77.5104 123.019" stroke="#1B453C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>\n</g>\n<g id="Vector_5" filter="url(#filter4_i_2375_19914)">\n<path d="M101.688 57.2974L119.536 62.2492L124.484 44.3895" stroke="#1B453C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>\n</g>\n</g>\n<defs>\n<filter id="filter0_i_2375_19914" x="14.0371" y="34.8516" width="40.6543" height="82.2148" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">\n<feFlood flood-opacity="0" result="BackgroundImageFix"/>\n<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>\n<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\n<feOffset dy="2"/>\n<feGaussianBlur stdDeviation="3"/>\n<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>\n<feColorMatrix type="matrix" values="0 0 0 0 0.886275 0 0 0 0 0.898039 0 0 0 0 0.901961 0 0 0 1 0"/>\n<feBlend mode="normal" in2="shape" result="effect1_innerShadow_2375_19914"/>\n</filter>\n<filter id="filter1_i_2375_19914" x="27.1436" y="34.5938" width="113.626" height="82.3203" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">\n<feFlood flood-opacity="0" result="BackgroundImageFix"/>\n<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>\n<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\n<feOffset dy="2"/>\n<feGaussianBlur stdDeviation="3"/>\n<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>\n<feColorMatrix type="matrix" values="0 0 0 0 0.886275 0 0 0 0 0.898039 0 0 0 0 0.901961 0 0 0 1 0"/>\n<feBlend mode="normal" in2="shape" result="effect1_innerShadow_2375_19914"/>\n</filter>\n<filter id="filter2_i_2375_19914" x="58.9082" y="0.0742188" width="64.6592" height="69.043" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">\n<feFlood flood-opacity="0" result="BackgroundImageFix"/>\n<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>\n<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\n<feOffset dy="2"/>\n<feGaussianBlur stdDeviation="3"/>\n<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>\n<feColorMatrix type="matrix" values="0 0 0 0 0.886275 0 0 0 0 0.898039 0 0 0 0 0.901961 0 0 0 1 0"/>\n<feBlend mode="normal" in2="shape" result="effect1_innerShadow_2375_19914"/>\n</filter>\n<filter id="filter3_i_2375_19914" x="59.4141" y="91.8086" width="23.0967" height="38.2109" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">\n<feFlood flood-opacity="0" result="BackgroundImageFix"/>\n<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>\n<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\n<feOffset dy="2"/>\n<feGaussianBlur stdDeviation="3"/>\n<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>\n<feColorMatrix type="matrix" values="0 0 0 0 0.886275 0 0 0 0 0.898039 0 0 0 0 0.901961 0 0 0 1 0"/>\n<feBlend mode="normal" in2="shape" result="effect1_innerShadow_2375_19914"/>\n</filter>\n<filter id="filter4_i_2375_19914" x="96.6885" y="39.3867" width="32.7959" height="29.8633" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">\n<feFlood flood-opacity="0" result="BackgroundImageFix"/>\n<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>\n<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\n<feOffset dy="2"/>\n<feGaussianBlur stdDeviation="3"/>\n<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>\n<feColorMatrix type="matrix" values="0 0 0 0 0.886275 0 0 0 0 0.898039 0 0 0 0 0.901961 0 0 0 1 0"/>\n<feBlend mode="normal" in2="shape" result="effect1_innerShadow_2375_19914"/>\n</filter>\n</defs>\n</svg>\n';
-  
-  /**************** Done Carousel ****************/
-
-
   /**************** Nav functions ****************/
   const handleReusePress = () => {  
     if (modelVerdict == 1 || modelVerdict == 3 || modelVerdict >= 6) {  
@@ -385,61 +381,98 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
       </PinchGestureHandler>
       <RBSheet
         ref={bottomSheetRef}
-        height={350}
+        height={screenHeight * 0.4}
         openDuration={250}
         closeDuration={200}
-        closeOnDragDown={false}
-        closeOnPressMask={false}
+        closeOnDragDown={!(modelVerdict>=1 && modelVerdict<=7)}
+        closeOnPressMask={!(modelVerdict>=1 && modelVerdict<=7)}
+        dragFromTopOnly={!(modelVerdict>=1 && modelVerdict<=7)}
         customStyles={{
           wrapper: {
             backgroundColor: 'transparent',
           },
           container: {
             backgroundColor: '#FBFBF4',
-            justifyContent: 'center',
+            justifyContent: 'space-evenly',
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
+            alignItems: 'center',
+            paddingBottom: screenHeight * 0.05,
           },
           // only shows up when closeOnDragDown is true
           draggableIcon: {
             backgroundColor: '#000',
+            bottom: screenHeight * 0.03
           },
         }}
       >
+       {modelVerdict>=1 && modelVerdict<=7 ?
+        <>
         <View style={{ flexDirection: 'column', alignItems: 'center', marginBottom: 20, borderColor: 'black', marginTop:12 }}>
+              
+            <View style={{ justifyContent:'center', alignItems:'center', borderColor:'black', width: '50%', maxHeight: '40%', marginBottom: 8, marginTop:20  }}>
+              <PlasticSymbol right={'4.5%'}> </PlasticSymbol>
+              <Text style={[styles.bottomSheetTitle]}>{modelVerdict}</Text>
+            </View>
+            <Text style={{ fontSize: 16, color: '#1B453C', marginBottom: 20 }}>
+              {plasticTypes[modelVerdict as keyof typeof plasticTypes]}
+            </Text>
             
-          <View style={{ justifyContent:'center', alignItems:'center', borderColor:'black', width: '50%', maxHeight: '40%', marginBottom: 8, marginTop:20  }}>
-            <SvgXml
-              style={styles.bottomSheetsvg}
-              xml={carouselSVG}
-              width="105%"
-              height="105%"
-            />
-            <Text style={[styles.bottomSheetTitle]}>{modelVerdict}</Text>
-          </View>
-          <Text style={{ fontSize: 16, color: '#1B453C', marginBottom: 20 }}>
-            {plasticTypes[modelVerdict as keyof typeof plasticTypes]}
-          </Text>
-          
-          <TouchableOpacity
-            style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
-            onPress={handleReusePress}
-          >
-            <Text style={styles.bottomSheetSelectButtonText}>I'M REUSING</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: 14 }]}
+              onPress={handleReusePress}
+            >
+              <Text style={styles.bottomSheetSelectButtonText}>I'M REUSING</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
-            onPress={selectButtonPressed}
-          >
-            <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>I'M RECYCLING</Text>
-          </TouchableOpacity>
-        </View>
-        <ReuseWarningModal 
+            <TouchableOpacity
+              style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
+              onPress={selectButtonPressed}
+            >
+              <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>I'M RECYCLING</Text>
+            </TouchableOpacity>
+          </View>
+          <ReuseWarningModal 
+          navigation={navigation}
           modalVisible={reuseModalVisible} 
           setModalVisible={setReuseModalVisible} 
-          plasticType={modelVerdict} 
-        />
+          plasticType={modelVerdict} /> 
+        </> :
+        <>
+              
+            <View style={{ justifyContent:'center', alignItems:'center', width: '95%', maxHeight: '40%' }}>
+              <Text style={[styles.bottomSheetTitle]}>Unknown Plastic Type</Text>
+            </View>
+
+            <View style={{ justifyContent:'center',  width: '90%',  marginTop: screenHeight * 0.01 }}>
+              <Text style={{ fontSize: screenHeight * 0.02, color: '#1B453C', textAlign: 'center' }}>We are unable to identify the type of plastic. Please try scanning again or manually enter.</Text>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.bottomSheetSelectButton, { backgroundColor: '#1B453C', marginBottom: screenHeight * 0.01, marginTop: screenHeight * 0.01}]}
+              onPress={()=>{
+                bottomSheetRef.current?.close();
+                setCapturedPhoto(undefined);
+                setIsAnimating(true);
+                setModelVerdict(0);
+              }}
+            >
+              <Text style={styles.bottomSheetSelectButtonText}>Rescan Label</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.bottomSheetSelectButton, { borderColor: '#1B453C', borderWidth: 1, backgroundColor: 'transparent' }]}
+              onPress={()=>{
+                bottomSheetRef.current?.close();
+                setCapturedPhoto(undefined);
+                setModelVerdict(0);
+                navigation.navigate(BaseTabRoutes.MANUAL_ENTRY, {});
+              }}
+            >
+              <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>Manually Enter</Text>
+            </TouchableOpacity>
+        </>
+      }
       </RBSheet>
     </View>
   );
@@ -582,8 +615,8 @@ const styles = StyleSheet.create({
   },
   bottomSheetSelectButton: {
     justifyContent: 'center',
-    width: 180,
-    height: 46,
+    width: screenWidth * 0.45,
+    height: screenHeight * 0.05,
     backgroundColor: '#1B453C',
     borderRadius: 10,
     borderWidth: 1,
@@ -591,15 +624,14 @@ const styles = StyleSheet.create({
   bottomSheetSelectButtonText: {
     textAlign: 'center',
     color: '#fff',
-    fontSize: 14,
+    fontSize: screenHeight * 0.0175,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 14,
     letterSpacing: -0.3,
     textTransform: 'uppercase',
   },
   bottomSheetTitle: {
-    fontSize: 35,
+    fontSize: screenHeight * 0.04,
     color: '#1B453C',
     fontWeight: 'bold',
     position: 'absolute',

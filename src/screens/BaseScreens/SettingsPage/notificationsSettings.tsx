@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { View, Text, StyleSheet, TouchableOpacity, Switch, Dimensions, SafeAreaView } from 'react-native';
-import { BaseTabRoutes, BaseNavigationList } from 'navigation/routeTypes';
+import { BaseNavigationList } from 'navigation/routeTypes';
 import type { StackNavigationProp } from '@react-navigation/stack';
 
 import useAppSelector from 'hooks/useAppSelector';
@@ -9,6 +9,7 @@ import useAppDispatch from 'hooks/useAppDispatch';
 import { updateNotificationSettings } from 'redux/slices/notificationSlice';
 import { scheduleAvatarPushNotification, scheduleDailyGoalPushNotification } from 'components/Notifications/pushNotifications';
 import * as Notifications from 'expo-notifications';
+
 
 import Colors from 'utils/Colors';
 
@@ -25,8 +26,7 @@ const NotificationsSettingsPage = ({ navigation } : NotificationsSettingsPagePro
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.users.selectedUser);
   const notificationSettings = useAppSelector((state) => state.notifications.settings);
-
-  
+  console.log(notificationSettings);
   const [isEnabled, setIsEnabled] = useState(notificationSettings?.generalPush);
 
   const [isEnabled2, setIsEnabled2] = useState(notificationSettings?.dailyGoalPush);
@@ -72,7 +72,7 @@ const NotificationsSettingsPage = ({ navigation } : NotificationsSettingsPagePro
       Notifications.cancelScheduledNotificationAsync(notificationSettings.avatarIdentifier);
       if (value) {
         handleNotification('dailyGoalIdentifier', value);
-        handleNotification('dailyGoalIdentifier', value);
+        handleNotification('avatarIdentifier', value);
       }
     }
     

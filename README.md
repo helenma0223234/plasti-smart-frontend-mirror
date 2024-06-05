@@ -1,14 +1,13 @@
-# CRUD Template - Mobile Frontend - Expo - Redux Toolkit
+# PlastiSmart Frontend
 
 This repository is an optional frontend starter for new DALI React projects. Installation and setup instructions are included below. You should eventually customize this README file with project-specific documentation.
 
 ## Designs
 
-[Screenshot description]
 
-[Link to the project Figma]()
 
-[2-4 screenshots from the app]
+[Link to the project Figma](https://www.figma.com/design/5doTne1z3zCYPKUAZiwsuO/Plastic-Sorting-24W?node-id=5551-3487&t=ENX9gyrGE6VoCzDY-0)
+
 
 ## Architecture
 ### Tech Stack
@@ -18,11 +17,17 @@ This repository is an optional frontend starter for new DALI React projects. Ins
 - [axios](https://github.com/axios/axios)
 - [TypeScript](https://www.typescriptlang.org/docs/)
 
+
 #### External Packages
-- [Description of any notable added services]
+- [SendGrid](https://sendgrid.com/)
+- [React Navigation](https://reactnavigation.org/)
+- [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/)
+- [React Native SVG](https://github.com/react-native-svg/react-native-svg)
+- [Expo Camera](https://docs.expo.dev/versions/latest/sdk/camera/)
+- [Expo Notifications](https://docs.expo.dev/versions/latest/sdk/notifications/)
+
 
 ### Style
-[Describe notable code style conventions]
 
 We are using [typically a configuration like [CS52's React-Native ESLint Configuration](https://gist.github.com/timofei7/c8df5cc69f44127afb48f5d1dffb6c84) or [CS52's ES6 and Node ESLint Configuration](https://gist.github.com/timofei7/21ac43d41e506429495c7368f0b40cc7)]
 

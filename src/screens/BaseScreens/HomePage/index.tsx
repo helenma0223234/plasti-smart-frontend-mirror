@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { SafeAreaView, Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import useAppSelector from 'hooks/useAppSelector';
 import useAppDispatch from 'hooks/useAppDispatch';
@@ -42,6 +42,15 @@ import FullAlertModal from './fullAlertModal';
 import { cameraClosed } from 'redux/slices/cameraSlice';
 import Avatar from 'components/Avatar';
 
+// for device ID and notifications
+import { getNotificationSettings, updateNotificationSettings, createDefaultNotificationSettings } from 'redux/slices/notificationSlice';
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import * as SecureStore from 'expo-secure-store';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+import { scheduleAvatarPushNotification, scheduleDailyGoalPushNotification } from 'components/Notifications/pushNotifications';
+
 type HomePageProps = {
   navigation: StackNavigationProp<BaseNavigationList>;
 };
@@ -54,8 +63,7 @@ const HomePage = ({ navigation }: HomePageProps) => {
   const currentLoginHist = useAppSelector((state) => state.loginhistory.history);
   const needTutorial = useAppSelector((state) => state.tutorial.needTutorial);
   const dispatch = useAppDispatch();
-
-  const camera = useAppSelector((state) => state.camera.cameraOpen);
+  const notifications = useAppSelector((state) => state.notifications.settings);
 
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalMessage, setModalMessage] = React.useState('');
@@ -158,11 +166,61 @@ const HomePage = ({ navigation }: HomePageProps) => {
 
   // Can start at mount if needTutorial is true
   React.useEffect(() => {
-    // if (needTutorial && canStart) {
+    //if (needTutorial && canStart) {
     start();
     dispatch(doneTutorial());
     // }
   }, [needTutorial]); 
+
+  useEffect(() => {
+    const fetchAndSetNotificationReady = async () => {
+    // check if deviceID is new
+      if (user?.id) {
+        let deviceID = await SecureStore.getItemAsync('secure_deviceid');
+        // if this is a new device:
+        if (notifications && notifications.deviceID != deviceID) {
+          // get new device id
+          try {
+            const uuid = uuidv4();
+            await SecureStore.setItemAsync('secure_deviceid', uuid);
+            deviceID = await SecureStore.getItemAsync('secure_deviceid');
+            // update deviceID
+            if (deviceID) dispatch(updateNotificationSettings({ userID: user?.id, deviceID: deviceID }));
+          } catch (error) {
+            console.error('Error generating UUID:', error);
+          }
+          // cancel all previous notifications 
+          // (note: not redundant calls cuz we are cancelling potentially on previous device)
+          await Notifications.cancelAllScheduledNotificationsAsync();
+          Notifications.cancelScheduledNotificationAsync(notifications.dailyGoalIdentifier);
+          Notifications.cancelScheduledNotificationAsync(notifications.avatarIdentifier);
+          // set up notifications
+          if (notifications.generalPush) {
+            if (notifications.avatarPush) {
+              scheduleAvatarPushNotification(8, 0)
+                .then(identifier => {
+                  dispatch(updateNotificationSettings({ userID: user?.id, avatarIdentifier: identifier }));
+                })
+                .catch(error => {
+                  console.error(error);
+                });
+            }
+            if (notifications.dailyGoalPush) {
+              scheduleDailyGoalPushNotification(16, 0)
+                .then(identifier => {
+                  dispatch(updateNotificationSettings({ userID: user?.id, dailyGoalIdentifier: identifier }));
+                })
+                .catch(error => {
+                  console.error(error);
+                });
+            }
+          }
+        }
+      }
+    };
+    fetchAndSetNotificationReady();
+  }, [notifications]);
+
 
   return (
     <SafeAreaView style={{ ...FormatStyle.container, justifyContent: 'flex-start' }}>

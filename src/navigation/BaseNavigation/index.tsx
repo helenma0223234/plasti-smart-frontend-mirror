@@ -31,7 +31,7 @@ import FormatStyle from 'utils/FormatStyle';
 import CameraOptionsModal from './CameraOptionsModal';
 
 // for device ID and notifications
-import { getNotificationSettings, updateNotificationSettings } from 'redux/slices/notificationSlice';
+import { getNotificationSettings, updateNotificationSettings, createDefaultNotificationSettings } from 'redux/slices/notificationSlice';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import * as SecureStore from 'expo-secure-store';
@@ -201,7 +201,6 @@ const BaseNavigation = () => {
   const cameraOpen = useAppSelector((state) => state.camera.cameraOpen);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
-  const notifications = useAppSelector((state) => state.notifications.settings);
   const userSelf = useAppSelector((state) => state.users.selectedUser);
   const closeModal = () => {
     setModalVisible(false);
@@ -210,55 +209,7 @@ const BaseNavigation = () => {
 
   useEffect(() => {
     dispatch(doneTutorial());
-    // UNCOMMENT WHEN BUILDING FOR PRODUCTION
-    const fetchAndSetNotificationReady = async () => {
-    // check if deviceID is new
-      if (userSelf?.id) {
-        // dispatch get user settings
-        dispatch(getNotificationSettings({ userID: userSelf?.id }));
-        let deviceID = await SecureStore.getItemAsync('secure_deviceid');
-        // if this is a new device:
-        if (notifications && notifications.deviceID != deviceID) {
-        // get new device id
-          try {
-            const uuid = uuidv4();
-            await SecureStore.setItemAsync('secure_deviceid', uuid);
-            deviceID = await SecureStore.getItemAsync('secure_deviceid');
-            // update deviceID
-            if (deviceID) dispatch(updateNotificationSettings({ userID: userSelf?.id, deviceID: deviceID }));
-          } catch (error) {
-            console.error('Error generating UUID:', error);
-          }
-          // cancel all previous notifications 
-          // (note: not redundant calls cuz we are cancelling potentially on previous device)
-          await Notifications.cancelAllScheduledNotificationsAsync();
-          Notifications.cancelScheduledNotificationAsync(notifications.dailyGoalIdentifier);
-          Notifications.cancelScheduledNotificationAsync(notifications.avatarIdentifier);
-          // set up notifications
-          if (notifications.generalPush) {
-            if (notifications.avatarPush) {
-              scheduleAvatarPushNotification(8, 0)
-                .then(identifier => {
-                  dispatch(updateNotificationSettings({ userID: userSelf?.id, avatarIdentifier: identifier }));
-                })
-                .catch(error => {
-                  console.error(error);
-                });
-            }
-            if (notifications.dailyGoalPush) {
-              scheduleDailyGoalPushNotification(16, 0)
-                .then(identifier => {
-                  dispatch(updateNotificationSettings({ userID: userSelf?.id, dailyGoalIdentifier: identifier }));
-                })
-                .catch(error => {
-                  console.error(error);
-                });
-            }
-          }
-        }
-      }
-    };
-    fetchAndSetNotificationReady();
+    dispatch(getNotificationSettings({ userID: userSelf?.id }));
   }, []);
 
   return (

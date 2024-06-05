@@ -218,16 +218,14 @@ const progressCardWidth = screenWidth * 0.425;
 
 const EducationPage = () => {
   const user = useAppSelector((state) => state.users.selectedUser);
-  const [currCard, setCurrCard] = useState(1);
-  const [currCardPlastic, setCurrCardPlastic] = useState(1);
+  const [currCard, setCurrCard] = useState(0);
+  const [currCardPlastic, setCurrCardPlastic] = useState(0);
 
   const navigation = useNavigation<NavType>();
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    // setCurrCardPlastic(Math.floor(((event.nativeEvent.contentOffset.x)) / modalCardWidth));
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const centerX = contentOffsetX + (event.nativeEvent.layoutMeasurement.width / 2);
-
-    const cardIndex = Math.floor(centerX / modalCardWidth);
+    const cardIndex = Math.floor(centerX / polymerCardWidth);
     setCurrCardPlastic(cardIndex);
   };
 
@@ -470,10 +468,19 @@ const EducationPage = () => {
             </View>
           </View>
 
-          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} contentOffset={{ x: modalCardWidth * currCard + currCard * 10, y: 0 }} onScroll={handleScroll} scrollEventThrottle={10}>
+          <ScrollView 
+          showsHorizontalScrollIndicator={false} 
+          horizontal={true} 
+          contentOffset={{ x: currCard * (polymerCardWidth + 10), y: 0 }}
+          onScroll={handleScroll} 
+          scrollEventThrottle={15}
+          snapToInterval={(polymerCardWidth + 10)}
+          decelerationRate="fast"
+          snapToAlignment='start'
+          >
             <View style={{ gap: 10, flexDirection: 'row' }}>
               {info.map((card, index) => (
-                <PolymerCard number={index + 1} setModalVisible={setModalVisible} setModalPlasticType={setModalPlasticType} />
+                <PolymerCard key={index} number={index + 1} setModalVisible={setModalVisible} setModalPlasticType={setModalPlasticType} />
               ))}
 
             </View>

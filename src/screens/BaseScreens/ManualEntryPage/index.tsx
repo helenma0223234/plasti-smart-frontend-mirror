@@ -98,7 +98,7 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
     setPlasticNum(carouselIndex + 1);
     if (carouselIndex < 5 &&  carouselIndex > 0 && carouselIndex != 2 ) {
       if (user) {
-        dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, image: null, reused: true, recycled:false  }));
+        dispatch(createScan({ scannedBy: user.id, plasticNumber: carouselIndex + 1, image: null, reused: true, recycled:false  }));
       }
       dispatch(reusedRedux());
       dispatch(cameraClosed());
@@ -112,9 +112,7 @@ const ManualEntryPage = ({ navigation }: ManualEntryPageProps ) => {
   const selectButtonPressed = () => {
     const carouselIndex = getCarouselIndex();
     setPlasticNum(carouselIndex + 1);
-    if (user) {
-      dispatch(createScan({ scannedBy: user.id, plasticNumber: plasticNum, image: null,  reused: false, recycled:true }));
-    }
+    dispatch(createScan({ scannedBy: user.id, plasticNumber: carouselIndex + 1, image: null, reused: false, recycled:true }));
     dispatch(recycledRedux());
     dispatch(cameraClosed());
     navigation.navigate(BaseTabRoutes.SCAN_COMPLETE, {});

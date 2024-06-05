@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, SafeAreaView, View, Text, Dimensions } from 'react-native';
+import { ScrollView, SafeAreaView, View, Text, Dimensions, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { SERVER_URL } from 'utils/constants';
 import FormatStyle from '../../../utils/FormatStyle';
@@ -66,6 +66,16 @@ const LeaderboardPage = () => {
   );
 
   const userRank = user?.rank || 100;
+
+  if (leaderboard.length === 0) {
+    return (
+      <SafeAreaView style={{ ...FormatStyle.topContainer }}>
+        <View style={{alignContent: 'center', alignItems: 'center', justifyContent: 'center', minHeight:'90%', minWidth:'100%'}}>
+          <ActivityIndicator size='large' color={Colors.primary.dark}></ActivityIndicator>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     leaderboard.length > 0 && <SafeAreaView style={{ ...FormatStyle.topContainer, alignItems: 'center' }}>

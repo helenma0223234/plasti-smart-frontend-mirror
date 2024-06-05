@@ -471,14 +471,8 @@ const CameraPage = ({ navigation }: CameraPageProps) => {
             >
               <Text style={[styles.bottomSheetSelectButtonText, { color: '#1B453C' }]}>Manually Enter</Text>
             </TouchableOpacity>
-
-            
-
         </>
       }
-
-        
-
       </RBSheet>
     </View>
   );

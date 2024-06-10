@@ -4,8 +4,7 @@ This repository is an optional frontend starter for new DALI React projects. Ins
 
 ## Designs
 
-
-
+![Design](./assets/screenShotDemo.png)
 [Link to the project Figma](https://www.figma.com/design/5doTne1z3zCYPKUAZiwsuO/Plastic-Sorting-24W?node-id=5551-3487&t=ENX9gyrGE6VoCzDY-0)
 
 
@@ -54,24 +53,33 @@ For more detailed documentation on our file structure and specific functions in 
 
 1. clone repo and `yarn install`
    - We are using yarn because npm has issues with installing peer dependencies, which in turn causes issues when you eventually want to deploy to TestFlight
-2. Change `SERVER_URL` endpoint to exact IPv4 address + port used by backend
+2. Add an `.env` file in the root folder and add in following properties:
+   ```
+   EXPO_PUBLIC_REPLICATE_API_TOKEN=...
+   EXPO_PUBLIC_REPLICATE_VERSION="..."
+   EXPO_PUBLIC_SERVER_URL=...
+   ```
+3. Fill in replicate version and URL accordingly, and change `SERVER_URL` endpoint to exact IPv4 address + port used by backend
    - You can view your IPv4 address by running `ipconfig` in command terminal
-3. App should be ready for use now
+4. App should be ready for use now
    - `yarn start` to run with hot reloading
       - If you are getting "This is taking much longer than it should..." error, try doing `expo start --tunnel` instead. This error happens sometimes when trying to run on Dartmouth eduroam.
 
 ## Deployment 🚀
-[Where is the app deployed? i.e. Expo, Surge, TestFlight etc.]
-
-[What are the steps to re-deploy the project with any new changes?]
-
-[How does one get access to the deployed project?]
+1. the backend is deployed through replicate.com
+2. frontend is built with Expo and deployed on TestFlight
+3. To build, run `eas login`, `eas build` and then `eas submit` in the terminal
+   1. follow any prompts the terminal may have, like log in to Expo account, and Apple Developer account
 
 ## Authors
-* Firstname Lastname 'YY, role
+* Aneesh Patnaik '25, Developer
+* Herbert Sekpey, Developer
+* Yuchuan Ma '23+1, Developer Mentor
+* Colin Wolfe '27, Data Developer
+* James Lu, '25, Data Developer
 
 ## Acknowledgments 🤝
-We would like to thank [anyone you would like to acknowledge] for [what you would like to acknowledge them for].
+We would like to thank Ashna Ghanate for being a great PM! As well as our partners, Professor Xin Qi, and Professor Wenlin Zhang, for being supportive and formative throughout this journey.
 
 ---
 Designed and developed by [@DALI Lab](https://github.com/dali-lab)
